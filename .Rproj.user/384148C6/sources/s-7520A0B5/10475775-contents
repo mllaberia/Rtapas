@@ -1,0 +1,64 @@
+#' Geodesic distance between trees
+#'
+#' For any trimmed matrix produced with \code{\link[=trimHS_maxC]{trimHS_maxC()}},
+#' it prunes the host-symbiont phylogenies to conform with the trimmed matrix
+#' and computes the geodesic distance between the pruned trees.
+#' \code{NOTE}: This function can only be used with strictly bifurcating trees.
+#'
+#' @param hs Trimmed matrix.
+#'
+#' @param treeH Host phyolgeny. An object of class \code{"phylo"}.
+#'
+#' @param treeS Symbiont phylogeny. An object of class \code{"phylo"}.
+#'
+#' @param session Strategy you want to work with. Default is \code{"sequential"},
+#'        resolves \R expressions sequentially in the current \R
+#'        process. If \code{"multisession"} and \code{"multicore"} (not
+#'        supported on Windows) resolves \R expressions in parallel in separate
+#'        \R sessions running in the background.
+#'
+#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
+#'        your computer has with \code{\link[future:availableCores]{future::availableCores()}}.
+#'        Note that \code{cl<=\link[=availableCores]{availableCores()}}.
+#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
+#'
+#' @return Geodesic distance
+#'
+#' @examples
+#' #geo_D(hs, treeH, treeS)
+#'
+#' @import ape
+#' @import distory
+#'
+#' @export
+geo_D <- function(hs, treeH, treeS,
+                  session = "sequential", cl = 1) {
+
+  geoD <- function (hs, treeH, treeS) {
+    treeh <- ape::drop.tip(treeH, setdiff(treeH$tip.label, rownames(hs)))
+    trees <- ape::drop.tip(treeS, setdiff(treeS$tip.label, colnames(hs)))
+
+    hs <- hs[treeh$tip.label, trees$tip.label]
+
+    hs.lut <- which(hs[treeh$tip.label, trees$tip.label]==1, arr.ind = TRUE)
+    dummy.labels <- rownames(hs.lut)
+    trees$tip.label <- dummy.labels
+    combo.tree <- list(treeh, trees)
+    gd <- distory::dist.multiPhylo(combo.tree)
+    return(gd)
+  }
+
+  session.choice <- c("sequential", "multisession", "multicore")
+  if (session %in% session.choice == FALSE)
+    stop(writeLines("Invalid session parameter"))
+
+  if (session == "sequential") {
+    plan(sequential)
+    gd_f <- future_sapply(hs, geoD, treeH, treeS)
+    return(gd_f)
+  } else {
+    plan(session, workers = cl)
+    gd_f <- future_sapply(hs, geoD, treeH, treeS)
+    return(gd_f)
+  }
+}
