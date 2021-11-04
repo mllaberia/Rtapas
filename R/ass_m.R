@@ -1,15 +1,17 @@
-#' Create an host-symbiont association matrix
+#' Creates a host-symbiont association matrix
 #'
-#' @param hs
+#' @param hs A two-columns matrix representing associations between host
+#' (column 1) and symbiont (column 2) species.
 #'
-#' @return
+#' @return An association matrix, with hosts in rows and symbionts
+#' in columns, sorted alphabetically.
 #' @export
 #'
 #' @examples
 ass_m <- function(hs) {
   host <- hs[,1]
   symb <- hs[,2]
-  mhs <- (matrix(NA, nrow = length(symb), ncol = length(host)))
+  mhs <- (matrix(NA, nrow = length(host), ncol = length(symb)))
   diag(mhs) <- 1
   mhs[is.na(mhs)] <- 0
   colnames(mhs) <- symb

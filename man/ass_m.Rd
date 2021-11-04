@@ -7,10 +7,12 @@
 ass_m(hs)
 }
 \arguments{
-\item{hs}{}
+\item{hs}{A two-columns matrix representing associations between host
+(column 1) and symbiont (column 2) species.}
 }
 \value{
-
+An association matrix, with hosts in rows and symbionts
+in columns, sorted alphabetically.
 }
 \description{
 Create an host-symbiont association matrix
