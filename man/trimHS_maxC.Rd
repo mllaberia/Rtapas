@@ -4,7 +4,7 @@
 \alias{trimHS_maxC}
 \title{Trims the H-S association matrix maximizing the Congruence}
 \usage{
-trimHS_maxC(N, HS, n, check.unique = TRUE, session = "sequential", cl = 1)
+trimHS_maxC(N, HS, n, check.unique = TRUE, strat = "sequential", cl = 1)
 }
 \arguments{
 \item{N}{Number of runs.}
@@ -18,15 +18,13 @@ alternative is recommended if \code{n} is small, because the
 probability of obtaining the same trimmed matrix in different runs
 increases as \code{n} decreases.}
 
-\item{session}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
-process. If \code{"multisession"} and \code{"multicore"} (not
-supported on Windows) resolves \R expressions in parallel in separate
-\R sessions running in the background.}
+process. If \code{"parallel"} resolves \R expressions in parallel in
+separate \R sessions running in the background.}
 
 \item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[future:availableCores]{future::availableCores()}}.
-Note that \code{cl<=\link[=availableCores]{availableCores()}}.
+your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 Default is \code{cl = 1} for \code{"sequential"} strategy.}
 }
 \value{
@@ -37,6 +35,17 @@ For N runs, it randomly chooses \code{n} unique one-to-one associations and
 trims the H-S association matrix to include only the n associations.
 }
 \examples{
-#trimHS_maxC(N, HS, n, check.unique = TRUE)
+# With birds_mites dataset
+data(birds_mites)
+N = 1e+2
+n = 50
+TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE, strat = "parallel", cl = 4)
+
+# With plant_fungi dataset
+data(plant_fungi)
+N = 1e+2
+n = 15
+TPF <- trimHS_maxC(N, pf_matrix, n)
+
 
 }

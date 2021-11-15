@@ -64,6 +64,26 @@ the fraction of lowest geodesic distances or lowest sum of squared residuals).
 }
 
 \examples{
-#link_freq
+# birds_mites dataset
+data(birds_mites)
+N = 1e+2
+n = 50
+TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
+gd_bm <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
+# link frequencies with the geodesic distance
+LFGD <- link_freq(TBM, gd_bm, bm_matrix, percentile = 0.01, sep = "-",
+                  below.p = TRUE, res.fq = FALSE)
+
+# plant_fungi dataset
+data(plant_fungi)
+N = 1e+2
+n = 15
+TPF <- trimHS_maxC(N, pf_matrix, n)
+pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
+                  proc.warns = FALSE, ei.correct = "sqrt.D",
+                  strat = "parallel", cl = 8)
+# link frequencies with PACo
+LFPACO <- link_freq(TPF, pac_pf, pf_matrix, percentile = 0.01, sep = "-",
+                  below.p = TRUE, res.fq = TRUE)
 
 }

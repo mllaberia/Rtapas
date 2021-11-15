@@ -4,22 +4,28 @@
 \alias{one2one_f}
 \title{Maximum n for pick unique one-to-one association over a number of runs}
 \usage{
-one2one_f(
-  HS,
-  reps = 10000,
-  session = "sequential",
-  cl = 1,
-  plot = TRUE,
-  na.percent = 0.2
-)
+one2one_f(HS, reps = 10000, strat = "sequential", cl = 1, plot = TRUE)
 }
 \arguments{
 \item{HS}{Host-symbiont association matrix.}
 
 \item{reps}{Number of runs to evaluate.}
+
+\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
+resolves \R expressions sequentially in the current \R
+process. If \code{"parallel"} resolves \R expressions in parallel in
+separate \R sessions running in the background.}
+
+\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
+your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+Default is \code{cl = 1} for \code{"sequential"} strategy.}
+
+\item{plot}{Default is \code{"TRUE"}, plots the number of unique host-symbiont
+associations for the number of runs.}
 }
 \value{
-The maximum number of unique associations (\code{n}).
+A data frame with the maximum number of unique associations (\code{n})
+        and the range of possible \code{n} to choose.
 }
 \description{
 For a matrix of host-symbiont associations, it finds the maximum \code{n} for
@@ -33,6 +39,12 @@ which one-to-one unique associations can be picked in
 }
 
 \examples{
-#one2one_f
+N = 1e+2
+
+# With plant_fungi data
+data(plant_fungi)
+n <- one2one_f(pf_matrix, reps = N, plot = TRUE, strat = "sequential", cl = 1)
+# you can choose any n inside the range
+n <- 15
 
 }

@@ -12,7 +12,7 @@ paco_ss(
   symmetric = FALSE,
   proc.warns = FALSE,
   ei.correct = "none",
-  session = "sequential",
+  strat = "sequential",
   cl = 1
 )
 }
@@ -39,16 +39,14 @@ takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes and
 Cailliez corrections, respectively.}
 
-\item{session}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
-process. If \code{"multisession"} and \code{"multicore"} (not
-supported on Windows) resolves \R expressions in parallel in separate
-\R sessions running in the background.}
+process. If \code{"parallel"} resolves \R expressions in parallel in
+separate \R sessions running in the background.}
 
 \item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[future:availableCores]{future::availableCores()}}.
-Note that \code{cl <= \link[=availableCores]{availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
+your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+Default is \code{cl = 1} for \code{"sequential"} strategy}
 }
 \value{
 A sum of squared residuals.
@@ -61,6 +59,23 @@ squared sum of residuals of the Procrustes superimposition of the host and
 symbiont configurations in Euclidean space.
 }
 \examples{
-#paco_ss(ths, treeH, treeS)
+# birds_mites dataset
+data(birds_mites)
+N = 1e+2
+n = 50
+TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
+pac_bm <- paco_ss(TBM, treeH = birds, treeS = mites, symmetric = TRUE,
+                  proc.warns = FALSE, ei.correct = "sqrt.D",
+                  strat = "parallel", cl = 8)
+
+# plant_fungi dataset
+data(plant_fungi)
+N = 1e+2
+n = 15
+TPF <- trimHS_maxC(N, pf_matrix, n)
+pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
+                  proc.warns = FALSE, ei.correct = "sqrt.D",
+                  strat = "parallel", cl = 8)
+
 
 }

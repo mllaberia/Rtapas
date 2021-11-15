@@ -19,7 +19,7 @@ tangle_gram(
   link.lty = 1,
   fsize = 0.5,
   pts = FALSE,
-  link.type = "curved",
+  link.type = "straight",
   ftype = "i",
   ...
 )
@@ -41,7 +41,7 @@ heatmap.}
 
 \item{nbreaks}{Number of discrete values along \code{"colgrad"}.}
 
-\item{fqtab}{Dataframe produced with \code{\link[=link_freq()]{link_freq()}}.}
+\item{fqtab}{Dataframe produced with \code{\link[=link_freq]{link_freq()}}.}
 
 \item{res.fq}{If \code{TRUE} it processes corrected (residual) frequencies of
 fqtab (column 5). If \code{FALSE} uncorrected (absolute) frequencies
@@ -67,8 +67,8 @@ integer (0=blank, 1=solid (default), 2=dashed, 3=dotted, 4=dotdash,
 each vertex of the tree, as well as at transition points between
 mapped states. Default is \code{FALSE}.}
 
-\item{link.type}{If curved linking lines are desired, set to \code{"curved"},
-if straighten linking lines are desired, do not specify the argument.}
+\item{link.type}{If curved linking lines are desired, set to \code{"curved"}.
+Default is \code{"straight"}.}
 
 \item{ftype}{Font type. Options are \code{"reg"}, \code{"i"}
 (italics), \code{"b"} (bold) or \code{"bi"} (bold-italics).}
@@ -86,7 +86,34 @@ Random TaPas on a tanglegram. It also plots the average frequency
 fast maximum likelihood estimators of ancestral states of each node.
 }
 \examples{
-#tangle_gram ()
+# birds_mites dataset
+data(birds_mites)
+N = 10
+n = 50
+TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
+gd_bm <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
+LFGD <- link_freq(TBM, gd_bm, bm_matrix, percentile = 0.01, sep = "-",
+                  below.p = TRUE, res.fq = TRUE)
 
+col.scale = c("darkred","gray90", "darkblue")
+tangle_gram(birds, mites, bm_matrix, colscale= "sequential", colgrad=col.scale,
+         nbreaks = 50, LFGD, res.fq = TRUE, link.lty = 1, fsize = 0.25,
+         pts = FALSE, link.type = "straight", node.tag = FALSE, cexpt=1)
+
+# plant_fungi dataset
+data(plant_fungi)
+N = 10
+n = 15
+TPF <- trimHS_maxC(N, pf_matrix, n)
+pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
+                  proc.warns = FALSE, ei.correct = "sqrt.D",
+                  strat = "parallel", cl = 8)
+LFPACO <- link_freq(TPF, pac_pf, pf_matrix, percentile = 0.01, sep = "-",
+                  below.p = TRUE, res.fq = TRUE)
+
+col.scale = c("darkred","gray90", "darkblue")
+tangle_gram(plant, fungi, pf_matrix, colscale= "sequential", colgrad=col.scale,
+         nbreaks = 50, LFPACO, res.fq = TRUE, link.lty = 1, fsize = 0.25,
+         pts = FALSE, link.type = "straight", node.tag = FALSE, cexpt=1)
 
 }

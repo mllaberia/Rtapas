@@ -8,7 +8,20 @@
 #'
 #' @param reps Number of runs to evaluate.
 #'
-#' @return The maximum number of unique associations (\code{n}).
+#' @param strat Strategy you want to work with. Default is \code{"sequential"},
+#'        resolves \R expressions sequentially in the current \R
+#'        process. If \code{"parallel"} resolves \R expressions in parallel in
+#'        separate \R sessions running in the background.
+#'
+#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
+#'        your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
+#'
+#' @param plot Default is \code{"TRUE"}, plots the number of unique host-symbiont
+#'        associations for the number of runs.
+#'
+#' @return A data frame with the maximum number of unique associations (\code{n})
+#'         and the range of possible \code{n} to choose.
 #'
 #' @section NOTE:
 #'          It can be used to decide the best \code{n} prior to application of
@@ -17,11 +30,17 @@
 #' @import stringr
 #'
 #' @examples
-#' #one2one_f
+#' N = 1e+2
+#'
+#' # With plant_fungi data
+#' data(plant_fungi)
+#' n <- one2one_f(pf_matrix, reps = N, plot = TRUE, strat = "sequential", cl = 1)
+#' # you can choose any n inside the range
+#' n <- 15
 #'
 #' @export
-one2one_f <- function(HS, reps = 1e+4, session = "sequential", cl = 1,
-                      plot = TRUE, na.percent = 0.2){
+one2one_f <- function(HS, reps = 1e+4, strat = "sequential", cl = 1,
+                      plot = TRUE){
 
   one2one <- function (HS, ...) {
     HS.LUT <- which(HS == 1, arr.ind = TRUE)
@@ -41,18 +60,13 @@ one2one_f <- function(HS, reps = 1e+4, session = "sequential", cl = 1,
     V <- min(V)
     return(V)
   }
-  np <- function(c, d){
-    c <- na.percent
-    d <- round(sum(HS) * c)
-    return(d)
-  }
   one  <- one2one(HS, reps)
   r.one <- round(one * 0.1)
   a <- (one - r.one):(one + r.one)
   if (plot == TRUE) {
     b <- rep(NA, length(a))
     for (i in 1:length(a)) {
-      THS <- trimHS_maxC(reps, HS, n=a[i], check.unique = TRUE, session, cl)
+      THS <- trimHS_maxC(reps, HS, n=a[i], check.unique = TRUE, strat = strat, cl = cl)
       b[i] <- length(THS)
     }
     plot(a, b, type = "b", xlim = c(min(a), max(a)), xaxt = "n",
@@ -61,12 +75,12 @@ one2one_f <- function(HS, reps = 1e+4, session = "sequential", cl = 1,
       axis(1, seq(round(min(a)), round(max(a)), by = 1),
            labels = (min(a):max(a)))
 
-    x <- c("n.max", "n.rank", "posible.n")
-    y <- c(one, stringr::str_c("[", 1, ";", one , "]"), np(c,d))
+    x <- c("n.max", "n.range")
+    y <- c(one, stringr::str_c("[", 1, ";", one , "]"))
     r <- data.frame(x, y)
   } else {
-    x <- c("n.max", "n.rank", "posible.n")
-    y <- c(one, stringr::str_c("[", 1, ";", one , "]"), np(c,d))
+    x <- c("n.max", "n.range")
+    y <- c(one, stringr::str_c("[", 1, ";", one , "]"))
     r <- data.frame(x, y)
   }
   return(r)

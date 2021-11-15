@@ -1,0 +1,26 @@
+{
+    "id": "96803C69",
+    "path": "~/R/library/RandomTaPas/R/link_freq.R",
+    "project_path": "R/link_freq.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1636705100270.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "26,10",
+        "scrollLine": "16"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1636543784,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1636543784,
+    "read_only": false,
+    "read_only_alternatives": []
+}

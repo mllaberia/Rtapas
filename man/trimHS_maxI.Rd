@@ -4,7 +4,7 @@
 \alias{trimHS_maxI}
 \title{Trims the H-S association matrix maximizing the incongruence}
 \usage{
-trimHS_maxI(N, HS, n, check.unique = TRUE, session = "sequential", cl = 1)
+trimHS_maxI(N, HS, n, check.unique = TRUE)
 }
 \arguments{
 \item{N}{Number of runs.}
@@ -17,17 +17,6 @@ trimHS_maxI(N, HS, n, check.unique = TRUE, session = "sequential", cl = 1)
 alternative is recommended if \code{n} is small, because the
 probability of obtaining the same trimmed matrix in different runs
 increases as \code{n} decreases.}
-
-\item{session}{Strategy you want to work with. Default is \code{"sequential"},
-resolves \R expressions sequentially in the current \R
-process. If \code{"multisession"} and \code{"multicore"} (not
-supported on Windows) resolves \R expressions in parallel in separate
-\R sessions running in the background.}
-
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[future:availableCores]{future::availableCores()}}.
-Note that \code{cl<=\link[=availableCores]{availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
 }
 \value{
 A list of the N trimmed matrices.
@@ -36,4 +25,12 @@ A list of the N trimmed matrices.
 For N runs, it randomly chooses \code{n} unique one-to-one associations and
 trims the H-S association matrix to exclude the configurations with only one
 H or one S.
+}
+\examples{
+# With birds_mites dataset
+# data(birds_mites)
+N = 10
+n = 50
+TBMI <- trimHS_maxI(N, bm_matrix, n, check.unique = TRUE)
+
 }
