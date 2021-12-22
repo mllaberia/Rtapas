@@ -15,28 +15,26 @@ link_freq(
 )
 }
 \arguments{
-\item{x}{List of trimmed matrices produced by \code{\link[=trimHS_maxC]{trimHS_maxC()}}.}
+\item{x}{List of trimmed matrices produced by
+\code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+\code{\link[=trimHS_maxI]{trimHS_maxI()}}.}
 
-\item{fx}{Vector of statistics produced with either
-\code{\link[=geo_D]{geo_D()}} or \code{\link[=paco_ss]{paco_ss()}}.}
+\item{fx}{Vector of statistics produced with \code{\link[=geo_D]{geo_D()}},
+\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}}}
 
 \item{HS}{Host-symbiont association matrix.}
 
-\item{percentile}{Percentile to evaluate. Default is \code{0.01}. The percentile
-applied can be specified with \code{percentile.res.fq}, determines whether
-to apply a correction to the estimated frequencies by setting a null
-model in wich the occurrence of each host-symbiont association is
-evenly distributed along the whole frequency distribution.}
+\item{percentile}{Percentile to evaluate. Default is \code{0.01}.}
 
 \item{sep}{Character that separates host and symbiont labels.}
 
 \item{below.p}{Determines whether frequencies are to be computed below or
 above the percentile set. Default is \code{TRUE}.}
 
-\item{res.fq}{Determines whether a correction to avoid one-to-one associations
-being overrepresented in the percentile evaluated. If \code{TRUE} (default)
-a residual frequency value (observed - expected frequency) is computed
-for each host-symbiont association.}
+\item{res.fq}{Determines whether a correction to avoid one-to-one
+associations being overrepresented in the percentile evaluated.
+If \code{TRUE} (default) a residual frequency value (observed -
+expected frequency) is computed for each host-symbiont association.}
 }
 \value{
 A dataframe with host-symbiont associations in rows. The first and
@@ -44,15 +42,17 @@ A dataframe with host-symbiont associations in rows. The first and
         respectively. The third column designates the host-symbiont
         association by pasting the names of the terminals, and the fourth
         column displays the frequency of occurrence of each host-symbiont
-        association. If \code{res.fq = TRUE}, column 5 displays the corrected
-        frequencies as a residual.
+        association. If \code{res.fq = TRUE}, column 5 displays the
+        corrected frequencies as a residual.
 }
 \description{
-After applying \code{\link[=geo_D]{geo_D()}} or \code{\link[=paco_ss]{paco_ss()}}
-to each matrix produced by \code{\link[=trimHS_maxC]{trimHS_maxC()}}, this
-function determines the frequency of each host-symbiont association occurring
-in a given percentile of cases that maximize phylogenetic congruence (either
-the fraction of lowest geodesic distances or lowest sum of squared residuals).
+After applying \code{\link[=geo_D]{geo_D()}},
+\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}} to each
+matrix produced by \code{\link[=trimHS_maxC]{trimHS_maxC()}}, this function
+determines the frequency of each host-symbiont association occurring in a
+given percentile of cases that maximize phylogenetic congruence
+(or incongruence in case that \code{\link[=trimHS_maxI]{trimHS_maxI()}}
+has been used).
 }
 \section{NOTE}{
 
@@ -69,21 +69,9 @@ data(birds_mites)
 N = 1e+2
 n = 50
 TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-gd_bm <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
+GD <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
 # link frequencies with the geodesic distance
-LFGD <- link_freq(TBM, gd_bm, bm_matrix, percentile = 0.01, sep = "-",
-                  below.p = TRUE, res.fq = FALSE)
+LFGD <- link_freq(TBM, GD, bm_matrix, below.p = TRUE, res.fq = FALSE)
 
-# plant_fungi dataset
-data(plant_fungi)
-N = 1e+2
-n = 15
-TPF <- trimHS_maxC(N, pf_matrix, n)
-pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
-                  proc.warns = FALSE, ei.correct = "sqrt.D",
-                  strat = "parallel", cl = 8)
-# link frequencies with PACo
-LFPACO <- link_freq(TPF, pac_pf, pf_matrix, percentile = 0.01, sep = "-",
-                  below.p = TRUE, res.fq = TRUE)
 
 }

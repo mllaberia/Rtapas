@@ -22,17 +22,18 @@
 #' @examples
 #' # With birds_mites dataset
 #' # data(birds_mites)
-#' N = 10
+#' N = 1e+2
 #' n = 50
 #' TBMI <- trimHS_maxI(N, bm_matrix, n, check.unique = TRUE)
 #'
 trimHS_maxI <- function (N, HS, n, check.unique = TRUE) {
+
   trim.intI <- function (HS, n) {
     HS.LUT <- which(HS == 1, arr.ind = TRUE)
     HS.LUT <- cbind(HS.LUT, 1:nrow(HS.LUT))
-    LH <- LS <- 1
-    while(LH <= 1 | LS <= 1) {  # skip configurations with only
-      HS.trim <- HS.LUT[sample(nrow(HS.LUT), n), ] # one H or one S
+    LH <- LS <- 2
+    while(LH <= 2 | LS <= 2) {  # skip configurations with less than
+      HS.trim <- HS.LUT[sample(nrow(HS.LUT), n), ] # three H or three S
       LH <- length(unique(HS.trim[, 1]))
       LS <- length(unique(HS.trim[, 2]))
     }

@@ -1,0 +1,26 @@
+{
+    "id": "321C2C56",
+    "path": "~/R/library/RandomTaPas/R/gini_plot.R",
+    "project_path": "R/gini_plot.R",
+    "type": "r_source",
+    "hash": "1662865134",
+    "contents": "",
+    "dirty": false,
+    "created": 1639134627333.0,
+    "source_on_save": false,
+    "relative_order": 9,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "69,20",
+        "scrollLine": "25"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1640097592,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1640097592473,
+    "read_only": false,
+    "read_only_alternatives": []
+}

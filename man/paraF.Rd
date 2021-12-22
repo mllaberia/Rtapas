@@ -27,16 +27,29 @@ process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
 \item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+your computer has with
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 Default is \code{cl = 1} for \code{"sequential"} strategy}
 }
 \value{
-A number object with the statistic of the global host-symbiont test
-        for any trimmed matrix.
+A number object with the ParaFitGlobal Statistic of host-symbiont
+        test for any trimmed matrix.
 }
 \description{
-Test of host-symbiont coevolution
+For any trimmed matrix produced with
+\code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+\code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
+(S) phylogenies to conform with the trimmed matrix and runs
+\code{\link[ape::parafit]{ape::parafit()}} (Legendre et al. 2002) to
+calculate the ParaFitGlobal Statistic.
 }
 \examples{
-#paraF()
+# birds_mites dataset
+data(birds_mites)
+N = 1e+2
+n = 50
+TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
+PARAF <- pacoF(TBM, birds, mites, ei.correct = "sqrt.D",
+                  strat = "parallel", cl = 8)
+
 }

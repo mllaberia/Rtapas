@@ -29,7 +29,7 @@ H or one S.
 \examples{
 # With birds_mites dataset
 # data(birds_mites)
-N = 10
+N = 1e+2
 n = 50
 TBMI <- trimHS_maxI(N, bm_matrix, n, check.unique = TRUE)
 

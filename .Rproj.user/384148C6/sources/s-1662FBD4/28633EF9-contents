@@ -1,0 +1,136 @@
+
+#libraries for create a package
+
+library(devtools)
+library(roxygen2)
+library(tidyverse)
+
+#libraries for the functions of package (use_package())
+
+use_package("paco")
+use_package("phytools")
+use_package("distory")
+use_package("vegan")
+use_package("GiniWegNeg")
+use_package("ape")
+use_package("stats")
+use_package("parallelly")
+
+usethis::use_mit_license("MIT")
+
+usethis::use_r("assoc_mat")
+#then insert roxygen skeleton in .R function file
+
+usethis::use_r("one2one_f")
+
+usethis::use_r("trimHS_maxC")
+
+usethis::use_r("geo_D")
+
+usethis::use_r("paco_ss")
+
+usethis::use_r("link_freq")
+
+usethis::use_r("tangle_gram")
+
+usethis::use_r("linkf_CI")
+
+usethis::use_r("trimHS_maxI")
+
+usethis::use_r("paraF")
+
+usethis::use_r("incong_tangle")
+
+usethis::use_r("gini_plot")
+
+usethis::use_r("prob_statistic")
+
+devtools::load_all()
+devtools::document()
+devtools::install()
+
+
+?trimHS_maxC
+?geo_D
+?paco_ss
+?link_freq
+?one2one_f
+?tangle_gram
+
+?birds_mites
+?plant_fungi
+
+data(package = "RandomTaPas")
+
+use_readme_md()
+
+usethis::use_testthat()
+use_test("trimHS_maxI")
+use_test("geo_D")
+use_test("paco_ss")
+use_test("link_freq")
+use_test("one2one_f")
+use_test("tangle_gram")
+use_test("assoc_mat")
+
+#the ned check and install
+devtools::check()
+devtools::install()
+devtools::build()
+
+
+
+
+#data set BIRDS AND MITES
+
+birds <- read.nexus("C:/Users/Mar/Desktop/bxm/birds.nex")
+mites <- read.nexus("C:/Users/Mar/Desktop/bxm/mites.nex")
+bm_matrix <- read.delim("C:/Users/Mar/Desktop/bxm/HS_birds_mites.txt", header= TRUE, row.names = 1)
+birds_200r_trees <- read.nexus("C:/Users/Mar/Desktop/bxm/birds_200random_trees.nex")
+
+#usethis::use_data(birds, mites, bm_matrix, birds_200r_trees)
+
+tools::checkRdaFiles("~/R/library/RandomTaPas/data")
+tools::resaveRdaFiles("~/R/library/RandomTaPas/data", compress = "bzip2")
+
+save(birds, mites, bm_matrix, birds_200r_trees, file = "~/R/library/RandomTaPas/data/birds_mites.rda")
+
+#documentation
+
+use_r("birds_mites")
+
+devtools::load_all()
+roxygenise()
+devtools::document()
+
+
+
+
+
+
+#data set PLANTS AND FUNGAL PATHOGENS
+
+plant <- read.tree("C:/Users/Mar/Desktop/axm/H1.nwk")
+fungi <- read.tree("C:/Users/Mar/Desktop/axm/P1.nwk")
+pf <- read.delim("C:/Users/Mar/Desktop/axm/HP.txt", sep = "")
+pf_matrix <- read.delim("C:/Users/Mar/Desktop/axm/HP_m.txt", sep = ",", row.names = 1)
+
+#usethis::use_data(plant, fungi, pf, pf_matrix, internal = FALSE)
+
+tools::checkRdaFiles("~/R/library/RandomTaPas/data")
+tools::resaveRdaFiles("~/R/library/RandomTaPas/data", compress = "bzip2")
+save(plant, fungi, pf, pf_matrix, file = "~/R/library/RandomTaPas/data/plant_fungi.rda")
+
+
+#documentation
+
+use_r("plant_fungi")
+
+devtools::load_all()
+devtools::document()
+devtools::check()
+
+
+
+tools::add_datalist("~/R/library/RandomTaPas/data")
+

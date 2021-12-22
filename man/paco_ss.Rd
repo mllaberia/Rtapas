@@ -36,8 +36,8 @@ from the conversion of phylogenetic distances into Principal
 Coordinates: \code{"none"} (the default) indicates that no correction
 is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
 takes the element-wise square-root of the phylogenetic distances;
-\code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes and
-Cailliez corrections, respectively.}
+\code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
+and Cailliez corrections, respectively.}
 
 \item{strat}{Strategy you want to work with. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
@@ -45,18 +45,21 @@ process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
 \item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy}
+your computer has with
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+Default is \code{cl = 1} for \code{"sequential"} strategy.}
 }
 \value{
 A sum of squared residuals.
 }
 \description{
-For any trimmed matrix produced with \code{\link[=trimHS_maxC]{trimHS_maxC()}},
-it prunes the host (H) & symbiont (S) phylogenies to conform with the trimmed
-matrix and runs Procrustes Approach to Cophylogeny (PACo) to produce the
-squared sum of residuals of the Procrustes superimposition of the host and
-symbiont configurations in Euclidean space.
+For any trimmed matrix produced with
+\code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+\code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
+(S) phylogenies to conform with the trimmed matrix and runs Procrustes
+Approach to Cophylogeny (PACo) to produce the squared sum of residuals of
+the Procrustes superimposition of the host and symbiont configurations
+in Euclidean space.
 }
 \examples{
 # birds_mites dataset
@@ -64,16 +67,7 @@ data(birds_mites)
 N = 1e+2
 n = 50
 TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-pac_bm <- paco_ss(TBM, treeH = birds, treeS = mites, symmetric = TRUE,
-                  proc.warns = FALSE, ei.correct = "sqrt.D",
-                  strat = "parallel", cl = 8)
-
-# plant_fungi dataset
-data(plant_fungi)
-N = 1e+2
-n = 15
-TPF <- trimHS_maxC(N, pf_matrix, n)
-pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
+PACO <- paco_ss(TBM, birds, mites, symmetric = TRUE,
                   proc.warns = FALSE, ei.correct = "sqrt.D",
                   strat = "parallel", cl = 8)
 

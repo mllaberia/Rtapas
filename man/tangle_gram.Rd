@@ -8,11 +8,10 @@ tangle_gram(
   treeH,
   treeS,
   HS,
+  fqtab,
   colscale = "diverging",
   colgrad,
   nbreaks = 50,
-  fqtab,
-  res.fq = TRUE,
   node.tag = TRUE,
   cexpt = 1,
   link.lwd = 1,
@@ -31,6 +30,8 @@ tangle_gram(
 
 \item{HS}{Host-symbiont association matrix.}
 
+\item{fqtab}{Dataframe produced with \code{\link[=link_freq]{link_freq()}}.}
+
 \item{colscale}{Choose between \code{"diverging"}, color reflects distance
 from 0 (centered at 0, recommended if \code{"res.fq = TRUE"})
 or \code{"sequential"}, color reflects distance from minimum value
@@ -41,12 +42,6 @@ heatmap.}
 
 \item{nbreaks}{Number of discrete values along \code{"colgrad"}.}
 
-\item{fqtab}{Dataframe produced with \code{\link[=link_freq]{link_freq()}}.}
-
-\item{res.fq}{If \code{TRUE} it processes corrected (residual) frequencies of
-fqtab (column 5). If \code{FALSE} uncorrected (absolute) frequencies
-(column 4) are be processed.}
-
 \item{node.tag}{Specifies whether maximum likelihood estimators of ancestral
 states are to be computed. Default is \code{TRUE}.}
 
@@ -55,11 +50,12 @@ states are to be computed. Default is \code{TRUE}.}
 \item{link.lwd}{The line width for plotting, default to 1.}
 
 \item{link.lty}{The line type. Line types can either be specified as an
-integer (0=blank, 1=solid (default), 2=dashed, 3=dotted, 4=dotdash,
-5=longdash, 6=twodash) or as one of the character strings
-\code{"blank"}, \code{"solid"}, \code{"dashed"}, \code{"dotted"},
-\code{"dotdash"}, \code{"longdash"}, or \code{"twodash"}, where
-\code{"blank"} uses invisible lines' (i.e., does not draw them).}
+integer (0 = blank, 1 = solid (default), 2 = dashed, 3 = dotted,
+4 = dotdash, 5 = longdash, 6 = twodash) or as one of the character
+strings \code{"blank"}, \code{"solid"}, \code{"dashed"},
+\code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, or
+\code{"twodash"}. Note that \code{"blank"} uses invisible lines
+(i.e., does not draw them).}
 
 \item{fsize}{Relative font size for tip labels.}
 
@@ -73,7 +69,8 @@ Default is \code{"straight"}.}
 \item{ftype}{Font type. Options are \code{"reg"}, \code{"i"}
 (italics), \code{"b"} (bold) or \code{"bi"} (bold-italics).}
 
-\item{...}{Any graphical option admissible in \code{\link[phytools:plot.cophylo]{phytools::plot.cophylo()}}}
+\item{...}{Any graphical option admissible in
+\code{\link[phytools:plot.cophylo]{phytools::plot.cophylo()}}}
 }
 \value{
 A tanglegram with quantitative information displayed as heatmap.
@@ -82,38 +79,25 @@ A tanglegram with quantitative information displayed as heatmap.
 Wrapper of \code{\link[phytools:plot.cophylo]{phytools::plot.cophylo()}}
 is used for mapping as heatmap the host-symbiont frequencies estimated by
 Random TaPas on a tanglegram. It also plots the average frequency
-(or residual frequency)of occurrence of each terminal and optionally, the
+(or residual frequency) of occurrence of each terminal and optionally, the
 fast maximum likelihood estimators of ancestral states of each node.
 }
 \examples{
-# birds_mites dataset
 data(birds_mites)
 N = 10
 n = 50
 TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-gd_bm <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
-LFGD <- link_freq(TBM, gd_bm, bm_matrix, percentile = 0.01, sep = "-",
-                  below.p = TRUE, res.fq = TRUE)
-
-col.scale = c("darkred","gray90", "darkblue")
-tangle_gram(birds, mites, bm_matrix, colscale= "sequential", colgrad=col.scale,
-         nbreaks = 50, LFGD, res.fq = TRUE, link.lty = 1, fsize = 0.25,
-         pts = FALSE, link.type = "straight", node.tag = FALSE, cexpt=1)
-
-# plant_fungi dataset
-data(plant_fungi)
-N = 10
-n = 15
-TPF <- trimHS_maxC(N, pf_matrix, n)
-pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
+PACO <- paco_ss(TBM, birds, mites, symmetric = TRUE,
                   proc.warns = FALSE, ei.correct = "sqrt.D",
                   strat = "parallel", cl = 8)
-LFPACO <- link_freq(TPF, pac_pf, pf_matrix, percentile = 0.01, sep = "-",
+LFPACO <- link_freq(TBM, PACO, bm_matrix, percentile = 0.01, sep = "-",
                   below.p = TRUE, res.fq = TRUE)
 
 col.scale = c("darkred","gray90", "darkblue")
-tangle_gram(plant, fungi, pf_matrix, colscale= "sequential", colgrad=col.scale,
-         nbreaks = 50, LFPACO, res.fq = TRUE, link.lty = 1, fsize = 0.25,
-         pts = FALSE, link.type = "straight", node.tag = FALSE, cexpt=1)
+tangle_gram(birds, mites, bm_matrix, LFPACO, colscale= "diverging",
+            colgrad = col.scale, nbreaks = 50, node.tag = FALSE,
+            link.lty = 1, fsize = 0.25, pts = FALSE,
+            link.type = "straight", cexpt = 1)
+
 
 }

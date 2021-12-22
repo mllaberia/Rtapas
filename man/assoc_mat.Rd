@@ -2,7 +2,7 @@
 % Please edit documentation in R/assoc_mat.R
 \name{assoc_mat}
 \alias{assoc_mat}
-\title{Create an host-symbiont association matrix}
+\title{Create a host-symbiont association matrix}
 \usage{
 assoc_mat(hs)
 }
@@ -15,7 +15,7 @@ An association matrix, with hosts in rows and symbionts in columns,
         sorted alphabetically.
 }
 \description{
-Create an host-symbiont association matrix
+Create a host-symbiont association matrix
 }
 \examples{
 data(plant_fungi)

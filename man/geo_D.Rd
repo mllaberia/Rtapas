@@ -19,18 +19,32 @@ process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
 \item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+your computer has with
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 Default is \code{cl = 1} for \code{"sequential"} strategy.}
 }
 \value{
 Geodesic distance
 }
 \description{
-For any trimmed matrix produced with \code{\link[=trimHS_maxC]{trimHS_maxC()}},
-it prunes the host-symbiont phylogenies to conform with the trimmed matrix
-and computes the geodesic distance between the pruned trees.
+For any trimmed matrix produced with
+\code{\link[=trimHS_maxC]{trimHS_maxC()}} it prunes the host-symbiont
+phylogenies to conform with the trimmed matrix and computes the geodesic
+distance between the pruned trees.
 \code{NOTE}: This function can only be used with strictly bifurcating trees.
 }
+\section{NOTE}{
+
+      If the \code{node.label} object in both trees contains NAs or neither
+      value, an error will appear. You should make sure that all nodes
+      have a value, or else remove it within the \code{"phylo"} class tree
+      with \code{tree$node.label <- NULL}. For more details, see
+      \code{\link[distory::dist.multiPhylo]{distory::dist.multiPhylo()}}
+
+      This function can not be used with the trimmed matrices produced
+      with \code{\link[=trimHS_maxI]{trimHS_maxI()}}.
+}
+
 \examples{
 # birds_mites dataset
 data(birds_mites)
@@ -38,13 +52,5 @@ N = 1e+2
 n = 50
 TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
 gd_bm <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
-
-# plant_fungi dataset
-data(plant_fungi)
-N = 1e+2
-n = 15
-TPF <- trimHS_maxC(N, pf_matrix, n)
-gd_pf <- geo_D(TPF, treeH = plant, treeS = fungi, strat = "parallel", cl = 8)
-
 
 }

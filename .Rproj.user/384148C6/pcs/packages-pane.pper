@@ -1,6 +1,6 @@
 {
     "installOptions": {
-        "installFromRepository": false,
+        "installFromRepository": true,
         "libraryPath": "C:/Users/Mar/Documents/R/win-library/4.1",
         "installDependencies": true
     }

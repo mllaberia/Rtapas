@@ -2,7 +2,7 @@
 % Please edit documentation in R/trimHS_maxC.R
 \name{trimHS_maxC}
 \alias{trimHS_maxC}
-\title{Trims the H-S association matrix maximizing the Congruence}
+\title{Trims the H-S association matrix maximizing the congruence}
 \usage{
 trimHS_maxC(N, HS, n, check.unique = TRUE, strat = "sequential", cl = 1)
 }
@@ -24,7 +24,8 @@ process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
 \item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+your computer has with
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 Default is \code{cl = 1} for \code{"sequential"} strategy.}
 }
 \value{
@@ -39,13 +40,8 @@ trims the H-S association matrix to include only the n associations.
 data(birds_mites)
 N = 1e+2
 n = 50
-TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE, strat = "parallel", cl = 4)
-
-# With plant_fungi dataset
-data(plant_fungi)
-N = 1e+2
-n = 15
-TPF <- trimHS_maxC(N, pf_matrix, n)
+TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE,
+                   strat = "parallel", cl = 4)
 
 
 }
