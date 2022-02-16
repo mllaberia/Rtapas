@@ -40,7 +40,7 @@ For any trimmed matrix produced with
 \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
 \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
 (S) phylogenies to conform with the trimmed matrix and runs
-\code{\link[ape:parafit]{ape::parafit()}} (Legendre et al. 2002) to
+\code{\link[ape::parafit]{ape::parafit()}} (Legendre et al. 2002) to
 calculate the ParaFitGlobal Statistic.
 }
 \examples{

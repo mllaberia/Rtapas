@@ -4,7 +4,7 @@
 #' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
 #' \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
 #' (S) phylogenies to conform with the trimmed matrix and runs
-#' \code{\link[ape:parafit]{ape::parafit()}} (Legendre et al. 2002) to
+#' \code{\link[ape::parafit]{ape::parafit()}} (Legendre et al. 2002) to
 #' calculate the ParaFitGlobal Statistic.
 #'
 #' @param ths Trimmed matrix.
@@ -61,7 +61,7 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
     DH <- ape::cophenetic.phylo(treeh)
     DP <- ape::cophenetic.phylo(trees)
     if (ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
-    PF <- ape::parafit(DH, DP, ths, nperm = 1, silent = TRUE, correction = ei.correct)
+    PF <- ape::parafit(DH, DP, ths, nperm=1, silent=TRUE, correction = ei.correct)
     PF <- PF$ParaFitGlobal
     }
     return(PF)

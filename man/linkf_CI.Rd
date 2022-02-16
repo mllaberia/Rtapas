@@ -28,7 +28,7 @@ for Geodesic distance, PACo or ParaFit.}
 \code{\link[=link_freq]{link_freq()}} for Geodesic distance, PACo or
 ParaFit.}
 
-\item{c.level}{Confidence interval level. Default is \code{95} (95 per cent).}
+\item{c.level}{Confidence interval level. Default is \code{95} (95%).}
 
 \item{barplot}{Default is \code{"TRUE"}, plots the distribution and confidence
 intervals of the frequencies.}
@@ -49,11 +49,12 @@ A dataframe with the associations (columns 1 and 2), the observed
         and 6) obtained with the sets of posterior probability trees.
 }
 \description{
-From the matrix obtained in \code{\link[=prob_statistic]{prob_statistic()}},
+From the matrix obtained in \code{\link[=prob_statics]{prob_statics()}},
 compute the confidence intervals for the frequencies of the host-symbiont
 associations using sets of posterior probability trees.
 }
 \examples{
 # ficus_aganoidae
+
 
 }

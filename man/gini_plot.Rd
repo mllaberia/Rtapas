@@ -7,36 +7,32 @@
 gini_plot(geoD, lkgd, paco, lkpaco, parafit, lkpf, ...)
 }
 \arguments{
-\item{geoD}{Matrix produced with
-\code{\link[=prob_statistic]{prob_statistic()}} for Geodesic distance.}
+\item{geoD}{Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
+for Geodesic distance.}
 
 \item{lkgd}{Vector of statistics produced with
 \code{\link[=link_freq]{link_freq()}} for Geodesic distance.}
 
-\item{paco}{Matrix produced with
-\code{\link[=prob_statistic]{prob_statistic()}} for PACo.}
+\item{paco}{Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
+for PACo.}
 
 \item{lkpaco}{Vector of statistics produced with
 \code{\link[=link_freq]{link_freq()}} for PACo.}
 
-\item{parafit}{Matrix produced with
-\code{\link[=prob_statistic]{prob_statistic()}} for ParaFit.}
+\item{parafit}{Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
+for ParaFit.}
 
 \item{lkpf}{Vector of statistics produced with
 \code{\link[=link_freq]{link_freq()}} for ParaFit.}
 
-\item{...}{Any optional argument admissible in
-\code{\link[graphics:boxplot]{boxplot()}}}
+\item{...}{}
 }
 \value{
-The Gini values obtained and their representation in a boxplot.
+
 }
 \description{
 Computes and plot the normalized Gini coefficient (G*) (Raffinetti et al.
 2015) and its confidence intervals of the residual frequency distributions
-of the  desired statistics: \code{"geoD"}, \code{"paco"} or
+of the  desired statistics: \code{"geo_D"}, \code{"paco_ss"} or
 \code{"paraF"} (either all or only one of them).
-}
-\examples{
-#data(birds_mites)
 }

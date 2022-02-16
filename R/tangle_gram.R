@@ -81,35 +81,34 @@
 #' @importFrom grDevices colorRampPalette
 #'
 #' @export
-tangle_gram <- function (treeH, treeS, HS, fqtab, colscale = "diverging",
-                         colgrad, nbreaks = 50, node.tag = TRUE, cexpt = 1,
-                         link.lwd = 1, link.lty = 1, fsize = 0.5, pts = FALSE,
-                         link.type = "straight", ftype = "i", ...) {
+tangle_gram <- function(treeH, treeS, HS, fqtab, colscale = "diverging",
+                        colgrad, nbreaks = 50, node.tag = TRUE, cexpt = 1,
+                        link.lwd = 1, link.lty = 1, fsize = 0.5, pts = FALSE,
+                        link.type = "straight", ftype = "i", ...) {
 
   colscale.choice <- c("diverging", "sequential")
   if (colscale %in% colscale.choice == FALSE)
-    stop(writeLines("Invalid colscale parameter.\r\n
-                    Correct choices are 'diverging' and 'sequential'"))
+    stop(writeLines("Invalid colscale parameter.\r
+                     Correct choices are 'diverging' and 'sequential'"))
+
   colscale.range <- function(x) {
     rescale.range <- function(x) {
       xsq <- round(x)
-      if (colscale == "sequential") {
+      if(colscale == "sequential") {
         y <- range(xsq)
-        col_lim <- (y[1]:y[2]) - y[1] + 1
-        xsq <- xsq - y[1] + 1
+        col_lim <- (y[1]:y[2])-y[1]+1
+        xsq <- xsq-y[1]+1
         new.range <- list(col_lim, xsq)
-      }
-      else {
+      } else {
         x1 <- x[which(x < 0)]
-        if (length(x[which(x < 0)]) == 0) {
-          warning("Not enough negative values for diverging scale.\n
-                  The color scale is sequential")
+        if(length(x[which(x < 0)]) == 0) {
+          warning("Not enough negative values for diverging scale.
+                   The color scale is sequential")
           y <- range(xsq)
           col_lim <- (y[1]:y[2]) - y[1] + 1
           xsq <- xsq - y[1] + 1
           new.range <- list(col_lim, xsq)
-        }
-        else {
+        } else {
           x2 <- x[which(x >= 0)]
           x1 <- round(x1)
           x2 <- round(x2)
@@ -117,24 +116,23 @@ tangle_gram <- function (treeH, treeS, HS, fqtab, colscale = "diverging",
           col_lim <- (-y:y) + y + 1
           y1 <- range(x1)
           y2 <- range(x2)
-          x1 <- x1 - y1[1] + 1
-          x2 <- x2 - y2[1] + 1
+          x1 <- x1-y1[1] + 1
+          x2 <- x2-y2[1] + 1
           new.range <- list(col_lim, x1, x2)
         }
       }
       return(new.range)
     }
-    if (colscale == "sequential" | length(x[which(x < 0)]) == 0) {
+    if(colscale == "sequential" | length(x[which(x < 0)]) == 0) {
       NR <- rescale.range(x)
       rbPal <- colorRampPalette(colgrad)
       linkcolor <- rbPal(nbreaks)[as.numeric(cut(NR[[1]], breaks = nbreaks))]
       NR <- NR[[2]]
       linkcolor <- linkcolor[NR]
-    }
-    else {
+    } else {
       NR <- rescale.range(x)
-      NR.neg <- NR[[1]][which(NR[[1]] <= max(NR[[2]]))]
-      NR.pos <- NR[[1]][-NR.neg] - max(NR[[2]])
+      NR.neg <- NR[[1]] [which (NR[[1]] <= max(NR[[2]]))]
+      NR.pos <- NR[[1]] [-NR.neg] - max(NR[[2]])
       m <- median(1:length(colgrad))
       colgrad.neg <- colgrad[which(1:length(colgrad) <= m)]
       colgrad.pos <- colgrad[which(1:length(colgrad) >= m)]
@@ -150,41 +148,40 @@ tangle_gram <- function (treeH, treeS, HS, fqtab, colscale = "diverging",
     }
     return(linkcolor)
   }
-  if (colscale == "sequential") {
+
+  if(colscale == "sequential"){
     links <- fqtab[, 4]
-  }
-  else {
-    if (ncol(fqtab) < 5 & all(fqtab[, 4] >= 0)) {
-      stop("'diverging' color scale requires residual frequencies\n
+  } else {
+    if(ncol(fqtab) < 5) {
+      stop("'diverging' color scale requires residual frequencies
            (res.fq = TRUE) in link_f() function")
-    }
-    else {
-      links <- fqtab[, ncol(fqtab)]
-    }
+    } else {links <- fqtab[, 5]}
   }
+
   LKcolor <- colscale.range(links)
   HS.lut <- which(HS == 1, arr.ind = TRUE)
   linkhs <- cbind(rownames(HS)[HS.lut[, 1]], colnames(HS)[HS.lut[, 2]])
   obj <- phytools::cophylo(treeH, treeS, linkhs)
   phytools::plot.cophylo(obj, link.col = LKcolor, link.lwd = link.lwd,
-                         link.lty = link.lty, fsize = fsize, link.type = link.type,
-                         ftype = ftype, ...)
-  Hfreq <- aggregate(links, by = list(freq = fqtab[, 1]), FUN = mean)
-  Sfreq <- aggregate(links, by = list(freq = fqtab[, 2]), FUN = mean)
-  Hfreq <- Hfreq[match(obj$trees[[1]]$tip.label, Hfreq$freq), ]
-  Sfreq <- Sfreq[match(obj$trees[[2]]$tip.label, Sfreq$freq), ]
+                         link.lty = link.lty, fsize = fsize,
+                         link.type = link.type, ftype = ftype, ...)
 
-  if (node.tag == TRUE) {
-    fit.H <- fastAnc(obj$trees[[1]], Hfreq[, 2])
-    fit.S <- fastAnc(obj$trees[[2]], Sfreq[, 2])
-    NLH <- colscale.range(fit.H)
-    NLS <- colscale.range(fit.S)
+  Hfreq <- aggregate(links, by=list(freq = fqtab[, 1]), FUN=mean)
+  Sfreq <- aggregate(links, by=list(freq = fqtab[, 2]), FUN=mean)
+
+  Hfreq <- Hfreq[match(obj$trees[[1]]$tip.label, Hfreq$freq),]
+  Sfreq <- Sfreq[match(obj$trees[[2]]$tip.label, Sfreq$freq),]
+
+  if (node.tag == TRUE){
+    fit.H <- fastAnc(obj$trees[[1]],Hfreq[, 2])
+    fit.S <- fastAnc(obj$trees[[2]],Sfreq[, 2])
+    NLH <- colscale.range (fit.H)
+    NLS <- colscale.range (fit.S)
     nodelabels.cophylo(pch = 16, col = NLH, cex = cexpt)
-    nodelabels.cophylo(pch = 16, col = NLS, cex = cexpt,
-                       which = "right")
+    nodelabels.cophylo(pch = 16, col = NLS, cex = cexpt, which = "right")
   }
-  TLH <- colscale.range(Hfreq[, 2])
-  TLS <- colscale.range(Sfreq[, 2])
+  TLH <- colscale.range (Hfreq[, 2])
+  TLS <- colscale.range (Sfreq[, 2])
   phytools::tiplabels.cophylo(pch = 16, col = TLH, cex = cexpt)
   phytools::tiplabels.cophylo(pch = 16, col = TLS, cex = cexpt, which = "right")
 }

@@ -13,7 +13,7 @@
 #'
 #' @param mTreeS Number X of posterior-probabilistic trees of symbiont.
 #'
-#' @param freqfun Options are \code{"geoD"}, \code{"paco"} or
+#' @param freqfun Options are \code{"geo_D"}, \code{"paco_ss"} or
 #'        \code{"paraF"}, depending on which confidence intervals you want to
 #'        compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
 #'        \code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}})
@@ -63,10 +63,7 @@
 #' @export
 #'
 #' @examples
-#' #birds _mites dataset
-#'
-#'
-prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geoD", fx,
+prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
                        percentile = 0.01, res.fq = TRUE, below.p = TRUE,
                        symmetric=FALSE, ei.correct="none", proc.warns = FALSE,
                        strat = "sequential", cl = 1) {
@@ -75,12 +72,12 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geoD", fx,
   if (strat %in% strat.choice == FALSE)
     stop(writeLines("Invalid strategy parameter"))
 
-  freqfun.choice <- c("geoD", "paco", "paraF")
+  freqfun.choice <- c("geo_D", "paco_ss", "paraF")
   if(freqfun %in% freqfun.choice == FALSE)
-    stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geoD',
-                    'paco' or 'paraF'"))
+    stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geo_D',
+                    'paco_ss' or 'paraF'"))
 
-  if(freqfun == "geoD") {
+  if(freqfun == "geo_D") {
     LFGD01 <- link_freq(ths, fx, HS, percentile = percentile,
                         res.fq = res.fq, below.p = below.p)
 
@@ -113,7 +110,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geoD", fx,
       for(i in 1:length(mTreeH)) {
         GD.CI <- parallel::parSapply(cores, ths, geoD, treeH=mTreeH[[i]],
                                      treeS= mTreeS[[i]])
-        LFGD01.CI <- Rtapas::link_freq(ths, GD.CI, HS, percentile = percentile,
+        LFGD01.CI <- RandomTaPas::link_freq(ths, GD.CI, HS, percentile = percentile,
                                             res.fq = res.fq, below.p = below.p)
         GD01[i,] <- LFGD01.CI[,5]
       }
@@ -122,7 +119,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geoD", fx,
     }
     return(GD01)
     } else {
-      if(freqfun == "paco") {
+      if(freqfun == "paco_ss") {
         LFPACO01 <- link_freq (ths, fx, HS, percentile = percentile,
                              res.fq = res.fq, below.p = below.p)
 

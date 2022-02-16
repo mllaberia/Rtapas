@@ -1,4 +1,4 @@
-#' Create an host-symbiont association matrix
+#' Create a host-symbiont association matrix
 #'
 #' @param hs A two-columns matrix representing associations between host
 #'        (column 1) and symbiont (column 2) species.

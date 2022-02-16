@@ -73,7 +73,7 @@ A tanglegram that maximizes the incongruence with quantitative
 Wrapper of \code{\link[phytools:plot.cophylo]{phytools::plot.cophylo()}}
 is used for mapping as heatmap the host-symbiont frequencies estimated by
 Random TaPas maximizing the incongruence on a tanglegram. It also plots the
-average frequency (or residual frequency)of occurrence of each terminal and
+average frequency (or residual frequency) of occurrence of each terminal and
 optionally, the fast maximum likelihood estimators of ancestral states
 of each node.
 }

@@ -39,7 +39,7 @@ distance between the pruned trees.
       value, an error will appear. You should make sure that all nodes
       have a value, or else remove it within the \code{"phylo"} class tree
       with \code{tree$node.label <- NULL}. For more details, see
-      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
+      \code{\link[distory::dist.multiPhylo]{distory::dist.multiPhylo()}}
 
       This function can not be used with the trimmed matrices produced
       with \code{\link[=trimHS_maxI]{trimHS_maxI()}}.
@@ -47,5 +47,10 @@ distance between the pruned trees.
 
 \examples{
 # birds_mites dataset
+data(birds_mites)
+N = 1e+2
+n = 50
+TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
+gd_bm <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
 
 }
