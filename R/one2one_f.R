@@ -2,11 +2,17 @@
 #'
 #' For a matrix of host-symbiont associations, it finds the maximum \code{n} for
 #' which one-to-one unique associations can be picked in
-#' \code{\link[=trimHS_maxC]{trimHS_maxC()}} over a number of runs.
+#' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+#' \code{\link[=trimHS_maxI]{trimHS_maxI()}} over a number of runs.
 #'
 #' @param HS Host-symbiont association matrix.
 #'
 #' @param reps Number of runs to evaluate.
+#'
+#' @param interval Vector with the minimum and maximum \code{n} that the user
+#'        wants to test. Default is \code{"NULL"}, where a minimum \code{n}
+#'        (10% of the total associations) and a maximum \code{n} (20% of the
+#'        total associations) are automatically assigned.
 #'
 #' @param strat Strategy you want to work with. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
@@ -14,18 +20,21 @@
 #'        separate \R sessions running in the background.
 #'
 #' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+#'        your computer has with
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 #'        Default is \code{cl = 1} for \code{"sequential"} strategy.
 #'
-#' @param plot Default is \code{"TRUE"}, plots the number of unique host-symbiont
-#'        associations for the number of runs.
+#' @param plot Default is \code{"TRUE"}, plots the number of unique host-
+#'        symbiont associations for the number of runs.
 #'
-#' @return A data frame with the maximum number of unique associations (\code{n})
-#'         and the range of possible \code{n} to choose.
+#'
+#' @return A data frame with the maximum number of unique associations
+#'         (\code{n}) and the range of possible \code{n} to choose.
 #'
 #' @section NOTE:
 #'          It can be used to decide the best \code{n} prior to application of
-#'          \code{\link[=trimHS_maxC]{trimHS_maxC()}}.
+#'          \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+#'          \code{\link[=trimHS_maxI]{trimHS_maxI()}}.
 #'
 #' @import stringr
 #'
@@ -34,13 +43,13 @@
 #'
 #' # With plant_fungi data
 #' data(plant_fungi)
-#' n <- one2one_f(pf_matrix, reps = N, plot = TRUE, strat = "sequential", cl = 1)
+#' n <- one2one_f(pf_matrix, reps = N, interval = c(15, 25), plot = TRUE)
 #' # you can choose any n inside the range
 #' n <- 15
 #'
 #' @export
-one2one_f <- function(HS, reps = 1e+4, strat = "sequential", cl = 1,
-                      plot = TRUE){
+one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",
+                      cl = 1, plot = TRUE){
 
   one2one <- function (HS, ...) {
     HS.LUT <- which(HS == 1, arr.ind = TRUE)
@@ -51,7 +60,7 @@ one2one_f <- function(HS, reps = 1e+4, strat = "sequential", cl = 1,
       hs.lut <- subset(df[sample(nrow(df)),],
                        !duplicated(row) & !duplicated(col))
       n <- sum(HS)
-      while (n >0) {
+      while (n > 0) {
         n <- n-1;
         if (nrow(hs.lut) == n) break
       }
@@ -60,13 +69,28 @@ one2one_f <- function(HS, reps = 1e+4, strat = "sequential", cl = 1,
     V <- min(V)
     return(V)
   }
+
+  if (sum(HS) == ncol(HS))
+  stop("The association matrix must have almost one repeat interaction between
+  host and symbionts. If all associations are one to one associations,
+  there's no need to run this function.")
+
+  if (is.null(interval) == TRUE) {
+    N <- sum(HS)
+    Nlo <- round(N * 0.1)
+    Nhi <- round(N * 0.2)
+    int <- c(Nlo, Nhi)
+  } else {
+    int <- interval
+  }
+
   one  <- one2one(HS, reps)
-  r.one <- round(one * 0.1)
-  a <- (one - r.one):(one + r.one)
+  a <- int[1]:int[2]
   if (plot == TRUE) {
     b <- rep(NA, length(a))
     for (i in 1:length(a)) {
-      THS <- trimHS_maxC(reps, HS, n=a[i], check.unique = TRUE, strat = strat, cl = cl)
+      THS <- trimHS_maxC(reps, HS, n=a[i], check.unique = TRUE,
+                         strat = strat, cl = cl)
       b[i] <- length(THS)
     }
     plot(a, b, type = "b", xlim = c(min(a), max(a)), xaxt = "n",
@@ -85,4 +109,3 @@ one2one_f <- function(HS, reps = 1e+4, strat = "sequential", cl = 1,
   }
   return(r)
 }
-

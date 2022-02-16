@@ -1,4 +1,4 @@
 library(testthat)
-library(RandomTaPas)
+library(Rtapas)
 
-test_check("RandomTaPas")
+test_check("Rtapas")

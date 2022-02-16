@@ -1,17 +1,18 @@
 
-# RandomTaPas
+# Rtapas
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of RandomTaPas is to ...
+The goal of Rtapas is to ...
 
 ## Installation
 
-You can install the released version of RandomTaPas from [CRAN](https://CRAN.R-project.org) with:
+You can install the development version of Rtapas from [GitHub](https://github.com/) with:
 
 ``` r
-install.packages("RandomTaPas")
+# install.packages("devtools")
+devtools::install_github("mllaberia/RandomTaPas")
 ```
 
 ## Example
@@ -19,7 +20,7 @@ install.packages("RandomTaPas")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(RandomTaPas)
+library(Rtapas)
 ## basic example code
 ```
 

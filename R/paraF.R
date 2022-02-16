@@ -1,5 +1,12 @@
 #' Test of host-symbiont coevolution
 #'
+#' For any trimmed matrix produced with
+#' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+#' \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
+#' (S) phylogenies to conform with the trimmed matrix and runs
+#' \code{\link[ape:parafit]{ape::parafit()}} (Legendre et al. 2002) to
+#' calculate the ParaFitGlobal Statistic.
+#'
 #' @param ths Trimmed matrix.
 #'
 #' @param treeH Host phylogeny. An object of class \code{"phylo"}.
@@ -20,17 +27,25 @@
 #'        separate \R sessions running in the background.
 #'
 #' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+#'        your computer has with
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 #'        Default is \code{cl = 1} for \code{"sequential"} strategy
 #'
-#' @return A number object with the statistic of the global host-symbiont test
-#'         for any trimmed matrix.
+#' @return A number object with the ParaFitGlobal Statistic of host-symbiont
+#'         test for any trimmed matrix.
 #'
 #' @import ape
 #' @export
 #'
 #' @examples
-#' #paraF()
+#' # birds_mites dataset
+#' data(birds_mites)
+#' N = 1e+2
+#' n = 50
+#' TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
+#' PARAF <- pacoF(TBM, birds, mites, ei.correct = "sqrt.D",
+#'                   strat = "parallel", cl = 8)
+#'
 paraF <- function (ths, treeH, treeS, ei.correct = "none",
                      strat = "sequential", cl = 1) {
   paraf <- function (ths, treeH, treeS, ...) {
@@ -46,7 +61,7 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
     DH <- ape::cophenetic.phylo(treeh)
     DP <- ape::cophenetic.phylo(trees)
     if (ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
-    PF <- ape::parafit(DH, DP, ths, nperm=1, silent=TRUE)
+    PF <- ape::parafit(DH, DP, ths, nperm = 1, silent = TRUE, correction = ei.correct)
     PF <- PF$ParaFitGlobal
     }
     return(PF)

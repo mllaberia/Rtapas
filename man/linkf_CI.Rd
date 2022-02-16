@@ -5,100 +5,55 @@
 \title{Confidence intervals for the frequency of host-symbiont association}
 \usage{
 linkf_CI(
-  ths,
-  HS,
-  mTreeH,
-  mTreeS,
   freqfun = "geo_D",
-  geoD,
-  paco,
-  percentile = 0.01,
-  res.fq = TRUE,
-  below.p = TRUE,
-  symmetric = FALSE,
-  ei.correct = "none",
-  strat = "sequential",
-  cl = 1,
-  barplot = TRUE,
+  x,
+  fx,
   c.level = 95,
+  barplot = TRUE,
   col.bar = "lightblue",
   col.ci = "darkblue",
   ...
 )
 }
 \arguments{
-\item{ths}{List of trimmed matrices produced by \code{\link[=trimHS_maxC]{trimHS_maxC()}}.}
+\item{freqfun}{Options are \code{"geo_D"}, \code{"paco_ss"} or
+\code{"paraF"}, depending on which confidence intervals you want
+to compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
+\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}}).}
 
-\item{HS}{Host-Symbiont association matrix.}
+\item{x}{Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
+for Geodesic distance, PACo or ParaFit.}
 
-\item{mTreeH}{Number X of posterior-probabilistic trees of host.}
+\item{fx}{Vector of statistics produced with
+\code{\link[=link_freq]{link_freq()}} for Geodesic distance, PACo or
+ParaFit.}
 
-\item{mTreeS}{Number X of posterior-probabilistic trees of symbiont.}
-
-\item{freqfun}{Options are \code{"geo_D"} or \code{"paco_ss"},
-depending on which confidence intervals you want to compute
-(apply to the result of \code{\link[=paco_ss]{paco_ss()}}
-or \code{\link[=geo_D]{geo_D()}}).}
-
-\item{geoD}{Vector of statistics produced with \code{\link[=geo_D]{geo_D()}}.}
-
-\item{paco}{Vector of statistics produced with \code{\link[=paco_ss]{paco_ss()}}.}
-
-\item{percentile}{Percentile to evaluate. Default is \code{0.01}. The percentile
-applied can be specified with \code{percentile.res.fq}, determines whether
-to apply a correction to the estimated frequencies by setting a null
-model in wich the occurrence of each host-symbiont association is
-evenly distributed along the whole frequency distribution.}
-
-\item{res.fq}{Determines whether a correction to avoid one-to-one associations
-being overrepresented in the percentile evaluated. If \code{TRUE} (default)
-a residual frequency value (observed - expected frequency) is computed
-for each host-symbiont association.}
-
-\item{below.p}{Determines whether frequencies are to be computed below or
-above the percentile set. Default is \code{TRUE}.}
-
-\item{symmetric}{Specifies the type of Procrustes superimposition. Default
-is \code{FALSE}, indicates that the superposition is applied
-asymmetrically (S depends on H). If \code{TRUE}, PACo is applied
-symmetrically (dependency between S and H is reciprocal).}
-
-\item{ei.correct}{Specifies how to correct potential negative eigenvalues
-from the conversion of phylogenetic distances into Principal
-Coordinates: \code{"none"} (the default) indicates that no correction
-is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
-takes the element-wise square-root of the phylogenetic distances;
-\code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes and
-Cailliez corrections, respectively.}
-
-\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
-resolves \R expressions sequentially in the current \R
-process. If \code{"parallel"} resolves \R expressions in parallel in
-separate \R sessions running in the background.}
-
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
+\item{c.level}{Confidence interval level. Default is \code{95} (95 per cent).}
 
 \item{barplot}{Default is \code{"TRUE"}, plots the distribution and confidence
 intervals of the frequencies.}
 
-\item{c.level}{ha}
+\item{col.bar}{A vector of colors for the bars or bar components.
+By default, \code{"lightblue"} is used.}
 
-\item{col.bar}{ha}
+\item{col.ci}{A vector of colors for the confidence intervals arrows.
+By default, \code{"darkblue"} is used.}
 
-\item{col.ci}{ha}
-
-\item{...}{Any graphical option admissible in \code{\link[=barplot]{barplot()}}}
+\item{...}{Any graphical option admissible in
+\code{\link[=barplot]{barplot()}}}
 }
 \value{
-A dataframe with
+A dataframe with the associations (columns 1 and 2), the observed
+        value of the frequencies for these associations (column 3), the mean,
+        the minimum and the maximum value of the frequencies (columns 4, 5
+        and 6) obtained with the sets of posterior probability trees.
 }
 \description{
-Confidence intervals for the frequency of host-symbiont association
+From the matrix obtained in \code{\link[=prob_statistic]{prob_statistic()}},
+compute the confidence intervals for the frequencies of the host-symbiont
+associations using sets of posterior probability trees.
 }
 \examples{
 # ficus_aganoidae
-
 
 }

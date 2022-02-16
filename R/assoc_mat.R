@@ -9,8 +9,7 @@
 #' @export
 #'
 #' @examples
-#' data(plant_fungi)
-#' pf_matrix <- assoc_mat(pf)
+#' #birds_mites
 #'
 assoc_mat <- function(hs) {
   host <- hs[,1]

@@ -1,4 +1,4 @@
-#' Trims the H-S association matrix maximizing the Congruence
+#' Trims the H-S association matrix maximizing the congruence
 #'
 #' For N runs, it randomly chooses \code{n} unique one-to-one associations and
 #' trims the H-S association matrix to include only the n associations.
@@ -20,7 +20,8 @@
 #'        separate \R sessions running in the background.
 #'
 #' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+#'        your computer has with
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 #'        Default is \code{cl = 1} for \code{"sequential"} strategy.
 #'
 #'
@@ -31,17 +32,11 @@
 #' data(birds_mites)
 #' N = 1e+2
 #' n = 50
-#' TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE, strat = "parallel", cl = 4)
-#'
-#' # With plant_fungi dataset
-#' data(plant_fungi)
-#' N = 1e+2
-#' n = 15
-#' TPF <- trimHS_maxC(N, pf_matrix, n)
+#' TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE,
+#'                    strat = "parallel", cl = 4)
 #'
 #'
 #' @import parallelly
-#' @import parallel
 #'
 #' @export
 #'
@@ -75,8 +70,9 @@ trimHS_maxC <- function (N, HS, n, check.unique = TRUE,
     trim.HS[sapply(trim.HS, is.null)] <- NULL
     return(trim.HS)
   } else {
-    cores <- makeClusterPSOCK(workers = cl, autoStop = TRUE)
+    cores <- makeClusterPSOCK(workers = cl)
     trim.HS <- parLapply(cores, 1:N, trim.int, HS = HS, n = n)
+    stopCluster(cores)
     if (check.unique == TRUE) trim.HS <- unique(trim.HS)
     if (length(trim.HS) < N)
       warning("No. of trimmed H-S assoc. matrices < No. of runs")

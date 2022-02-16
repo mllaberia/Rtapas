@@ -18,7 +18,6 @@ An association matrix, with hosts in rows and symbionts in columns,
 Create an host-symbiont association matrix
 }
 \examples{
-data(plant_fungi)
-pf_matrix <- assoc_mat(pf)
+#birds_mites
 
 }

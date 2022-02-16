@@ -1,12 +1,13 @@
 #' Procrustes Approach to Cophylogeny (PACo) of the host and symbiont
 #' configurations
 #'
-#' For any trimmed matrix produced with \code{\link[=trimHS_maxC]{trimHS_maxC()}},
-#' it prunes the host (H) & symbiont (S) phylogenies to conform with the trimmed
-#' matrix and runs Procrustes Approach to Cophylogeny (PACo) to produce the
-#' squared sum of residuals of the Procrustes superimposition of the host and
-#' symbiont configurations in Euclidean space.
-#'
+#' For any trimmed matrix produced with
+#' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+#' \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
+#' (S) phylogenies to conform with the trimmed matrix and runs Procrustes
+#' Approach to Cophylogeny (PACo) to produce the squared sum of residuals of
+#' the Procrustes superimposition of the host and symbiont configurations
+#' in Euclidean space.
 #'
 #' @param ths Trimmed matrix.
 #'
@@ -27,8 +28,8 @@
 #'        Coordinates: \code{"none"} (the default) indicates that no correction
 #'        is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
 #'        takes the element-wise square-root of the phylogenetic distances;
-#'        \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes and
-#'        Cailliez corrections, respectively.
+#'        \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
+#'        and Cailliez corrections, respectively.
 #'
 #' @param strat Strategy you want to work with. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
@@ -36,8 +37,9 @@
 #'        separate \R sessions running in the background.
 #'
 #' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-#'        Default is \code{cl = 1} for \code{"sequential"} strategy
+#'        your computer has with
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
+#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
 #'
 #' @return A sum of squared residuals.
 #'
@@ -47,16 +49,7 @@
 #' N = 1e+2
 #' n = 50
 #' TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-#' pac_bm <- paco_ss(TBM, treeH = birds, treeS = mites, symmetric = TRUE,
-#'                   proc.warns = FALSE, ei.correct = "sqrt.D",
-#'                   strat = "parallel", cl = 8)
-#'
-#' # plant_fungi dataset
-#' data(plant_fungi)
-#' N = 1e+2
-#' n = 15
-#' TPF <- trimHS_maxC(N, pf_matrix, n)
-#' pac_pf <- paco_ss(TPF, treeH = plant, treeS = fungi, symmetric = TRUE,
+#' PACO <- paco_ss(TBM, birds, mites, symmetric = TRUE,
 #'                   proc.warns = FALSE, ei.correct = "sqrt.D",
 #'                   strat = "parallel", cl = 8)
 #'
@@ -80,13 +73,14 @@ paco_ss <- function (ths, treeH, treeS, symmetric = FALSE,
   ths <- ths[treeh$tip.label, trees$tip.label]
   DH <- ape::cophenetic.phylo(treeh)
   DP <- ape::cophenetic.phylo(trees)
-  if (ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
+  if(ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
   D <- paco::prepare_paco_data(DH, DP, ths)
   D <- paco::add_pcoord(D, correction = ei.correct)
   if (proc.warns == FALSE) D <- vegan::procrustes(D$H_PCo, D$P_PCo,
-                                                  symmetric = symmetric) else
-                                                    D <- suppressWarnings(vegan::procrustes(D$H_PCo, D$P_PCo,
-                                                                                            symmetric = symmetric))
+                                                  symmetric = symmetric)
+  else
+    D <- suppressWarnings(vegan::procrustes(D$H_PCo, D$P_PCo,
+                                            symmetric = symmetric))
   return(D$ss)
   }
 
