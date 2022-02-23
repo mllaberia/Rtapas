@@ -93,7 +93,7 @@ link_freq <- function (x, fx, HS, percentile = 0.01,
       linkf.all$Freq <- rep(0, nrow(linkf.all))
       linkf.all[match(lf.all[,1], linkf.all[, 3]), 4] <- lf.all[, 2]
       w <- linkf.all[, 4]
-      w <- as.matrix(w*percentile)
+      w <- as.matrix(w*0.01)
       wFq <- linkf$Freq - w
       linkf$wFq <- wFq
     } else linkf <- linkf2

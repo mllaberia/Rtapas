@@ -50,8 +50,9 @@
 #'
 #' @export
 #'
+#'
 #' @examples
-#' diff.fq
+#' #diff.fq
 #'
 max_incong <- function (HS, treeH, treeS, n, N, method = "paco", symmetric = FALSE,
                         ei.correct = "none", percentile = 0.99, diff.fq = FALSE,
@@ -60,26 +61,42 @@ max_incong <- function (HS, treeH, treeS, n, N, method = "paco", symmetric = FAL
   THSi <- trimHS_maxI(N = N, n = n, HS = HS, check.unique = TRUE)
   method.choice <- c("paco", "paraF")
   if (method %in% method.choice == FALSE)
-    stop(writeLines("Invalid global-fit method. Correct choices are 'paco' or 'paraF'"))
+    stop(writeLines("Invalid global-fit method.\n
+                    Correct choices are 'paco' or 'paraF'"))
+
   if (method == "paco") {
-    PACOi <- paco_ss(THSi, treeH, treeS, symmetric = symmetric,
-                     proc.warns = FALSE, ei.correct = ei.correct, strat = strat,
-                     cl = cl)
-  } else {
-    PFi <- paraF(THSi, treeH, treeS, ei.correct = ei.correct,
-                 strat = strat, cl = cl)
+    PACO <- paco_ss(THSi, treeH, treeS, symmetric = symmetric,
+                    proc.warns = FALSE, ei.correct = ei.correct, strat = strat,
+                    cl = cl)
+    LF <- link_freq(THSi, PACO, HS, percentile = percentile,
+                    below.p = FALSE, res.fq = FALSE)
+
+    if (diff.fq == TRUE) {
+      LFi_b <- link_freq(THSi, PACO, HS, percentile = 0.01,
+                         below.p = TRUE, res.fq = FALSE)
+      LFi_u <- link_freq(THSi, PACO, HS, percentile = 0.99,
+                         below.p = FALSE, res.fq = FALSE)
+      LFr <- LFi_b[, ncol(LFi_b)] - LFi_u[, ncol(LFi_u)]
+      LFi_n <- cbind(LFi_b[, 1:ncol(LFi_b)], LFr)
+      return(LFi_n)
+    } else {return(LF)}
   }
-  LFi <- link_freq(THSi, PACOi, HS, percentile = percentile,
-                   below.p = FALSE, res.fq = FALSE)
 
-  if (diff.fq == TRUE) {
-    LFi_b <- link_freq(THSi, PACOi, HS, percentile = 0.01,
-                       below.p = TRUE, res.fq = FALSE)
-    LFi_u <- link_freq(THSi, PACOi, HS, percentile = 0.99,
-                       below.p = FALSE, res.fq = FALSE)
-    LFr <- LFi_b[, 4] - LFi_u[, 4]
-    LFi_n <- cbind(LFi_b[, 1:4], LFr)
-    return(LFi_n)
+  if (method == "paraF") {
+    PF <- paraF(THSi, treeH, treeS, ei.correct = ei.correct,
+                strat = strat, cl = cl)
+    LF <- link_freq(THSi, PF, HS, percentile = percentile,
+                    below.p = FALSE, res.fq = FALSE)
 
-  } else {return(LFi)}
+    if (diff.fq == TRUE) {
+      LFi_b <- link_freq(THSi, PF, HS, percentile = 0.01,
+                         below.p = TRUE, res.fq = FALSE)
+      LFi_u <- link_freq(THSi, PF, HS, percentile = 0.99,
+                         below.p = FALSE, res.fq = FALSE)
+      LFr <- LFi_u[, ncol(LFi_u)] - LFi_b[, ncol(LFi_b)]
+      LFi_n <- cbind(LFi_b[, 1:ncol(LFi_b)], LFr)
+      return(LFi_n)
+    } else {return(LF)}
+  }
 }
+

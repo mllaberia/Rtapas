@@ -72,6 +72,6 @@ A dataframe with host-symbiont associations in rows. The first and
 Algortihm for maximizing incongruence between two phylogenies
 }
 \examples{
-diff.fq
+#diff.fq
 
 }

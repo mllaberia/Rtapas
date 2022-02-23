@@ -1,4 +1,4 @@
-Package: RandomTaPas
+Package: Rtapas
 Title: Random Tanglegram Partitions
 Version: 0.1
 Date: 2021-09-23
@@ -8,12 +8,10 @@ Description: Alexandrian approach to the co-phylogenetic gordian knot.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
 Depends: 
     phytools,
-    parallelly,
     parallel,
-    R (>= 2.10)
+    R (>= 3.5.0)
 Imports:
     ape,
     distory,
@@ -22,7 +20,8 @@ Imports:
     stats,
     vegan,
     stringr,
-    parallel,
+    parallelly
+RoxygenNote: 7.1.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

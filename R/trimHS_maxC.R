@@ -36,7 +36,9 @@
 #'                    strat = "parallel", cl = 4)
 #'
 #'
-#' @import parallelly
+#' @importFrom parallel parLapply
+#' @importFrom parallel stopCluster
+#' @importFrom parallelly makeClusterPSOCK
 #'
 #' @export
 #'

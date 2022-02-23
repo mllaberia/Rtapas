@@ -54,8 +54,10 @@
 #'                   strat = "parallel", cl = 8)
 #'
 #'
-#' @import paco
+#' @import ape
+#' @import parallel
 #' @importFrom vegan procrustes
+#' @importFrom parallelly makeClusterPSOCK
 #'
 #' @export
 paco_ss <- function (ths, treeH, treeS, symmetric = FALSE,
@@ -67,12 +69,12 @@ paco_ss <- function (ths, treeH, treeS, symmetric = FALSE,
   if (ei.correct %in% eigen.choice == FALSE)
     stop(writeLines("Invalid eigenvalue correction parameter.\r
                Correct choices are 'none', 'lingoes', 'cailliez' or 'sqrt.D'"))
-  treeh <- ape::drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
-  trees <- ape::drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
+  treeh <- drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
+  trees <- drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
   # Reorder ths as per tree labels:
   ths <- ths[treeh$tip.label, trees$tip.label]
-  DH <- ape::cophenetic.phylo(treeh)
-  DP <- ape::cophenetic.phylo(trees)
+  DH <- cophenetic.phylo(treeh)
+  DP <- cophenetic.phylo(trees)
   if(ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
   D <- paco::prepare_paco_data(DH, DP, ths)
   D <- paco::add_pcoord(D, correction = ei.correct)
@@ -95,7 +97,7 @@ paco_ss <- function (ths, treeH, treeS, symmetric = FALSE,
   } else {
     cores <- makeClusterPSOCK(workers = cl)
     paco <- parSapply(cores, ths, pacoss, treeH, treeS, symmetric = symmetric,
-                            proc.warns = proc.warns, ei.correct = ei.correct)
+                      proc.warns = proc.warns, ei.correct = ei.correct)
     stopCluster(cores)
     return(paco)
   }

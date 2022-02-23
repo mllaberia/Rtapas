@@ -4,7 +4,7 @@
 #' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
 #' \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
 #' (S) phylogenies to conform with the trimmed matrix and runs
-#' \code{\link[ape::parafit]{ape::parafit()}} (Legendre et al. 2002) to
+#' \code{\link[ape:parafit]{ape::parafit()}} (Legendre et al. 2002) to
 #' calculate the ParaFitGlobal Statistic.
 #'
 #' @param ths Trimmed matrix.
@@ -35,6 +35,10 @@
 #'         test for any trimmed matrix.
 #'
 #' @import ape
+#' @import parallel
+#' @importFrom parallelly makeClusterPSOCK
+#'
+#'
 #' @export
 #'
 #' @examples
@@ -53,15 +57,15 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
     if (ei.correct %in% eigen.choice == FALSE)
       stop(writeLines("Invalid eigenvalue correction parameter.\r
                Correct choices are 'none', 'lingoes', 'cailliez' or 'sqrt.D'"))
-    treeh <- ape::drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
-    trees <- ape::drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
+    treeh <- drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
+    trees <- drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
     if (is.null(treeh)==TRUE | is.null(trees)==TRUE) PF <- NA else {
     # Reorder ths as per tree labels:
     ths <- ths[treeh$tip.label, trees$tip.label]
-    DH <- ape::cophenetic.phylo(treeh)
-    DP <- ape::cophenetic.phylo(trees)
+    DH <- cophenetic.phylo(treeh)
+    DP <- cophenetic.phylo(trees)
     if (ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
-    PF <- ape::parafit(DH, DP, ths, nperm=1, silent=TRUE, correction = ei.correct)
+    PF <- parafit(DH, DP, ths, nperm = 0, silent = TRUE, correction = ei.correct)
     PF <- PF$ParaFitGlobal
     }
     return(PF)
@@ -75,9 +79,17 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
     pfit <- sapply(ths, paraf, treeH, treeS, ei.correct = ei.correct)
     return(pfit)
   } else {
+    a <- length(ths)/cl
+    b <- ceiling(a)
+    ths1 <- split(ths, rep(1:cl, each = b))
+    pf <- c()
     cores <- makeClusterPSOCK(workers = cl)
-    pfit <- parSapply(cores, ths, paraf, treeH, treeS, ei.correct = ei.correct)
+    for(i in 1:length(ths1)) {
+      ths2 <- ths1[[i]]
+      pfit <- parSapply(cores, ths2, paraf, treeH, treeS, ei.correct = "none")
+      pf <- c(pf, pfit)
+    }
     stopCluster(cores)
-    return(pfit)
+    return(pf)
   }
 }

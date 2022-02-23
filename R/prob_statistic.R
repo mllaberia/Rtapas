@@ -13,13 +13,14 @@
 #'
 #' @param mTreeS Number X of posterior-probabilistic trees of symbiont.
 #'
-#' @param freqfun Options are \code{"geo_D"}, \code{"paco_ss"} or
+#' @param freqfun Options are \code{"geoD"}, \code{"paco"} or
 #'        \code{"paraF"}, depending on which confidence intervals you want to
 #'        compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
 #'        \code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}})
 #'
 #' @param fx Vector of statistics produced with
-#'         \code{\link[=link_freq]{link_freq()}} for Geodesic distance, PACo or
+#'         \code{\link[=max_cong]{max_cong()}} or
+#'         \code{\link[=max_incong]{max_incong()}}for Geodesic distance, PACo or
 #'         ParaFit.
 #'
 #' @param percentile Percentile to evaluate. Default is \code{0.01}.
@@ -63,7 +64,10 @@
 #' @export
 #'
 #' @examples
-prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
+#' #birds _mites dataset
+#'
+#'
+prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
                        percentile = 0.01, res.fq = TRUE, below.p = TRUE,
                        symmetric=FALSE, ei.correct="none", proc.warns = FALSE,
                        strat = "sequential", cl = 1) {
@@ -72,15 +76,12 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
   if (strat %in% strat.choice == FALSE)
     stop(writeLines("Invalid strategy parameter"))
 
-  freqfun.choice <- c("geo_D", "paco_ss", "paraF")
+  freqfun.choice <- c("geoD", "paco", "paraF")
   if(freqfun %in% freqfun.choice == FALSE)
-    stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geo_D',
-                    'paco_ss' or 'paraF'"))
+    stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geoD',
+                    'paco' or 'paraF'"))
 
-  if(freqfun == "geo_D") {
-    LFGD01 <- link_freq(ths, fx, HS, percentile = percentile,
-                        res.fq = res.fq, below.p = below.p)
-
+  if(freqfun == "geoD") {
     gd_apply <- function(ths, mTreeH, mTreeS, HS) {
       GD.CI <- geo_D(ths, treeH=mTreeH, treeS=mTreeS)
       LFGD01.CI <- link_freq(ths, GD.CI, HS, percentile = percentile,
@@ -89,7 +90,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
     }
     if(strat == "sequential") {
     GD01 <- t(sapply(1:length(mTreeH), function(x) gd_apply(ths, mTreeH[[x]], mTreeS[[x]], HS)))
-    colnames(GD01) <- LFGD01[,3]
+    colnames(GD01) <- fx[,3]
     return(GD01)
     } else {
       geoD <- function (ths, treeH, treeS) {
@@ -106,23 +107,20 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
         return(gd)
       }
       cores <- makeClusterPSOCK(workers = cl)
-      GD01 <- matrix(NA, length(mTreeH), nrow(LFGD01))
+      GD01 <- matrix(NA, length(mTreeH), nrow(fx))
       for(i in 1:length(mTreeH)) {
         GD.CI <- parallel::parSapply(cores, ths, geoD, treeH=mTreeH[[i]],
                                      treeS= mTreeS[[i]])
-        LFGD01.CI <- RandomTaPas::link_freq(ths, GD.CI, HS, percentile = percentile,
+        LFGD01.CI <- Rtapas::link_freq(ths, GD.CI, HS, percentile = percentile,
                                             res.fq = res.fq, below.p = below.p)
         GD01[i,] <- LFGD01.CI[,5]
       }
       stopCluster(cores)
-      colnames(GD01) <- LFGD01[,3]
+      colnames(GD01) <- fx[,3]
     }
     return(GD01)
     } else {
-      if(freqfun == "paco_ss") {
-        LFPACO01 <- link_freq (ths, fx, HS, percentile = percentile,
-                             res.fq = res.fq, below.p = below.p)
-
+      if(freqfun == "paco") {
         paco_apply <- function(ths, mTreeH, mTreeS, HS) {
           PA.CI <- paco_ss(ths, treeH=mTreeH, treeS=mTreeS,
                          symmetric = symmetric, ei.correct = ei.correct,
@@ -133,7 +131,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
         }
         if(strat == "sequential") {
           PACO01 <- t(sapply(1:length(mTreeH), function(x) paco_apply(ths, mTreeH[[x]], mTreeS[[x]], HS)))
-          colnames(PACO01) <- LFPACO01[,3]
+          colnames(PACO01) <- fx[,3]
           return(PACO01)
           } else {
             pacoss <- function (ths, treeH, treeS, ...) {
@@ -158,7 +156,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
           return(D$ss)
           }
             cores <- makeClusterPSOCK(workers = cl)
-            PACO01 <- matrix(NA, length(mTreeH), nrow(LFPACO01))
+            PACO01 <- matrix(NA, length(mTreeH), nrow(fx))
             for(i in 1:length(mTreeH)) {
               PA.CI<-parallel::parSapply(cores, ths, pacoss, treeH=mTreeH[[i]],
                                    treeS= mTreeS[[i]], symmetric = symmetric,
@@ -168,13 +166,10 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
               PACO01[i,] <- LFPA01.CI[,5]
             }
             stopCluster(cores)
-            colnames(PACO01) <- LFPACO01[,3]
+            colnames(PACO01) <- fx[,3]
             }
         return(PACO01)
-
-      } else {
-        LFPF01 <- link_freq (ths, fx, HS, percentile = percentile,
-                               res.fq = res.fq, below.p = below.p)
+        } else {
         pf_apply <- function(ths, mTreeH, mTreeS, HS) {
           PF.CI <- paraF(ths, treeH=mTreeH, treeS=mTreeS,
                            ei.correct = ei.correct,
@@ -185,7 +180,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
         }
         if(strat == "sequential") {
           PF01 <- t(sapply(1:length(mTreeH), function(x) pf_apply(ths, mTreeH[[x]], mTreeS[[x]], HS)))
-          colnames(PF01) <- LFPF01[,3]
+          colnames(PF01) <- fx[,3]
           return(PF01)
         } else {
           paraf <- function (ths, treeH, treeS, ...) {
@@ -207,7 +202,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
             return(PF)
           }
           cores <- makeClusterPSOCK(workers = cl)
-          PF01 <- matrix(NA, length(mTreeH), nrow(LFPF01))
+          PF01 <- matrix(NA, length(mTreeH), nrow(fx))
           for(i in 1:length(mTreeH)) {
             PF.CI<-parallel::parSapply(cores, ths, paraf, treeH=mTreeH[[i]],
                                        treeS= mTreeS[[i]],
@@ -217,11 +212,9 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "geo_D", fx,
             PF01[i,] <- LFPF01.CI[,5]
           }
           stopCluster(cores)
-          colnames(PF01) <- LFPF01[,3]
+          colnames(PF01) <- fx[,3]
         }
         return(PF01)
-
-
       }
     }
 }

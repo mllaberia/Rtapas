@@ -99,11 +99,11 @@ one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",
       axis(1, seq(round(min(a)), round(max(a)), by = 1),
            labels = (min(a):max(a)))
 
-    x <- c("n.max", "n.range")
+    x <- c("n.lim", "n.range")
     y <- c(one, stringr::str_c("[", 1, ";", one , "]"))
     r <- data.frame(x, y)
   } else {
-    x <- c("n.max", "n.range")
+    x <- c("n.lim", "n.range")
     y <- c(one, stringr::str_c("[", 1, ";", one , "]"))
     r <- data.frame(x, y)
   }

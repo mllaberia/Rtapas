@@ -9,7 +9,7 @@ prob_statistic(
   HS,
   mTreeH,
   mTreeS,
-  freqfun = "geo_D",
+  freqfun = "paco",
   fx,
   percentile = 0.01,
   res.fq = TRUE,
@@ -31,13 +31,14 @@ prob_statistic(
 
 \item{mTreeS}{Number X of posterior-probabilistic trees of symbiont.}
 
-\item{freqfun}{Options are \code{"geo_D"}, \code{"paco_ss"} or
+\item{freqfun}{Options are \code{"geoD"}, \code{"paco"} or
 \code{"paraF"}, depending on which confidence intervals you want to
 compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
 \code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}})}
 
 \item{fx}{Vector of statistics produced with
-\code{\link[=link_freq]{link_freq()}} for Geodesic distance, PACo or
+\code{\link[=max_cong]{max_cong()}} or
+\code{\link[=max_incong]{max_incong()}}for Geodesic distance, PACo or
 ParaFit.}
 
 \item{percentile}{Percentile to evaluate. Default is \code{0.01}.}
@@ -84,4 +85,9 @@ A matrix with the value of the statistics for each of the
 Computes the frequencies of the associations for each of the probabilistic
 trees from the statistics of \code{\link[=geo_D]{geo_D()}},
 \code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}}).
+}
+\examples{
+#birds _mites dataset
+
+
 }
