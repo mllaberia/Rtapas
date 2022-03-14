@@ -28,17 +28,13 @@
 #' @return A list of the N trimmed matrices.
 #'
 #' @examples
-#' # With birds_mites dataset
-#' data(birds_mites)
+#' data(nuc_cp)
 #' N = 1e+2
-#' n = 50
-#' TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE,
-#'                    strat = "parallel", cl = 4)
+#' n = 15
+#' TNC <- trimHS_maxC(N, np_matrix, n, check.unique = TRUE)
 #'
 #'
-#' @importFrom parallel parLapply
-#' @importFrom parallel stopCluster
-#' @importFrom parallelly makeClusterPSOCK
+#' @import parallel
 #'
 #' @export
 #'

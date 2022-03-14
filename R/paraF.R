@@ -32,9 +32,8 @@
 #'        Default is \code{cl = 1} for \code{"sequential"} strategy
 #'
 #' @return A number object with the ParaFitGlobal Statistic of host-symbiont
-#'         test for any trimmed matrix.
+#'         test for the N trimmed matrix.
 #'
-#' @import ape
 #' @import parallel
 #' @importFrom parallelly makeClusterPSOCK
 #'
@@ -42,30 +41,33 @@
 #' @export
 #'
 #' @examples
-#' # birds_mites dataset
-#' data(birds_mites)
-#' N = 1e+2
-#' n = 50
-#' TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-#' PARAF <- pacoF(TBM, birds, mites, ei.correct = "sqrt.D",
-#'                   strat = "parallel", cl = 8)
+#' data(amph_trem)
+#' N = 10
+#' n = 8
+#'
+#' TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+#' PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
+#'             strat = "parallel", cl = 8)
 #'
 paraF <- function (ths, treeH, treeS, ei.correct = "none",
                      strat = "sequential", cl = 1) {
+
   paraf <- function (ths, treeH, treeS, ...) {
+
     eigen.choice <- c("none", "lingoes", "cailliez", "sqrt.D")
     if (ei.correct %in% eigen.choice == FALSE)
       stop(writeLines("Invalid eigenvalue correction parameter.\r
                Correct choices are 'none', 'lingoes', 'cailliez' or 'sqrt.D'"))
-    treeh <- drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
-    trees <- drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
+
+    treeh <- ape::drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
+    trees <- ape::drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
     if (is.null(treeh)==TRUE | is.null(trees)==TRUE) PF <- NA else {
     # Reorder ths as per tree labels:
     ths <- ths[treeh$tip.label, trees$tip.label]
-    DH <- cophenetic.phylo(treeh)
-    DP <- cophenetic.phylo(trees)
+    DH <- ape::cophenetic.phylo(treeh)
+    DP <- ape::cophenetic.phylo(trees)
     if (ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
-    PF <- parafit(DH, DP, ths, nperm = 0, silent = TRUE, correction = ei.correct)
+    PF <- ape::parafit(DH, DP, ths, nperm = 0, silent = TRUE, correction = ei.correct)
     PF <- PF$ParaFitGlobal
     }
     return(PF)
@@ -78,18 +80,15 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
   if (strat == "sequential") {
     pfit <- sapply(ths, paraf, treeH, treeS, ei.correct = ei.correct)
     return(pfit)
-  } else {
-    a <- length(ths)/cl
-    b <- ceiling(a)
-    ths1 <- split(ths, rep(1:cl, each = b))
-    pf <- c()
-    cores <- makeClusterPSOCK(workers = cl)
-    for(i in 1:length(ths1)) {
-      ths2 <- ths1[[i]]
-      pfit <- parSapply(cores, ths2, paraf, treeH, treeS, ei.correct = "none")
-      pf <- c(pf, pfit)
-    }
-    stopCluster(cores)
-    return(pf)
+    } else {
+      ths1 <- split(ths, rep(1:cl, each = ceiling(length(ths)/cl)))
+      pf <- c()
+      cores <- parallelly::makeClusterPSOCK(workers = cl)
+      for(i in 1:length(ths1)) {
+        pf <- c(pf, parSapply(cores, ths1[[i]], paraf, treeH, treeS,
+                              ei.correct = ei.correct))
+      }
+      stopCluster(cores)
+      return(pf)
   }
 }

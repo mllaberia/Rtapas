@@ -12,26 +12,29 @@ linkf_CI(
   barplot = TRUE,
   col.bar = "lightblue",
   col.ci = "darkblue",
+  y.lim = NULL,
   ...
 )
 }
 \arguments{
-\item{freqfun}{Options are \code{"geo_D"}, \code{"paco_ss"} or
-\code{"paraF"}, depending on which confidence intervals you want
-to compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
-\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}}).}
+\item{freqfun}{Options are \code{"geoD"} (Geodesic Distances),
+\code{"paco"} (PACo) or \code{"paraF"} (ParaFit) depending on which
+confidence intervals the user wants to compute.}
 
 \item{x}{Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
-for Geodesic distance, PACo or ParaFit.}
+for\code{"geoD"} (Geodesic Distances),
+\code{"paco"} (PACo) or \code{"paraF"} (ParaFit).}
 
 \item{fx}{Vector of statistics produced with
-\code{\link[=link_freq]{link_freq()}} for Geodesic distance, PACo or
-ParaFit.}
+\code{\link[=max_cong]{max_cong()}} or
+\code{\link[=max_incong]{max_incong}} for\code{"geoD"}
+(Geodesic Distances), \code{"paco"} (PACo) or \code{"paraF"}
+(ParaFit).}
 
-\item{c.level}{Confidence interval level. Default is \code{0.01} (99 per cent).}
+\item{c.level}{Confidence interval level. Default is \code{95} (95%).}
 
-\item{barplot}{Default is \code{"TRUE"}, plots the distribution and confidence
-intervals of the frequencies.}
+\item{barplot}{Default is \code{"TRUE"}, plots the distribution and
+confidence intervals of the frequencies.}
 
 \item{col.bar}{A vector of colors for the bars or bar components.
 By default, \code{"lightblue"} is used.}
@@ -54,6 +57,23 @@ compute the confidence intervals for the frequencies of the host-symbiont
 associations using sets of posterior probability trees.
 }
 \examples{
-# ficus_aganoidae
+data(nuc_cp)
+N = 10
+n = 8
+# Maximizing incongruence
+NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+                  symmetric = FALSE, ei.correct = "sqrt.D",
+                  percentile = 0.99, diff.fq = TRUE,
+                  strat = "parallel", cl = 8)
+THSi <- trimHS_maxI(N, np_matrix, n)
+PACOc <- prob_statistic(ths = THSi, np_matrix, NUC_500tr[1:5],
+                        CP_500tr[1:5], freqfun = "paco", NPi,
+                        symmetric = FALSE, ei.correct = "sqrt.D",
+                        percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
+                        below.p = FALSE, strat = "parallel", cl = 8)
+
+LFci <- linkf_CI (freqfun = "paco", x = PACOi, fx = NPi, c.level = 95,
+                  ylab = "Observed - Expected frequency")
+
 
 }

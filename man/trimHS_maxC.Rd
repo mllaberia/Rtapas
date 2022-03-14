@@ -36,12 +36,10 @@ For N runs, it randomly chooses \code{n} unique one-to-one associations and
 trims the H-S association matrix to include only the n associations.
 }
 \examples{
-# With birds_mites dataset
-data(birds_mites)
+data(nuc_cp)
 N = 1e+2
-n = 50
-TBM <- trimHS_maxC(N, bm_matrix, n, check.unique = TRUE,
-                   strat = "parallel", cl = 4)
+n = 15
+TNC <- trimHS_maxC(N, np_matrix, n, check.unique = TRUE)
 
 
 }

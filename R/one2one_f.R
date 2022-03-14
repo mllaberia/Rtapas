@@ -28,24 +28,20 @@
 #'        symbiont associations for the number of runs.
 #'
 #'
-#' @return A data frame with the maximum number of unique associations
-#'         (\code{n}) and the range of possible \code{n} to choose.
+#' @return The maximum number of unique one-to-one associations
+#'         (\code{n}).
 #'
 #' @section NOTE:
 #'          It can be used to decide the best \code{n} prior to application of
-#'          \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-#'          \code{\link[=trimHS_maxI]{trimHS_maxI()}}.
+#'          \code{\link[=max_cong]{max_cong()}} or
+#'          \code{\link[=max_incong]{max_incong()}}.
 #'
 #' @import stringr
 #'
 #' @examples
 #' N = 1e+2
-#'
-#' # With plant_fungi data
-#' data(plant_fungi)
-#' n <- one2one_f(pf_matrix, reps = N, interval = c(15, 25), plot = TRUE)
-#' # you can choose any n inside the range
-#' n <- 15
+#' data(amph_trem)
+#' n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
 #'
 #' @export
 one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",
@@ -71,9 +67,8 @@ one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",
   }
 
   if (sum(HS) == ncol(HS))
-  stop("The association matrix must have almost one repeat interaction between
-  host and symbionts. If all associations are one to one associations,
-  there's no need to run this function.")
+  stop("If all associations are one-to-one associations, n would be the sum of
+       all associations in HS")
 
   if (is.null(interval) == TRUE) {
     N <- sum(HS)
@@ -98,14 +93,6 @@ one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",
          ylab = "Number of runs accomplished") +
       axis(1, seq(round(min(a)), round(max(a)), by = 1),
            labels = (min(a):max(a)))
-
-    x <- c("n.lim", "n.range")
-    y <- c(one, stringr::str_c("[", 1, ";", one , "]"))
-    r <- data.frame(x, y)
-  } else {
-    x <- c("n.lim", "n.range")
-    y <- c(one, stringr::str_c("[", 1, ";", one , "]"))
-    r <- data.frame(x, y)
   }
-  return(r)
+  return(one)
 }

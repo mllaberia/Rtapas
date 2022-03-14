@@ -15,7 +15,6 @@ max_cong(
   ei.correct = "none",
   percentile = 0.01,
   res.fq = TRUE,
-  diff.fq = FALSE,
   strat = "sequential",
   cl = 1
 )
@@ -31,7 +30,8 @@ max_cong(
 
 \item{N}{Number of runs.}
 
-\item{method}{cc}
+\item{method}{Specifies the desired global-fit method (GD, PACo or ParaFit).
+The default is \code{PACo}.}
 
 \item{symmetric}{Specifies the type of Procrustes superimposition. Default
 is \code{FALSE}, indicates that the superposition is applied
@@ -46,14 +46,13 @@ takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 and Cailliez corrections, respectively.}
 
-\item{percentile}{Percentile to evaluate. Default is \code{0.01}.}
+\item{percentile}{Percentile to evaluate (\emph{p}). Default is
+\code{0.01} (1%).}
 
 \item{res.fq}{Determines whether a correction to avoid one-to-one
 associations being overrepresented in the percentile evaluated.
 If \code{TRUE} (default) a residual frequency value (observed -
 expected frequency) is computed for each host-symbiont association.}
-
-\item{diff.fq}{FALSE}
 
 \item{strat}{Strategy you want to work with. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
@@ -71,13 +70,34 @@ A dataframe with host-symbiont associations in rows. The first and
         respectively. The third column designates the host-symbiont
         association by pasting the names of the terminals, and the fourth
         column displays the frequency of occurrence of each host-symbiont
-        association. If \code{res.fq = TRUE}, column 5 displays the
-        corrected frequencies as a residual
+        association in \emph{p}. If \code{res.fq = TRUE},column 5 displays
+        the corrected frequencies as a residual.
 }
 \description{
-Algortihm for maximizing congruence between two phylogenies
+Prunes the host (H) and symbiont (S) phylogenies to conform with trimmed
+matrices and computes the given global fit method, Geodesic distances (GD),
+Procrustes Approach to Cophylogeny (PACo) or ParaFit (Legendre et al. 2002)
+between the pruned trees. Then, determines the frequency of each
+host-symbiont association occurring in a given percentile of cases that
+maximize phylogenetic congruence.
 }
+\section{NOTE}{
+
+      If the \code{node.label} object in both trees contains NAs or neither
+      value, an error will appear. You should make sure that all nodes
+      have a value, or else remove it within the \code{"phylo"} class tree
+      with \code{tree$node.label <- NULL}. For more details, see
+      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
+}
+
 \examples{
-diff.fq
+data(nuc_pc)
+N = 1e+2
+n = 15
+NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+                symmetric = FALSE, ei.correct = "sqrt.D",
+                percentile = 0.01, res.fq = FALSE,
+                strat = "parallel", cl = 10)
+
 
 }

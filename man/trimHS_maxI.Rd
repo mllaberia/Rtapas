@@ -11,7 +11,7 @@ trimHS_maxI(N, HS, n, check.unique = TRUE)
 
 \item{HS}{Host-Symbiont association matrix.}
 
-\item{n}{Number of unique associations.}
+\item{n}{Number of associations.}
 
 \item{check.unique}{if \code{TRUE} discards duplicated trimmed matrices. This
 alternative is recommended if \code{n} is small, because the
@@ -22,15 +22,14 @@ increases as \code{n} decreases.}
 A list of the N trimmed matrices.
 }
 \description{
-For N runs, it randomly chooses \code{n} unique one-to-one associations and
-trims the H-S association matrix to exclude the configurations with only one
-H or one S.
+For N runs, it randomly chooses \code{n} associations and trims the H-S
+association matrix to include them, allowing both single and multiple
+associations.
 }
 \examples{
-# With birds_mites dataset
-# data(birds_mites)
+data(nuc_cp)
 N = 1e+2
-n = 50
-TBMI <- trimHS_maxI(N, bm_matrix, n, check.unique = TRUE)
+n = 15
+TNC <- trimHS_maxI(N, np_matrix, n, check.unique = TRUE)
 
 }

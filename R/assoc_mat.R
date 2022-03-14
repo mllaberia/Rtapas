@@ -9,7 +9,11 @@
 #' @export
 #'
 #' @examples
-#' #birds_mites
+#' data(nuc_cp)
+#' NTaxa <- sort(NUCtr$tip.label)
+#' CPTaxa <- sort(CPtr$tip.label)
+#'
+#' NC <- assoc_mat(data.frame(NTaxa, CPTaxa))
 #'
 assoc_mat <- function(hs) {
   host <- hs[,1]

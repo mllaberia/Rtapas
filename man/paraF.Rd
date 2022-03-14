@@ -33,7 +33,7 @@ Default is \code{cl = 1} for \code{"sequential"} strategy}
 }
 \value{
 A number object with the ParaFitGlobal Statistic of host-symbiont
-        test for any trimmed matrix.
+        test for the N trimmed matrix.
 }
 \description{
 For any trimmed matrix produced with
@@ -44,12 +44,12 @@ For any trimmed matrix produced with
 calculate the ParaFitGlobal Statistic.
 }
 \examples{
-# birds_mites dataset
-data(birds_mites)
-N = 1e+2
-n = 50
-TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-PARAF <- pacoF(TBM, birds, mites, ei.correct = "sqrt.D",
-                  strat = "parallel", cl = 8)
+data(amph_trem)
+N = 10
+n = 8
+
+TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
+            strat = "parallel", cl = 8)
 
 }

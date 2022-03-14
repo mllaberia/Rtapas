@@ -17,7 +17,8 @@
 #'
 #' @param HS Host-symbiont association matrix.
 #'
-#' @param percentile Percentile to evaluate. Default is \code{0.01}.
+#' @param percentile Percentile to evaluate (\emph{p}). Default is
+#'        \code{0.01} (1%).
 #'
 #' @param sep Character that separates host and symbiont labels.
 #'
@@ -46,15 +47,15 @@
 #'         corrected frequencies as a residual.
 #'
 #' @examples
-#' # birds_mites dataset
-#' data(birds_mites)
-#' N = 1e+2
-#' n = 50
-#' TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-#' GD <- geo_D(TBM, treeH = birds, treeS = mites, strat = "parallel", cl = 8)
-#' # link frequencies with the geodesic distance
-#' LFGD <- link_freq(TBM, GD, bm_matrix, below.p = TRUE, res.fq = FALSE)
+#' data(amph_trem)
+#' N = 10
+#' n = 8
 #'
+#' TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+#' PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
+#'                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
+#' LFPACO <- link_freq(TAM, PACO, am_matrix, percentile = 0.01,
+#'                   below.p = TRUE, res.fq = TRUE)
 #'
 #' @export
 link_freq <- function (x, fx, HS, percentile = 0.01,

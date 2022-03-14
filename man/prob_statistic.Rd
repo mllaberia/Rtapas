@@ -14,6 +14,7 @@ prob_statistic(
   percentile = 0.01,
   res.fq = TRUE,
   below.p = TRUE,
+  diff.fq = FALSE,
   symmetric = FALSE,
   ei.correct = "none",
   proc.warns = FALSE,
@@ -23,7 +24,8 @@ prob_statistic(
 }
 \arguments{
 \item{ths}{List of trimmed matrices produced by
-\code{\link[=trimHS_maxC]{trimHS_maxC()}}.}
+\code{\link[=trimHS_maxC]{trimHS_maxC()}} or
+\code{\link[=trimHS_maxI]{trimHS_maxI()}}.}
 
 \item{HS}{Host-Symbiont association matrix.}
 
@@ -31,17 +33,17 @@ prob_statistic(
 
 \item{mTreeS}{Number X of posterior-probabilistic trees of symbiont.}
 
-\item{freqfun}{Options are \code{"geoD"}, \code{"paco"} or
-\code{"paraF"}, depending on which confidence intervals you want to
-compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
-\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}})}
+\item{freqfun}{Options are \code{"geoD"} (Geodesic Distances),
+\code{"paco"} (PACo) or \code{"paraF"} (ParaFit) depending on which
+confidence intervals the user wants to compute.}
 
 \item{fx}{Vector of statistics produced with
 \code{\link[=max_cong]{max_cong()}} or
-\code{\link[=max_incong]{max_incong()}}for Geodesic distance, PACo or
+\code{\link[=max_incong]{max_incong()}} for GD, PACo or
 ParaFit.}
 
-\item{percentile}{Percentile to evaluate. Default is \code{0.01}.}
+\item{percentile}{Percentile to evaluate (\emph{p}). Default is
+\code{0.01} (1%) for \code{\link[=max_cong]{max_cong()}}.}
 
 \item{res.fq}{Determines whether a correction to avoid one-to-one
 associations being overrepresented in the percentile evaluated.
@@ -49,20 +51,19 @@ If \code{TRUE} (default) a residual frequency value (observed -
 expected frequency) is computed for each host-symbiont association.}
 
 \item{below.p}{Determines whether frequencies are to be computed below or
-above the percentile set. Default is \code{TRUE}.}
+above the percentile set. Default is \code{TRUE} for
+\code{\link[=max_cong]{max_cong()}}. Set it to \code{FALSE} for
+\code{\link[=max_incong]{max_incong()}}}
+
+\item{diff.fq}{Determines whether a correction to detect those associations
+that present higher (in)congruence in the system.
+If \code{TRUE} a corrected frequency value (observed(\emph{p}) -
+observed\emph{(p-1)}) is computed for each host-symbiont association.}
 
 \item{symmetric}{Specifies the type of Procrustes superimposition. Default
 is \code{FALSE}, indicates that the superposition is applied
 asymmetrically (S depends on H). If \code{TRUE}, PACo is applied
 symmetrically (dependency between S and H is reciprocal).}
-
-\item{ei.correct}{Specifies how to correct potential negative eigenvalues
-from the conversion of phylogenetic distances into Principal
-Coordinates: \code{"none"} (the default) indicates that no correction
-is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
-takes the element-wise square-root of the phylogenetic distances;
-\code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
-and Cailliez corrections, respectively.}
 
 \item{proc.warns}{Switches on/off trivial warnings returned when treeH and
 treeS differ in size (number of tips). Default is \code{FALSE}.}
@@ -76,6 +77,14 @@ separate \R sessions running in the background.}
 your computer has with
 \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
 Default is \code{cl = 1} for \code{"sequential"} strategy.}
+
+\item{ei.correctSpecifies}{how to correct potential negative eigenvalues
+from the conversion of phylogenetic distances into Principal
+Coordinates: \code{"none"} (the default) indicates that no correction
+is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+takes the element-wise square-root of the phylogenetic distances;
+\code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
+and Cailliez corrections, respectively.}
 }
 \value{
 A matrix with the value of the statistics for each of the
@@ -83,11 +92,36 @@ A matrix with the value of the statistics for each of the
 }
 \description{
 Computes the frequencies of the associations for each of the probabilistic
-trees from the statistics of \code{\link[=geo_D]{geo_D()}},
-\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}}).
+trees from the statistics of \code{GD} (Geodesic Distances), \code{PACo}
+(PACo) or \code{ParaFit}(ParaFit).
 }
 \examples{
-#birds _mites dataset
+data(nuc_pc)
+N = 1e+2 #for the example, we recommend 1e+4 value
+n = 15
+# Maximizing congruence (not run)
+# NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#                 symmetric = FALSE, ei.correct = "sqrt.D",
+#                 percentile = 0.01, res.fq = FALSE,
+#                 strat = "parallel", cl = 8)
+# THSc <- trimHS_maxC(N, np_matrix, n)
+# PACOc <- prob_statistic(ths = THSc, np_matrix, NUC_500tr[1:10],
+#                         CP_500tr[1:10], freqfun = "paco", NPc,
+#                         symmetric = FALSE, ei.correct = "sqrt.D",
+#                         percentile = 0.01, res.fq = FALSE,  below.p = TRUE,
+#                         strat = "parallel", cl = 8)
+
+#Maximizing incongruence
+NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+                  symmetric = FALSE, ei.correct = "sqrt.D",
+                  percentile = 0.99, diff.fq = TRUE,
+                  strat = "parallel", cl = 8)
+THSi <- trimHS_maxI(N, np_matrix, n)
+PACOc <- prob_statistic(ths = THSi, np_matrix, NUC_500tr[1:10],
+                        CP_500tr[1:10], freqfun = "paco", NPi,
+                        symmetric = FALSE, ei.correct = "sqrt.D",
+                        percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
+                        below.p = TRUE, strat = "parallel", cl = 8)
 
 
 }

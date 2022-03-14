@@ -3,8 +3,9 @@
 #' Wrapper of \code{\link[phytools:plot.cophylo]{phytools::plot.cophylo()}}
 #' is used for mapping as heatmap the host-symbiont frequencies estimated by
 #' Random TaPas on a tanglegram. It also plots the average frequency
-#' (or residual frequency) of occurrence of each terminal and optionally, the
-#' fast maximum likelihood estimators of ancestral states of each node.
+#' (or residual/corrected frequency) of occurrence of each terminal
+#' and optionally, the fast maximum likelihood estimators of ancestral states
+#' of each node.
 #'
 #' @param treeH Host phylogeny. An object of class \code{"phylo"}.
 #'
@@ -12,7 +13,8 @@
 #'
 #' @param HS Host-symbiont association matrix.
 #'
-#' @param fqtab Dataframe produced with \code{\link[=link_freq]{link_freq()}}.
+#' @param fqtab Dataframe produced with \code{\link[=max_cong]{max_cong()}} or
+#'        \code{\link[=max_incong]{max_incong()}}.
 #'
 #' @param colscale Choose between \code{"diverging"}, color reflects distance
 #'        from 0 (centered at 0, recommended if \code{"res.fq = TRUE"})
@@ -25,7 +27,7 @@
 #' @param nbreaks Number of discrete values along \code{"colgrad"}.
 #'
 #' @param node.tag Specifies whether maximum likelihood estimators of ancestral
-#'        states are to be computed. Default is \code{TRUE}.
+#'        states are to be computed. Default is \code{TRUE}. NOTE:
 #'
 #' @param cexpt Size of color points at terminals and nodes.
 #'
@@ -57,23 +59,27 @@
 #'
 #' @return A tanglegram with quantitative information displayed as heatmap.
 #'
+#' @section NOTE:
+#'          In order to calculate the ancestral states in the phylogenies, all
+#'          the nodes (node.label) of the trees must have a value (NA or
+#'          neither values are not allowed). In addition, the trees must be
+#'          time-calibrated and preferably rooted. If one of these elements
+#'          is missing, an error will be generated and the heatmap will
+#'          be displayed as black.
+#'
 #'
 #' @examples
-#' data(birds_mites)
+#' data(amph_trem)
 #' N = 10
-#' n = 50
-#' TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-#' PACO <- paco_ss(TBM, birds, mites, symmetric = TRUE,
-#'                   proc.warns = FALSE, ei.correct = "sqrt.D",
-#'                   strat = "parallel", cl = 8)
-#' LFPACO <- link_freq(TBM, PACO, bm_matrix, percentile = 0.01, sep = "-",
-#'                   below.p = TRUE, res.fq = TRUE)
+#' n = 8
+#' ATc <- max_cong(am_matrix, amphipod, trematode, n, N, method = "paco",
+#'                 symmetric = TRUE, ei.correct = "sqrt.D",
+#'                 percentile = 0.01, res.fq = TRUE,
+#'                 strat = "parallel", cl = 10)
 #'
-#' col.scale = c("darkred","gray90", "darkblue")
-#' tangle_gram(birds, mites, bm_matrix, LFPACO, colscale= "diverging",
-#'             colgrad = col.scale, nbreaks = 50, node.tag = FALSE,
-#'             link.lty = 1, fsize = 0.25, pts = FALSE,
-#'             link.type = "straight", cexpt = 1)
+#' col = c("darkred","gray90", "darkblue")
+#' tangle_gram(amphipod, trematode, am_matrix, ATc, colscale= "diverging",
+#'             colgrad = col, nbreaks = 50, node.tag = TRUE)
 #'
 #'
 #' @import stats
@@ -156,7 +162,8 @@ tangle_gram <- function (treeH, treeS, HS, fqtab, colscale = "diverging",
   else {
     if (ncol(fqtab) < 5 & all(fqtab[, 4] >= 0)) {
       stop("'diverging' color scale requires residual frequencies\n
-           (res.fq = TRUE) in link_f() function")
+           (res.fq = TRUE or diff.fq = TURE) in max_cong() or \n
+           max_incong() function, respectively")
     }
     else {
       links <- fqtab[, ncol(fqtab)]

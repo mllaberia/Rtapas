@@ -62,14 +62,13 @@ the Procrustes superimposition of the host and symbiont configurations
 in Euclidean space.
 }
 \examples{
-# birds_mites dataset
-data(birds_mites)
-N = 1e+2
-n = 50
-TBM <- trimHS_maxC(N, bm_matrix, n, strat = "parallel", cl = 4)
-PACO <- paco_ss(TBM, birds, mites, symmetric = TRUE,
-                  proc.warns = FALSE, ei.correct = "sqrt.D",
-                  strat = "parallel", cl = 8)
+data(amph_trem)
+N = 10
+n = 8
+
+TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
+                ei.correct = "sqrt.D", strat = "parallel", cl = 8)
 
 
 }

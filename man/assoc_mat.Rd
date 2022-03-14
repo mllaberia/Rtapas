@@ -18,6 +18,10 @@ An association matrix, with hosts in rows and symbionts in columns,
 Create an host-symbiont association matrix
 }
 \examples{
-#birds_mites
+data(nuc_cp)
+NTaxa <- sort(NUCtr$tip.label)
+CPTaxa <- sort(CPtr$tip.label)
+
+NC <- assoc_mat(data.frame(NTaxa, CPTaxa))
 
 }

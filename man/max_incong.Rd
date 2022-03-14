@@ -30,7 +30,8 @@ max_incong(
 
 \item{N}{Number of runs.}
 
-\item{method}{cc}
+\item{method}{Specifies the desired global-fit method (GD, PACo or ParaFit).
+The default is \code{PACo}.}
 
 \item{symmetric}{Specifies the type of Procrustes superimposition. Default
 is \code{FALSE}, indicates that the superposition is applied
@@ -45,9 +46,13 @@ takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 and Cailliez corrections, respectively.}
 
-\item{percentile}{Percentile to evaluate. Default is \code{0.01}.}
+\item{percentile}{Percentile to evaluate (\emph{p}). Default is
+\code{0.99} (99%).}
 
-\item{diff.fq}{FALSE}
+\item{diff.fq}{Determines whether a correction to detect those associations
+that present higher incongruence in the system.
+If \code{TRUE} a corrected frequency value (observed in p -
+observed in (p-1)) is computed for each host-symbiont association.}
 
 \item{strat}{Strategy you want to work with. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
@@ -65,13 +70,34 @@ A dataframe with host-symbiont associations in rows. The first and
         respectively. The third column designates the host-symbiont
         association by pasting the names of the terminals, and the fourth
         column displays the frequency of occurrence of each host-symbiont
-        association. If \code{res.fq = TRUE}, column 5 displays the
-        corrected frequencies as a residual
+        association in \emph{p}. If \code{diff.fq = TRUE}, column 5 displays
+        the corrected frequencies.
 }
 \description{
 Algortihm for maximizing incongruence between two phylogenies
 }
+\section{NOTE}{
+
+      If the \code{node.label} object in both trees contains NAs or neither
+      value, an error will appear. You should make sure that all nodes
+      have a value, or else remove it within the \code{"phylo"} class tree
+      with \code{tree$node.label <- NULL}. For more details, see
+      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
+
+      \code{GD} method can not be used with the trimmed matrices produced
+      with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
+      \code{\link[=max_incong]{max_incong()}} for those datasets with
+      multiple associations.
+}
+
 \examples{
-#diff.fq
+data(nuc_pc)
+N = 1e+2
+n = 15
+NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+                  symmetric = FALSE, ei.correct = "sqrt.D",
+                  percentile = 0.99, diff.fq = TRUE,
+                  strat = "parallel", cl = 10)
+
 
 }

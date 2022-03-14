@@ -4,26 +4,44 @@
 \alias{gini_plot}
 \title{Plot the confidence intervals of Gini coefficient}
 \usage{
-gini_plot(geoD, lkgd, paco, lkpaco, parafit, lkpf, ...)
+gini_plot(
+  LF_1,
+  M01,
+  LF_2,
+  M02,
+  LF_3,
+  M03,
+  ylab = "Normalized Gini coefficient",
+  ...
+)
 }
 \arguments{
-\item{geoD}{Matrix produced with
-\code{\link[=prob_statistic]{prob_statistic()}} for Geodesic distance.}
+\item{LF_1}{Vector of statistics produced with
+\code{\link[=max_cong]{max_cong()}} or
+\code{\link[=max_incong]{max_incong()}} for \code{"geoD"},
+\code{"paco"} or \code{"paraF"}.}
 
-\item{lkgd}{Vector of statistics produced with
-\code{\link[=link_freq]{link_freq()}} for Geodesic distance.}
+\item{M01}{Matrix produced with
+\code{\link[=prob_statistic]{prob_statistic()}} for \code{"geoD"},
+\code{"paco"} or \code{"paraF"} using \code{LF_1}.}
 
-\item{paco}{Matrix produced with
-\code{\link[=prob_statistic]{prob_statistic()}} for PACo.}
+\item{LF_2}{Vector of statistics produced with
+\code{\link[=max_cong]{max_cong()}} or
+\code{\link[=max_incong]{max_incong()}} for \code{"geoD"},
+\code{"paco"} or \code{"paraF"}.}
 
-\item{lkpaco}{Vector of statistics produced with
-\code{\link[=link_freq]{link_freq()}} for PACo.}
+\item{M02}{Matrix produced with
+\code{\link[=prob_statistic]{prob_statistic()}} for \code{"geoD"},
+\code{"paco"} or \code{"paraF"} using \code{LF_2}.}
 
-\item{parafit}{Matrix produced with
-\code{\link[=prob_statistic]{prob_statistic()}} for ParaFit.}
+\item{LF_3}{Vector of statistics produced with
+\code{\link[=max_cong]{max_cong()}} or
+\code{\link[=max_incong]{max_incong()}} for \code{"geoD"},
+\code{"paco"} or \code{"paraF"}.}
 
-\item{lkpf}{Vector of statistics produced with
-\code{\link[=link_freq]{link_freq()}} for ParaFit.}
+\item{M03}{Matrix produced with
+\code{\link[=prob_statistic]{prob_statistic()}} for \code{"geoD"},
+\code{"paco"} or \code{"paraF"} using \code{LF_3}.}
 
 \item{...}{Any optional argument admissible in
 \code{\link[graphics:boxplot]{boxplot()}}}
@@ -34,9 +52,23 @@ The Gini values obtained and their representation in a boxplot.
 \description{
 Computes and plot the normalized Gini coefficient (G*) (Raffinetti et al.
 2015) and its confidence intervals of the residual frequency distributions
-of the  desired statistics: \code{"geoD"}, \code{"paco"} or
-\code{"paraF"} (either all or only one of them).
+of the  desired statistics: \code{"geoD"} (Geodesic Distances),
+\code{"paco"} (PACo) or \code{"paraF"} (M03)
+(either all or only one of them).
 }
 \examples{
-#data(birds_mites)
+data(nuc_cp)
+N = 10
+n = 8
+# Maximizing incongruence
+NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+                  symmetric = FALSE, ei.correct = "sqrt.D",
+                  percentile = 0.99, diff.fq = TRUE,
+                  strat = "parallel", cl = 8)
+THSi <- trimHS_maxI(N, np_matrix, n)
+PACOc <- prob_statistic(ths = THSi, np_matrix, NUC_500tr[1:5],
+                        CP_500tr[1:5], freqfun = "paco", NPi,
+                        symmetric = FALSE, ei.correct = "sqrt.D",
+                        percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
+                        below.p = TRUE, strat = "parallel", cl = 8)
 }

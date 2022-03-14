@@ -37,8 +37,8 @@ Default is \code{cl = 1} for \code{"sequential"} strategy.}
 symbiont associations for the number of runs.}
 }
 \value{
-A data frame with the maximum number of unique associations
-        (\code{n}) and the range of possible \code{n} to choose.
+The maximum number of unique one-to-one associations
+        (\code{n}).
 }
 \description{
 For a matrix of host-symbiont associations, it finds the maximum \code{n} for
@@ -49,17 +49,13 @@ which one-to-one unique associations can be picked in
 \section{NOTE}{
 
          It can be used to decide the best \code{n} prior to application of
-         \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-         \code{\link[=trimHS_maxI]{trimHS_maxI()}}.
+         \code{\link[=max_cong]{max_cong()}} or
+         \code{\link[=max_incong]{max_incong()}}.
 }
 
 \examples{
 N = 1e+2
-
-# With plant_fungi data
-data(plant_fungi)
-n <- one2one_f(pf_matrix, reps = N, interval = c(15, 25), plot = TRUE)
-# you can choose any n inside the range
-n <- 15
+data(amph_trem)
+n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
 
 }

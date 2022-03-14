@@ -4,22 +4,24 @@
 #' compute the confidence intervals for the frequencies of the host-symbiont
 #' associations using sets of posterior probability trees.
 #'
-#' @param freqfun Options are \code{"geo_D"}, \code{"paco_ss"} or
-#'        \code{"paraF"}, depending on which confidence intervals you want
-#'        to compute (apply to the result of \code{\link[=geo_D]{geo_D()}},
-#'        \code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}}).
+#' @param freqfun Options are \code{"geoD"} (Geodesic Distances),
+#'        \code{"paco"} (PACo) or \code{"paraF"} (ParaFit) depending on which
+#'        confidence intervals the user wants to compute.
 #'
 #' @param x Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
-#'        for Geodesic distance, PACo or ParaFit.
+#'        for\code{"geoD"} (Geodesic Distances),
+#'        \code{"paco"} (PACo) or \code{"paraF"} (ParaFit).
 #'
 #' @param fx Vector of statistics produced with
-#'        \code{\link[=link_freq]{link_freq()}} for Geodesic distance, PACo or
-#'        ParaFit.
+#'        \code{\link[=max_cong]{max_cong()}} or
+#'        \code{\link[=max_incong]{max_incong}} for\code{"geoD"}
+#'        (Geodesic Distances), \code{"paco"} (PACo) or \code{"paraF"}
+#'        (ParaFit).
 #'
-#' @param c.level Confidence interval level. Default is \code{0.01} (99 per cent).
+#' @param c.level Confidence interval level. Default is \code{95} (95%).
 #'
-#' @param barplot Default is \code{"TRUE"}, plots the distribution and confidence
-#'        intervals of the frequencies.
+#' @param barplot Default is \code{"TRUE"}, plots the distribution and
+#'        confidence intervals of the frequencies.
 #'
 #' @param col.bar A vector of colors for the bars or bar components.
 #'        By default, \code{"lightblue"} is used.
@@ -40,10 +42,29 @@
 #' @export
 #'
 #' @examples
-#' # ficus_aganoidae
+#' data(nuc_cp)
+#' N = 10
+#' n = 8
+#' # Maximizing incongruence
+#' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#'                   symmetric = FALSE, ei.correct = "sqrt.D",
+#'                   percentile = 0.99, diff.fq = TRUE,
+#'                   strat = "parallel", cl = 8)
+#' THSi <- trimHS_maxI(N, np_matrix, n)
+#' PACOc <- prob_statistic(ths = THSi, np_matrix, NUC_500tr[1:5],
+#'                         CP_500tr[1:5], freqfun = "paco", NPi,
+#'                         symmetric = FALSE, ei.correct = "sqrt.D",
+#'                         percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
+#'                         below.p = FALSE, strat = "parallel", cl = 8)
+#'
+#' LFci <- linkf_CI (freqfun = "paco", x = PACOi, fx = NPi, c.level = 95,
+#'                   ylab = "Observed - Expected frequency")
+#'
 #'
 linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
-                      col.bar = "lightblue", col.ci = "darkblue", ...) {
+                      col.bar = "lightblue", col.ci = "darkblue", y.lim = NULL,
+                      ...) {
+
   freqfun.choice <- c("geoD", "paco", "paraF")
   if (freqfun %in% freqfun.choice == FALSE)
     stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geoD',\n
@@ -57,12 +78,11 @@ linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
     GD.AV <- apply(GD01, 2, mean)
     df <- data.frame(LFGD01[, 1], LFGD01[, 2], LFGD01[, ncol(LFGD01)],
                      GD.LO, GD.HI, GD.AV)
-    colnames(df) <- c("Taxa1", "Taxa2", "GD.wFq",
+    colnames(df) <- c("Taxa1", "Taxa2", "GD.Fq",
                       "GD.LO", "GD.HI", "GD.AV")
     if (barplot == TRUE) {
       link.fq <- barplot(GD.AV, xaxt = "n", horiz = FALSE,
                          cex.names = 0.6, las = 2, cex.axis = 0.8,
-                         ylab = "Observed - Expected frequency",
                          ylim = c(min(GD.LO), max(GD.HI)), col = col.bar,
                          ...)
       suppressWarnings(arrows(link.fq, GD.HI, link.fq,
@@ -83,13 +103,18 @@ linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
     PACO.HI <- apply(PACO01, 2, quantile, 1 - (a/2))
     PACO.AV <- apply(PACO01, 2, mean)
     df <- data.frame(LFPACO01[, 1], LFPACO01[, 2], LFPACO01[, ncol(LFPACO01)], PACO.LO, PACO.HI, PACO.AV)
-    colnames(df) <- c("Taxa1", "Taxa2", "PACO.wFq",
+    colnames(df) <- c("Taxa1", "Taxa2", "PACO.Fq",
                       "PACO.LO", "PACO.HI", "PACO.AV")
+    if (is.null(y.lim)){
+      y.lim = c(min(PACO.LO), max(PACO.HI))
+    } else {
+      y <- y.lim
+    }
+
     if (barplot == TRUE) {
       link.fq <- barplot(PACO.AV, xaxt = "n", horiz = FALSE,
                          cex.names = 0.6, las = 2, cex.axis = 0.8,
-                         ylab = "Observed - Expected frequency",
-                         ylim = c(min(PACO.LO), max(PACO.HI)), col = col.bar,
+                         ylim = y.lim, col = col.bar,
                          ...)
       suppressWarnings(arrows(link.fq, PACO.HI, link.fq,
                               PACO.LO, length = 0, angle = 90, code = 3, col = col.ci))
@@ -110,12 +135,11 @@ linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
     PF.AV <- apply(PF01, 2, mean)
     df <- data.frame(LFPF01[, 1], LFPF01[, 2], LFPF01[, ncol(LFPF01)],
                      PF.LO, PF.HI, PF.AV)
-    colnames(df) <- c("Taxa1", "Taxa2", "PF.wFq",
+    colnames(df) <- c("Taxa1", "Taxa2", "PF.Fq",
                       "PF.LO", "PF.HI", "PF.AV")
     if (barplot == TRUE) {
       link.fq <- barplot(PF.AV, xaxt = "n", horiz = FALSE,
                          cex.names = 0.6, las = 2, cex.axis = 0.8,
-                         ylab = "Observed - Expected frequency",
                          ylim = c(min(PF.LO), max(PF.HI)), col = col.bar,
                          ...)
       suppressWarnings(arrows(link.fq, PF.HI, link.fq,

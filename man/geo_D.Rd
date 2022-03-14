@@ -42,10 +42,18 @@ distance between the pruned trees.
       \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
 
       This function can not be used with the trimmed matrices produced
-      with \code{\link[=trimHS_maxI]{trimHS_maxI()}}.
+      with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
+      \code{\link[=max_incong]{max_incong()}} for those datasets with
+      multiple associations.
 }
 
 \examples{
-# birds_mites dataset
+data(amph_trem)
+N = 10
+n = 8
+
+TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+GD <- geo_D(TAM, amphipod, trematode, strat = "sequential", cl = 1)
+
 
 }
