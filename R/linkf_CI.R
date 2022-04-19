@@ -1,12 +1,13 @@
 #' Confidence intervals for the frequency of host-symbiont association
 #'
 #' From the matrix obtained in \code{\link[=prob_statistic]{prob_statistic()}},
-#' compute the confidence intervals for the frequencies of the host-symbiont
-#' associations using sets of posterior probability trees.
+#' compute the confidence intervals for the frequencies (or residual/corrected
+#' frequencies) of the host-symbiont associations using a set of pairs of
+#' posterior probability trees of host and symbiont.
 #'
-#' @param freqfun Options are \code{"geoD"} (Geodesic Distances),
-#'        \code{"paco"} (PACo) or \code{"paraF"} (ParaFit) depending on which
-#'        confidence intervals the user wants to compute.
+#' @param freqfun Global-fit method. Options are \code{"geoD"}
+#'        (Geodesic Distances), \code{"paco"} (PACo) or \code{"paraF"}
+#'        (ParaFit). It should be the same method used to obtain \code{"fx"}.
 #'
 #' @param x Matrix produced with \code{\link[=prob_statistic]{prob_statistic()}}
 #'        for\code{"geoD"} (Geodesic Distances),
@@ -18,7 +19,7 @@
 #'        (Geodesic Distances), \code{"paco"} (PACo) or \code{"paraF"}
 #'        (ParaFit).
 #'
-#' @param c.level Confidence interval level. Default is \code{95} (95%).
+#' @param c.level Confidence interval level. Default is \code{95} (95\%).
 #'
 #' @param barplot Default is \code{"TRUE"}, plots the distribution and
 #'        confidence intervals of the frequencies.
@@ -32,10 +33,13 @@
 #' @param ... Any graphical option admissible in
 #'        \code{\link[=barplot]{barplot()}}
 #'
-#' @return A dataframe with the associations (columns 1 and 2), the observed
-#'         value of the frequencies for these associations (column 3), the mean,
-#'         the minimum and the maximum value of the frequencies (columns 4, 5
-#'         and 6) obtained with the sets of posterior probability trees.
+#' @param y.lim Limits for the y axis.
+#'
+#' @return A dataframe with associations information (columns 1 and 2), the
+#'         observed value of the frequencies for these associations (column 3),
+#'         the mean, the minimum and the maximum value of the frequencies
+#'         (columns 4, 5 and 6) obtained with the sets of posterior
+#'         probability trees.
 #'
 #' @importFrom graphics arrows axis
 #'
@@ -50,18 +54,19 @@
 #'                   symmetric = FALSE, ei.correct = "sqrt.D",
 #'                   percentile = 0.99, diff.fq = TRUE,
 #'                   strat = "parallel", cl = 8)
-#' THSi <- trimHS_maxI(N, np_matrix, n)
-#' PACOc <- prob_statistic(ths = THSi, np_matrix, NUC_500tr[1:5],
-#'                         CP_500tr[1:5], freqfun = "paco", NPi,
-#'                         symmetric = FALSE, ei.correct = "sqrt.D",
-#'                         percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
-#'                         below.p = FALSE, strat = "parallel", cl = 8)
+#' # Loaded directly from dataset
+#' # THSi <- trimHS_maxI(N, np_matrix, n)
+#' # pp_treesPACo_incong <- prob_statistic(ths = THSi, np_matrix,
+#' #                        NUC_500tr[1:5], CP_500tr[1:5], freqfun = "paco",
+#' #                        NPi, symmetric = FALSE, ei.correct = "sqrt.D",
+#' #                        percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
+#' #                        below.p = FALSE, strat = "parallel", cl = 8)
 #'
-#' LFci <- linkf_CI (freqfun = "paco", x = PACOi, fx = NPi, c.level = 95,
-#'                   ylab = "Observed - Expected frequency")
+#' LFci <- linkf_CI (freqfun = "paco", x = pp_treesPACo_incong, fx = NPi,
+#'                   c.level = 95, ylab = "Observed - Expected frequency")
 #'
 #'
-linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
+linkf_CI <- function (freqfun = "paco", x, fx, c.level = 95, barplot = TRUE,
                       col.bar = "lightblue", col.ci = "darkblue", y.lim = NULL,
                       ...) {
 
@@ -83,7 +88,7 @@ linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
     if (barplot == TRUE) {
       link.fq <- barplot(GD.AV, xaxt = "n", horiz = FALSE,
                          cex.names = 0.6, las = 2, cex.axis = 0.8,
-                         ylim = c(min(GD.LO), max(GD.HI)), col = col.bar,
+                         ylim = y.lim, col = col.bar,
                          ...)
       suppressWarnings(arrows(link.fq, GD.HI, link.fq,
                               GD.LO, length = 0, angle = 90, code = 3, col = col.ci))
@@ -140,7 +145,7 @@ linkf_CI <- function (freqfun = "geo_D", x, fx, c.level = 95, barplot = TRUE,
     if (barplot == TRUE) {
       link.fq <- barplot(PF.AV, xaxt = "n", horiz = FALSE,
                          cex.names = 0.6, las = 2, cex.axis = 0.8,
-                         ylim = c(min(PF.LO), max(PF.HI)), col = col.bar,
+                         ylim = y.lim, col = col.bar,
                          ...)
       suppressWarnings(arrows(link.fq, PF.HI, link.fq,
                               PF.LO, length = 0, angle = 90, code = 3, col = col.ci))

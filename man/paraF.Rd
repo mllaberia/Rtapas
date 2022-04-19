@@ -16,20 +16,21 @@ paraF(ths, treeH, treeS, ei.correct = "none", strat = "sequential", cl = 1)
 \item{ei.correct}{Specifies how to correct potential negative eigenvalues
 from the conversion of phylogenetic distances into Principal
 Coordinates: \code{"none"} (the default) indicates that no correction
-is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+is applied, particularly if H and S are ultrametric; \code{"sqrt.D"}
 takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes and
 Cailliez corrections, respectively.}
 
-\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Flag indicating whether execution is to be  \code{"sequential"}
+or \code{"parallel"}. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
 process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with
-\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy}
+\item{cl}{Number of cluster to be used for parallel computing.
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+returns the number of clusters available.
+Default is \code{cl = 1} resulting in \code{"sequential"} execution.}
 }
 \value{
 A number object with the ParaFitGlobal Statistic of host-symbiont
@@ -38,8 +39,8 @@ A number object with the ParaFitGlobal Statistic of host-symbiont
 \description{
 For any trimmed matrix produced with
 \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-\code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
-(S) phylogenies to conform with the trimmed matrix and runs
+\code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) and
+symbiont (S) phylogenies to conform with the trimmed matrix and runs
 \code{\link[ape:parafit]{ape::parafit()}} (Legendre et al. 2002) to
 calculate the ParaFitGlobal Statistic.
 }
@@ -52,4 +53,14 @@ TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
 PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
             strat = "parallel", cl = 8)
 
+}
+\references{
+Legendre P., Desdevises Y., Bazin E. (2002). A Statistical Test for
+Host–Parasite Coevolution. Systematic Biology. 51:217–234.
+\doi{1080/10635150252899734}
+
+Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
+(2020). Random Tanglegram Partitions (Random TaPas): An Alexandrian Approach
+to the Cophylogenetic Gordian Knot. Systematic Biology. 69:1212–1230.
+\doi{10.1093/sysbio/syaa033}
 }

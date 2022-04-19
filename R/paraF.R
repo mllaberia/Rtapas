@@ -2,8 +2,8 @@
 #'
 #' For any trimmed matrix produced with
 #' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-#' \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
-#' (S) phylogenies to conform with the trimmed matrix and runs
+#' \code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) and
+#' symbiont (S) phylogenies to conform with the trimmed matrix and runs
 #' \code{\link[ape:parafit]{ape::parafit()}} (Legendre et al. 2002) to
 #' calculate the ParaFitGlobal Statistic.
 #'
@@ -16,23 +16,37 @@
 #' @param ei.correct Specifies how to correct potential negative eigenvalues
 #'        from the conversion of phylogenetic distances into Principal
 #'        Coordinates: \code{"none"} (the default) indicates that no correction
-#'        is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+#'        is applied, particularly if H and S are ultrametric; \code{"sqrt.D"}
 #'        takes the element-wise square-root of the phylogenetic distances;
 #'        \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes and
 #'        Cailliez corrections, respectively.
 #'
-#' @param strat Strategy you want to work with. Default is \code{"sequential"},
+#' @param strat Flag indicating whether execution is to be  \code{"sequential"}
+#'        or \code{"parallel"}. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
 #'        process. If \code{"parallel"} resolves \R expressions in parallel in
 #'        separate \R sessions running in the background.
 #'
-#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with
-#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-#'        Default is \code{cl = 1} for \code{"sequential"} strategy
+#' @param cl Number of cluster to be used for parallel computing.
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+#'        returns the number of clusters available.
+#'        Default is \code{cl = 1} resulting in \code{"sequential"} execution.
 #'
 #' @return A number object with the ParaFitGlobal Statistic of host-symbiont
 #'         test for the N trimmed matrix.
+#'
+#'
+#' @references
+#' Legendre P., Desdevises Y., Bazin E. (2002). A Statistical Test for
+#' Host–Parasite Coevolution. Systematic Biology. 51:217–234.
+#' \doi{1080/10635150252899734}
+#'
+#' Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
+#' (2020). Random Tanglegram Partitions (Random TaPas): An Alexandrian Approach
+#' to the Cophylogenetic Gordian Knot. Systematic Biology. 69:1212–1230.
+#' \doi{10.1093/sysbio/syaa033}
+#'
+#'
 #'
 #' @import parallel
 #' @importFrom parallelly makeClusterPSOCK
@@ -61,12 +75,12 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
 
     treeh <- ape::drop.tip(treeH, setdiff(treeH$tip.label, rownames(ths)))
     trees <- ape::drop.tip(treeS, setdiff(treeS$tip.label, colnames(ths)))
-    if (is.null(treeh)==TRUE | is.null(trees)==TRUE) PF <- NA else {
+    if(is.null(treeh)==TRUE | is.null(trees)==TRUE) {PF <- NA} else {
     # Reorder ths as per tree labels:
     ths <- ths[treeh$tip.label, trees$tip.label]
     DH <- ape::cophenetic.phylo(treeh)
     DP <- ape::cophenetic.phylo(trees)
-    if (ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
+    if(ei.correct == "sqrt.D"){DH <- sqrt(DH); DP <- sqrt(DP); ei.correct ="none"}
     PF <- ape::parafit(DH, DP, ths, nperm = 0, silent = TRUE, correction = ei.correct)
     PF <- PF$ParaFitGlobal
     }
@@ -74,10 +88,10 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
   }
 
   strat.choice <- c("sequential", "parallel")
-  if (strat %in% strat.choice == FALSE)
+  if(strat %in% strat.choice == FALSE)
     stop(writeLines("Invalid strategy parameter"))
 
-  if (strat == "sequential") {
+  if(strat == "sequential") {
     pfit <- sapply(ths, paraf, treeH, treeS, ei.correct = ei.correct)
     return(pfit)
     } else {
@@ -88,7 +102,7 @@ paraF <- function (ths, treeH, treeS, ei.correct = "none",
         pf <- c(pf, parSapply(cores, ths1[[i]], paraf, treeH, treeS,
                               ei.correct = ei.correct))
       }
-      stopCluster(cores)
+      parallel::stopCluster(cores)
       return(pf)
   }
 }

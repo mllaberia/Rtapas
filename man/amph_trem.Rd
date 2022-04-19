@@ -3,12 +3,17 @@
 \docType{data}
 \name{amph_trem}
 \alias{amph_trem}
+\alias{am_matrix}
+\alias{amphipod}
+\alias{trematode}
+\alias{amphipod_1000tr}
+\alias{trematode_1000tr}
 \title{amph_trem dataset}
 \format{
 This data set compresses five objects:
 
 \describe{
-   \item{\code{bm_matrix}}{Associations between 17 haplotypes of
+   \item{\code{am_matrix}}{Associations between 17 haplotypes of
    \emph{Coitocaecum parvum} and 59 haplotypes of
    \emph{Paracalliope fluviatilis}.
    A binary matrix with 59 rows (amphipod) and 17 variables (trematode).}
@@ -55,6 +60,7 @@ Lagrue C., Joannes A., Poulin R., Blasco-Costa I. (2016). Genetic structure
 and host–parasite co‐divergence: evidence for trait‐specific local adaptation.
 Biological Journal of the Linnean Society. 118:344–358.
 \doi{10.1111/bij.12722}
+
 Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
 (2022). User’s Guide Random Tanglegram Partitions V.1.0.0. Zenodo.
 \doi{10.5281/zenodo.6327235}

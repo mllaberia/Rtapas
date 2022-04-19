@@ -1,12 +1,8 @@
 #' Frequency of host-symbiont association
 #'
-#' After applying \code{\link[=geo_D]{geo_D()}},
-#' \code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}} to each
-#' matrix produced by \code{\link[=trimHS_maxC]{trimHS_maxC()}}, this function
-#' determines the frequency of each host-symbiont association occurring in a
-#' given percentile of cases that maximize phylogenetic congruence
-#' (or incongruence in case that \code{\link[=trimHS_maxI]{trimHS_maxI()}}
-#' has been used).
+#' Determines the frequency (or residual/corrected frequency) of each
+#' host-symbiont association in a given percentile of cases that maximize
+#' phylogenetic (in)congruence.
 #'
 #' @param x List of trimmed matrices produced by
 #' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
@@ -18,7 +14,7 @@
 #' @param HS Host-symbiont association matrix.
 #'
 #' @param percentile Percentile to evaluate (\emph{p}). Default is
-#'        \code{0.01} (1%).
+#'        \code{0.01} (1\%).
 #'
 #' @param sep Character that separates host and symbiont labels.
 #'

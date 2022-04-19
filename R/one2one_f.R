@@ -1,9 +1,8 @@
-#' Maximum n for pick unique one-to-one association over a number of runs
+#' Maximum number of unique one-to-one association over a number of runs
 #'
-#' For a matrix of host-symbiont associations, it finds the maximum \code{n} for
-#' which one-to-one unique associations can be picked in
-#' \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-#' \code{\link[=trimHS_maxI]{trimHS_maxI()}} over a number of runs.
+#' For a binary matrix of host-symbiont associations, it finds the maximum
+#' number of host-symbiont pairs, \code{n}, for which one-to-one unique
+#' associations can be chosen.
 #'
 #' @param HS Host-symbiont association matrix.
 #'
@@ -14,18 +13,20 @@
 #'        (10% of the total associations) and a maximum \code{n} (20% of the
 #'        total associations) are automatically assigned.
 #'
-#' @param strat Strategy you want to work with. Default is \code{"sequential"},
+#' @param strat Flag indicating whether execution is to be  \code{"sequential"}
+#'        or \code{"parallel"}. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
 #'        process. If \code{"parallel"} resolves \R expressions in parallel in
 #'        separate \R sessions running in the background.
 #'
-#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with
-#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
+#' @param cl Number of cluster to be used for parallel computing.
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+#'        returns the number of clusters available.
+#'        Default is \code{cl = 1} resulting in \code{"sequential"} execution.
 #'
 #' @param plot Default is \code{"TRUE"}, plots the number of unique host-
-#'        symbiont associations for the number of runs.
+#'        symbiont associations in the \code{"interval"} range against the
+#'        number of runs that could be completed.
 #'
 #'
 #' @return The maximum number of unique one-to-one associations
@@ -33,8 +34,7 @@
 #'
 #' @section NOTE:
 #'          It can be used to decide the best \code{n} prior to application of
-#'          \code{\link[=max_cong]{max_cong()}} or
-#'          \code{\link[=max_incong]{max_incong()}}.
+#'          \code{\link[=max_cong]{max_cong()}}.
 #'
 #' @import stringr
 #'

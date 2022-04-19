@@ -4,6 +4,11 @@
 \alias{paco_ss}
 \title{Procrustes Approach to Cophylogeny (PACo) of the host and symbiont
 configurations}
+\source{
+Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
+(2022). User’s Guide Random Tanglegram Partitions V.1.0.0. Zenodo.
+\doi{10.5281/zenodo.6327235}
+}
 \usage{
 paco_ss(
   ths,
@@ -34,20 +39,21 @@ treeS differ in size (number of tips). Default is \code{FALSE}.}
 \item{ei.correct}{Specifies how to correct potential negative eigenvalues
 from the conversion of phylogenetic distances into Principal
 Coordinates: \code{"none"} (the default) indicates that no correction
-is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+is applied, particularly if H and S are ultrametric; \code{"sqrt.D"}
 takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 and Cailliez corrections, respectively.}
 
-\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Flag indicating whether execution is to be  \code{"sequential"}
+or \code{"parallel"}. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
 process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with
-\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
+\item{cl}{Number of cluster to be used for parallel computing.
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+returns the number of clusters available.
+Default is \code{cl = 1} resulting in \code{"sequential"} execution.}
 }
 \value{
 A sum of squared residuals.
@@ -55,11 +61,11 @@ A sum of squared residuals.
 \description{
 For any trimmed matrix produced with
 \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-\code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) & symbiont
-(S) phylogenies to conform with the trimmed matrix and runs Procrustes
-Approach to Cophylogeny (PACo) to produce the squared sum of residuals of
-the Procrustes superimposition of the host and symbiont configurations
-in Euclidean space.
+\code{\link[=trimHS_maxI]{trimHS_maxI()}}, it prunes the host (H) and
+symbiont (S) phylogenies to conform with the trimmed matrix and runs
+Procruste Approach to Cophylogeny (PACo) to produce the squared sum of
+residuals of the Procrustes superimposition of the host and symbiont
+configurations in Euclidean space.
 }
 \examples{
 data(amph_trem)
@@ -70,5 +76,14 @@ TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
 PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
 
+}
+\references{
+Balbuena J.A., Miguez-Lozano R., Blasco-Costa I. (2013). PACo: A Novel
+Procrustes Application to Cophylogenetic Analysis. PLOS ONE. 8:e61048.
+\doi{10.1371/journal.pone.0061048}
 
+Balbuena J.A., Perez-Escobar Ó.A., Llopis-Belenguer C., Blasco-Costa I.
+(2020). Random Tanglegram Partitions (Random TaPas): An Alexandrian Approach
+to the Cophylogenetic Gordian Knot. Systematic Biology. 69:1212–1230.
+\doi{10.1093/sysbio/syaa033}
 }

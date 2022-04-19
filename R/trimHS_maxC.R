@@ -14,15 +14,16 @@
 #'        probability of obtaining the same trimmed matrix in different runs
 #'        increases as \code{n} decreases.
 #'
-#' @param strat Strategy you want to work with. Default is \code{"sequential"},
+#' @param strat Flag indicating whether execution is to be  \code{"sequential"}
+#'        or \code{"parallel"}. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
 #'        process. If \code{"parallel"} resolves \R expressions in parallel in
 #'        separate \R sessions running in the background.
 #'
-#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with
-#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
+#' @param cl Number of cluster to be used for parallel computing.
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+#'        returns the number of clusters available.
+#'        Default is \code{cl = 1} resulting in \code{"sequential"} execution.
 #'
 #'
 #' @return A list of the N trimmed matrices.
@@ -68,9 +69,9 @@ trimHS_maxC <- function (N, HS, n, check.unique = TRUE,
     trim.HS[sapply(trim.HS, is.null)] <- NULL
     return(trim.HS)
   } else {
-    cores <- makeClusterPSOCK(workers = cl)
-    trim.HS <- parLapply(cores, 1:N, trim.int, HS = HS, n = n)
-    stopCluster(cores)
+    cores <- parallelly::makeClusterPSOCK(workers = cl)
+    trim.HS <- parallel::parLapply(cores, 1:N, trim.int, HS = HS, n = n)
+    parallel::stopCluster(cores)
     if (check.unique == TRUE) trim.HS <- unique(trim.HS)
     if (length(trim.HS) < N)
       warning("No. of trimmed H-S assoc. matrices < No. of runs")

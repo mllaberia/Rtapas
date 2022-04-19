@@ -38,25 +38,20 @@ from 0 (centered at 0, recommended if \code{"res.fq = TRUE"})
 or \code{"sequential"}, color reflects distance from minimum value
 (spanning from the min to max frequencies observed).}
 
-\item{colgrad}{If \code{colscale =} vector defining the color gradient of the
-heatmap.}
+\item{colgrad}{Vector of R specified colors defining the color gradient of
+the heatmap.}
 
 \item{nbreaks}{Number of discrete values along \code{"colgrad"}.}
 
 \item{node.tag}{Specifies whether maximum likelihood estimators of ancestral
-states are to be computed. Default is \code{TRUE}. NOTE:}
+states are to be computed. Default is \code{TRUE}.}
 
 \item{cexpt}{Size of color points at terminals and nodes.}
 
-\item{link.lwd}{The line width for plotting, default to 1.}
+\item{link.lwd}{Line width for plotting, default to 1.}
 
-\item{link.lty}{The line type. Line types can either be specified as an
-integer (0 = blank, 1 = solid (default), 2 = dashed, 3 = dotted,
-4 = dotdash, 5 = longdash, 6 = twodash) or as one of the character
-strings \code{"blank"}, \code{"solid"}, \code{"dashed"},
-\code{"dotted"}, \code{"dotdash"}, \code{"longdash"}, or
-\code{"twodash"}. Note that \code{"blank"} uses invisible lines
-(i.e., does not draw them).}
+\item{link.lty}{Line type. Coded as \code{lty} in
+\code{\link[graphics:par]{par()}}.}
 
 \item{fsize}{Relative font size for tip labels.}
 
@@ -77,9 +72,8 @@ Default is \code{"straight"}.}
 A tanglegram with quantitative information displayed as heatmap.
 }
 \description{
-Wrapper of \code{\link[phytools:plot.cophylo]{phytools::plot.cophylo()}}
-is used for mapping as heatmap the host-symbiont frequencies estimated by
-Random TaPas on a tanglegram. It also plots the average frequency
+Maps the estimated (in)congruence metrics of the individual host-symbiont
+associations as heatmap on a tanglegram. It also plots the average frequency
 (or residual/corrected frequency) of occurrence of each terminal
 and optionally, the fast maximum likelihood estimators of ancestral states
 of each node.
@@ -87,24 +81,24 @@ of each node.
 \section{NOTE}{
 
          In order to calculate the ancestral states in the phylogenies, all
-         the nodes (node.label) of the trees must have a value (NA or
-         neither values are not allowed). In addition, the trees must be
+         nodes of the trees (node.label) must have a value (NA or
+         empty values are not allowed). In addition, the trees must be
          time-calibrated and preferably rooted. If one of these elements
-         is missing, an error will be generated and the heatmap will
-         be displayed as black.
+         is missing, an error will be generated and nodes and points of
+         terminals will be displayed as black.
 }
 
 \examples{
 data(amph_trem)
-N = 10
+N = 1000
 n = 8
 ATc <- max_cong(am_matrix, amphipod, trematode, n, N, method = "paco",
                 symmetric = TRUE, ei.correct = "sqrt.D",
                 percentile = 0.01, res.fq = TRUE,
-                strat = "parallel", cl = 10)
+                strat = "parallel", cl = 4)
 
 col = c("darkred","gray90", "darkblue")
-tangle_gram(amphipod, trematode, am_matrix, ATc, colscale= "diverging",
+tangle_gram(amphipod, trematode, am_matrix, ATc, colscale = "diverging",
             colgrad = col, nbreaks = 50, node.tag = TRUE)
 
 

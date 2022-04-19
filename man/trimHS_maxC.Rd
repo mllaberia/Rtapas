@@ -18,15 +18,16 @@ alternative is recommended if \code{n} is small, because the
 probability of obtaining the same trimmed matrix in different runs
 increases as \code{n} decreases.}
 
-\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Flag indicating whether execution is to be  \code{"sequential"}
+or \code{"parallel"}. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
 process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with
-\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
+\item{cl}{Number of cluster to be used for parallel computing.
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+returns the number of clusters available.
+Default is \code{cl = 1} resulting in \code{"sequential"} execution.}
 }
 \value{
 A list of the N trimmed matrices.

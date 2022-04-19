@@ -1,10 +1,13 @@
 #' Create an host-symbiont association matrix
 #'
-#' @param hs A two-columns matrix representing associations between host
-#'        (column 1) and symbiont (column 2) species.
+#' Creates a binary host-symbiont association matrix from a two-columns matrix
+#' or data frame of host-symbiont associations.
 #'
-#' @return An association matrix, with hosts in rows and symbionts in columns,
-#'         sorted alphabetically.
+#' @param hs A two-columns matrix or data frame representing associations
+#'        between hosts (column 1) and symbionts (column 2) species.
+#'
+#' @return An association binary matrix, with hosts in rows and symbionts in
+#'         columns, sorted alphabetically.
 #'
 #' @export
 #'

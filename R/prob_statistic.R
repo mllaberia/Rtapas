@@ -1,8 +1,9 @@
-#' Frequencies of the associations for the posterior probabilistic trees
+#' Frequencies of the associations for the posterior probability trees
 #'
-#' Computes the frequencies of the associations for each of the probabilistic
-#' trees from the statistics of \code{GD} (Geodesic Distances), \code{PACo}
-#' (PACo) or \code{ParaFit}(ParaFit).
+#' Computes frequencies (or residual/corrected frequencies) of the
+#' host-symbiont associations for pairs (H and S) of posterior  probability
+#' trees from the statistics generatedwith \code{GD} (Geodesic Distances),
+#' \code{PACo} (PACo) or \code{ParaFit}(ParaFit).
 #'
 #' @param ths List of trimmed matrices produced by
 #'        \code{\link[=trimHS_maxC]{trimHS_maxC()}} or
@@ -10,13 +11,14 @@
 #'
 #' @param HS Host-Symbiont association matrix.
 #'
-#' @param mTreeH Number X of posterior-probabilistic trees of host.
+#' @param mTreeH Number of posterior-probability trees of host.
 #'
-#' @param mTreeS Number X of posterior-probabilistic trees of symbiont.
+#' @param mTreeS Number of posterior-probability trees of symbiont.
 #'
-#' @param freqfun Options are \code{"geoD"} (Geodesic Distances),
-#'        \code{"paco"} (PACo) or \code{"paraF"} (ParaFit) depending on which
-#'        confidence intervals the user wants to compute.
+#' @param freqfun The global-fit method to compute using the
+#'        posterior probability trees. Options are \code{"geoD"} (Geodesic
+#'        Distances), \code{"paco"} (PACo) or \code{"paraF"} (ParaFit).
+#'        It should be the same method used to obtain \code{"fx"}.
 #'
 #' @param fx Vector of statistics produced with
 #'         \code{\link[=max_cong]{max_cong()}} or
@@ -24,32 +26,31 @@
 #'         ParaFit.
 #'
 #' @param percentile Percentile to evaluate (\emph{p}). Default is
-#'        \code{0.01} (1%) for \code{\link[=max_cong]{max_cong()}}.
+#'        \code{0.01} (1\%).
 #'
-#' @param res.fq Determines whether a correction to avoid one-to-one
-#'        associations being overrepresented in the percentile evaluated.
-#'        If \code{TRUE} (default) a residual frequency value (observed -
-#'        expected frequency) is computed for each host-symbiont association.
+#' @param correction Correction to be assumed. The default value is
+#'        \code{"none"}. If \code{= "res.fq"}, a residual frequency value
+#'        (observed - expected frequency) is computed for each host-symbiont
+#'        association that maximizes phylogenetic congruence. If
+#'        \code{= "diff.fq"}, a corrected frequency value
+#'        (observed in p - observed in (p-1)) is computed for each
+#'        host-symbiont association.
+#'        It should be the same correction used to obtain \code{"fx"}.
 #'
 #' @param below.p Determines whether frequencies are to be computed below or
 #'        above the percentile set. Default is \code{TRUE} for
-#'        \code{\link[=max_cong]{max_cong()}}. Set it to \code{FALSE} for
-#'        \code{\link[=max_incong]{max_incong()}}
-#'
-#' @param diff.fq  Determines whether a correction to detect those associations
-#'        that present higher (in)congruence in the system.
-#'        If \code{TRUE} a corrected frequency value (observed(\emph{p}) -
-#'        observed\emph{(p-1)}) is computed for each host-symbiont association.
+#'        \code{\link[=max_cong]{max_cong()}} analysis. Set it to
+#'        \code{FALSE} for \code{\link[=max_incong]{max_incong()}} analysis.
 #'
 #' @param symmetric Specifies the type of Procrustes superimposition. Default
 #'        is \code{FALSE}, indicates that the superposition is applied
 #'        asymmetrically (S depends on H). If \code{TRUE}, PACo is applied
 #'        symmetrically (dependency between S and H is reciprocal).
 #'
-#' @param ei.correctSpecifies how to correct potential negative eigenvalues
+#' @param ei.correct Specifies how to correct potential negative eigenvalues
 #'        from the conversion of phylogenetic distances into Principal
 #'        Coordinates: \code{"none"} (the default) indicates that no correction
-#'        is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+#'        is applied, particularly if H and S are ultrametric; \code{"sqrt.D"}
 #'        takes the element-wise square-root of the phylogenetic distances;
 #'        \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 #'        and Cailliez corrections, respectively.
@@ -57,18 +58,19 @@
 #' @param proc.warns Switches on/off trivial warnings returned when treeH and
 #'        treeS differ in size (number of tips). Default is \code{FALSE}.
 #'
-#' @param strat Strategy you want to work with. Default is \code{"sequential"},
+#' @param strat Flag indicating whether execution is to be  \code{"sequential"}
+#'        or \code{"parallel"}. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
 #'        process. If \code{"parallel"} resolves \R expressions in parallel in
 #'        separate \R sessions running in the background.
 #'
-#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with
-#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
+#' @param cl Number of cluster to be used for parallel computing.
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+#'        returns the number of clusters available.
+#'        Default is \code{cl = 1} resulting in \code{"sequential"} execution.
 #'
 #' @return A matrix with the value of the statistics for each of the
-#'         probabilistic trees.
+#'         probability trees.
 #' @export
 #'
 #' @examples
@@ -81,30 +83,29 @@
 #' #                 percentile = 0.01, res.fq = FALSE,
 #' #                 strat = "parallel", cl = 8)
 #' # THSc <- trimHS_maxC(N, np_matrix, n)
-#' # PACOc <- prob_statistic(ths = THSc, np_matrix, NUC_500tr[1:10],
+#' # pp_treesPACOo_cong <- prob_statistic(THSc, np_matrix, NUC_500tr[1:10],
 #' #                         CP_500tr[1:10], freqfun = "paco", NPc,
 #' #                         symmetric = FALSE, ei.correct = "sqrt.D",
-#' #                         percentile = 0.01, res.fq = FALSE,  below.p = TRUE,
-#' #                         strat = "parallel", cl = 8)
+#' #                         percentile = 0.01, correction = "none",
+#' #                         below.p = TRUE, strat = "parallel", cl = 8)
 #'
-#' #Maximizing incongruence
+#' # Maximizing incongruence
 #' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 #'                   symmetric = FALSE, ei.correct = "sqrt.D",
 #'                   percentile = 0.99, diff.fq = TRUE,
 #'                   strat = "parallel", cl = 8)
 #' THSi <- trimHS_maxI(N, np_matrix, n)
-#' PACOc <- prob_statistic(ths = THSi, np_matrix, NUC_500tr[1:10],
+#' pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:10],
 #'                         CP_500tr[1:10], freqfun = "paco", NPi,
 #'                         symmetric = FALSE, ei.correct = "sqrt.D",
-#'                         percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
+#'                         percentile = 0.99, correction = "diff.fq",
 #'                         below.p = TRUE, strat = "parallel", cl = 8)
 #'
 #'
 prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
-                       percentile = 0.01, res.fq = TRUE, below.p = TRUE,
-                       diff.fq = FALSE, symmetric = FALSE,
-                       ei.correct="none", proc.warns = FALSE,
-                       strat = "sequential", cl = 1) {
+                       percentile = 0.01, correction = "none", below.p = TRUE,
+                       symmetric = FALSE, ei.correct="none",
+                       proc.warns = FALSE, strat = "sequential", cl = 1) {
 
   strat.choice <- c("sequential", "parallel")
   if (strat %in% strat.choice == FALSE)
@@ -114,6 +115,23 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
   if(freqfun %in% freqfun.choice == FALSE)
     stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geoD',
                     'paco' or 'paraF'"))
+
+  corr.choice <- c("none", "res.fq", "diff.fq")
+  if(correction %in% corr.choice == FALSE)
+    stop(writeLines("Invalid correction parameter.\r Correct choices are 'none',
+                    'res.fq' or 'diff.fq'"))
+  if(correction == "none"){
+    res.fq = FALSE
+    diff.fq = FALSE
+  } else {
+    if(correction == "res.fq"){
+      res.fq = TRUE
+      diff.fq = FALSE
+    } else {
+      res.fq = FALSE
+      diff.fq = TRUE
+    }
+  }
 
   if(freqfun == "geoD") {
     gd_apply <- function(ths, mTreeH, mTreeS, HS) {
@@ -140,16 +158,16 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
         gd <- distory::dist.multiPhylo(combo.tree)
         return(gd)
       }
-      cores <- makeClusterPSOCK(workers = cl)
+      cores <- parallelly::makeClusterPSOCK(workers = cl)
       GD01 <- matrix(NA, length(mTreeH), nrow(fx))
       for(i in 1:length(mTreeH)) {
-        GD.CI <- parSapply(cores, ths, geoD, treeH = mTreeH[[i]],
+        GD.CI <- parallel::parSapply(cores, ths, geoD, treeH = mTreeH[[i]],
                            treeS = mTreeS[[i]])
           LFGD.CI <- link_freq(ths, GD.CI, HS,  percentile = percentile,
                                res.fq = res.fq, below.p = below.p)
           GD01[i,] <- LFGD.CI[, ncol(LFGD.CI)]
       }
-      stopCluster(cores)
+      parallel::stopCluster(cores)
       colnames(GD01) <- fx[,3]
     }
     return(GD01)
@@ -189,7 +207,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
                                                         symmetric = symmetric))
               return(D$ss)
             }
-            cores <- makeClusterPSOCK(workers = cl)
+            cores <- parallelly::makeClusterPSOCK(workers = cl)
             PACO01 <- matrix(NA, length(mTreeH), nrow(fx))
             for(i in 1:length(mTreeH)) {
               PA.CI <- parallel::parSapply(cores, ths, pacoss, treeH=mTreeH[[i]],
@@ -208,7 +226,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
               }
               PACO01[i,] <- LFPA.CI[, ncol(LFPA.CI)]
             }
-            stopCluster(cores)
+            parallel::stopCluster(cores)
             colnames(PACO01) <- fx[,3]
           }
         return(PACO01)
@@ -244,10 +262,10 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
             }
             return(PF)
           }
-          cores <- makeClusterPSOCK(workers = cl)
+          cores <- parallelly::makeClusterPSOCK(workers = cl)
           PF01 <- matrix(NA, length(mTreeH), nrow(fx))
           for(i in 1:length(mTreeH)) {
-            PF.CI <- parSapply(cores, ths, paraf, treeH = mTreeH[[i]],
+            PF.CI <- parallel::parSapply(cores, ths, paraf, treeH = mTreeH[[i]],
                                treeS = mTreeS[[i]], proc.warns = proc.warns,
                                ei.correct = ei.correct)
             if (diff.fq == TRUE) {
@@ -263,7 +281,7 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
             }
             PF01[i,] <- LFPF.CI[, ncol(LFPF.CI)]
           }
-          stopCluster(cores)
+          parallel::stopCluster(cores)
           colnames(PF01) <- fx[,3]
         }
         return(PF01)

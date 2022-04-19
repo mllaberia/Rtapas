@@ -25,7 +25,7 @@ link_freq(
 \item{HS}{Host-symbiont association matrix.}
 
 \item{percentile}{Percentile to evaluate (\emph{p}). Default is
-\code{0.01} (1%).}
+\code{0.01} (1\%).}
 
 \item{sep}{Character that separates host and symbiont labels.}
 
@@ -47,13 +47,9 @@ A dataframe with host-symbiont associations in rows. The first and
         corrected frequencies as a residual.
 }
 \description{
-After applying \code{\link[=geo_D]{geo_D()}},
-\code{\link[=paco_ss]{paco_ss()}} or \code{\link[=paraF]{paraF()}} to each
-matrix produced by \code{\link[=trimHS_maxC]{trimHS_maxC()}}, this function
-determines the frequency of each host-symbiont association occurring in a
-given percentile of cases that maximize phylogenetic congruence
-(or incongruence in case that \code{\link[=trimHS_maxI]{trimHS_maxI()}}
-has been used).
+Determines the frequency (or residual/corrected frequency) of each
+host-symbiont association in a given percentile of cases that maximize
+phylogenetic (in)congruence.
 }
 \section{NOTE}{
 

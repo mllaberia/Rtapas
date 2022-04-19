@@ -26,12 +26,13 @@ max_incong(
 
 \item{treeS}{Symbiont phylogeny. An object of class "phylo".}
 
-\item{n}{Number of unique associations.}
+\item{n}{Number of associations.}
 
 \item{N}{Number of runs.}
 
 \item{method}{Specifies the desired global-fit method (GD, PACo or ParaFit).
-The default is \code{PACo}.}
+The default is \code{PACo}. Options are \code{"geoD"} (Geodesic
+Distances), \code{"paco"} (PACo) or \code{"paraF"} (ParaFit).}
 
 \item{symmetric}{Specifies the type of Procrustes superimposition. Default
 is \code{FALSE}, indicates that the superposition is applied
@@ -41,28 +42,31 @@ symmetrically (dependency between S and H is reciprocal).}
 \item{ei.correct}{Specifies how to correct potential negative eigenvalues
 from the conversion of phylogenetic distances into Principal
 Coordinates: \code{"none"} (the default) indicates that no correction
-is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+is applied, particularly if H and S are ultrametric; \code{"sqrt.D"}
 takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 and Cailliez corrections, respectively.}
 
 \item{percentile}{Percentile to evaluate (\emph{p}). Default is
-\code{0.99} (99%).}
+\code{0.99} (99\%).}
 
 \item{diff.fq}{Determines whether a correction to detect those associations
-that present higher incongruence in the system.
+that present a similar contribution to (in)congruence and occur with
+some frequency at the 0.01 and 0.99 percentiles. These correction
+avoid multiple associations being overrepresented.
 If \code{TRUE} a corrected frequency value (observed in p -
 observed in (p-1)) is computed for each host-symbiont association.}
 
-\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Flag indicating whether execution is to be  \code{"sequential"}
+or \code{"parallel"}. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
 process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with
-\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
+\item{cl}{Number of cluster to be used for parallel computing.
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+returns the number of clusters available.
+Default is \code{cl = 1} resulting in \code{"sequential"} execution.y.}
 }
 \value{
 A dataframe with host-symbiont associations in rows. The first and
@@ -74,15 +78,19 @@ A dataframe with host-symbiont associations in rows. The first and
         the corrected frequencies.
 }
 \description{
-Algortihm for maximizing incongruence between two phylogenies
+Prunes the host (H) and symbiont (S) phylogenies to conform with the trimmed
+matrix and computes the given global-fit method (PACo or ParaFit) between
+the pruned trees. Then, determines the frequency of each host-symbiont
+association occurring in a given percentile of cases that maximize
+phylogenetic incongruence.
 }
 \section{NOTE}{
 
-      If the \code{node.label} object in both trees contains NAs or neither
-      value, an error will appear. You should make sure that all nodes
-      have a value, or else remove it within the \code{"phylo"} class tree
+      The \code{node.label} object in both trees can not contain NAs or null
+      values (i.e. no numeric value). All nodes should have a value. Else
+      remove node labels within the \code{"phylo"} class tree
       with \code{tree$node.label <- NULL}. For more details, see
-      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
+      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}.
 
       \code{GD} method can not be used with the trimmed matrices produced
       with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm

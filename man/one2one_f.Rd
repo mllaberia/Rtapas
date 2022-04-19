@@ -2,7 +2,7 @@
 % Please edit documentation in R/one2one_f.R
 \name{one2one_f}
 \alias{one2one_f}
-\title{Maximum n for pick unique one-to-one association over a number of runs}
+\title{Maximum number of unique one-to-one association over a number of runs}
 \usage{
 one2one_f(
   HS,
@@ -23,34 +23,34 @@ wants to test. Default is \code{"NULL"}, where a minimum \code{n}
 (10% of the total associations) and a maximum \code{n} (20% of the
 total associations) are automatically assigned.}
 
-\item{strat}{Strategy you want to work with. Default is \code{"sequential"},
+\item{strat}{Flag indicating whether execution is to be  \code{"sequential"}
+or \code{"parallel"}. Default is \code{"sequential"},
 resolves \R expressions sequentially in the current \R
 process. If \code{"parallel"} resolves \R expressions in parallel in
 separate \R sessions running in the background.}
 
-\item{cl}{Number of cluster the user wants to use. Check how many CPUs/cores
-your computer has with
-\code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-Default is \code{cl = 1} for \code{"sequential"} strategy.}
+\item{cl}{Number of cluster to be used for parallel computing.
+\code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+returns the number of clusters available.
+Default is \code{cl = 1} resulting in \code{"sequential"} execution.}
 
 \item{plot}{Default is \code{"TRUE"}, plots the number of unique host-
-symbiont associations for the number of runs.}
+symbiont associations in the \code{"interval"} range against the
+number of runs that could be completed.}
 }
 \value{
 The maximum number of unique one-to-one associations
         (\code{n}).
 }
 \description{
-For a matrix of host-symbiont associations, it finds the maximum \code{n} for
-which one-to-one unique associations can be picked in
-\code{\link[=trimHS_maxC]{trimHS_maxC()}} or
-\code{\link[=trimHS_maxI]{trimHS_maxI()}} over a number of runs.
+For a binary matrix of host-symbiont associations, it finds the maximum
+number of host-symbiont pairs, \code{n}, for which one-to-one unique
+associations can be chosen.
 }
 \section{NOTE}{
 
          It can be used to decide the best \code{n} prior to application of
-         \code{\link[=max_cong]{max_cong()}} or
-         \code{\link[=max_incong]{max_incong()}}.
+         \code{\link[=max_cong]{max_cong()}}.
 }
 
 \examples{

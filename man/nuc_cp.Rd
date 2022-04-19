@@ -3,9 +3,16 @@
 \docType{data}
 \name{nuc_cp}
 \alias{nuc_cp}
+\alias{np_matrix}
+\alias{NUCtr}
+\alias{CPtr}
+\alias{NUC_500tr}
+\alias{CP_500tr}
+\alias{pp_treesPACo_cong}
+\alias{pp_treesPACo_incong}
 \title{Nuclear and chloroplast dataset of orchids}
 \format{
-This data set compresses five objects:
+This data set consists of seven objects:
 
 \describe{
    \item{\code{np_matrix}}{Associations one-to-one between the 52 orchid
@@ -14,25 +21,33 @@ This data set compresses five objects:
 
    \item{\code{NUCtr}}{Phylogeny constructed by sequence data of nuclear
    loci of orchids (Perez-Escobar et al. 2021).
-   An object of class \code{"phylo"} containing a list with the details of
+   An object of class \code{"phylo"} containing the details of
    the phylogenetic tree (i.e. edge, edge length, nodes and tips names).}
 
    \item{\code{CPtr}}{Phylogeny constructed by sequence data of chloroplast
    loci of orchids (Perez-Escobar et al. 2021).
-   An object of class \code{"phylo"} containing a list with the details of
+   An object of class \code{"phylo"} containing the details of
    the phylogenetic tree (i.e. edge, edge length, nodes and tips names).}
 
-   \item{\code{NUC_500tr}}{500 bootstrap replicates ultrametric trees
-   from Perez-Escobar et al. (2021).
-   List of class \code{"multiphylo"} containing a 500 phylogenetic trees
+   \item{\code{NUC_500tr}}{500 bootstrap replicates trees from
+   Perez-Escobar et al. (2021).
+   Object of class \code{"multiphylo"} containing a 500 phylogenetic trees
    with their respective details (i.e. edges, edges length, nodes, and
    tips names).}
 
-   \item{\code{CP_500tr}}{500 bootstrap replicates ultrametric trees
-   from Perez-Escobar et al. (2021).
-   List of class \code{"multiphylo"} containing a 500 phylogenetic trees
+   \item{\code{CP_500tr}}{500 bootstrap replicates trees from
+   Perez-Escobar et al. (2021).
+   Object of class \code{"multiphylo"} containing a 500 phylogenetic trees
    with their respective details (i.e. edges, edges length, nodes, and
    tips names).}
+
+   \item{\code{pp_treesPACo_cong}}{Matrix with the value of the PACo
+   statistics generated for each pair (H and S) of posterior probability
+   trees maximizing congruence between them.}
+
+   \item{\code{pp_treesPACo_incong}}{Matrix with the value of the PACo
+   statistics generated for each pair (H and S) of posterior probability
+   trees maximizing incongruence between them.}
  }
 }
 \source{

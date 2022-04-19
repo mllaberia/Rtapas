@@ -1,17 +1,24 @@
 #' Algortihm for maximizing incongruence between two phylogenies
 #'
+#' Prunes the host (H) and symbiont (S) phylogenies to conform with the trimmed
+#' matrix and computes the given global-fit method (PACo or ParaFit) between
+#' the pruned trees. Then, determines the frequency of each host-symbiont
+#' association occurring in a given percentile of cases that maximize
+#' phylogenetic incongruence.
+#'
 #' @param HS Host-Symbiont association matrix.
 #'
 #' @param treeH Host phyolgeny. An object of class "phylo".
 #'
 #' @param treeS Symbiont phylogeny. An object of class "phylo".
 #'
-#' @param n Number of unique associations.
+#' @param n Number of associations.
 #'
 #' @param N Number of runs.
 #'
 #' @param method Specifies the desired global-fit method (GD, PACo or ParaFit).
-#'        The default is \code{PACo}.
+#'        The default is \code{PACo}. Options are \code{"geoD"} (Geodesic
+#'        Distances), \code{"paco"} (PACo) or \code{"paraF"} (ParaFit).
 #'
 #' @param symmetric Specifies the type of Procrustes superimposition. Default
 #'        is \code{FALSE}, indicates that the superposition is applied
@@ -21,28 +28,31 @@
 #' @param ei.correct Specifies how to correct potential negative eigenvalues
 #'        from the conversion of phylogenetic distances into Principal
 #'        Coordinates: \code{"none"} (the default) indicates that no correction
-#'        is required, particularly if H and S are ultrametric; \code{"sqrt.D"}
+#'        is applied, particularly if H and S are ultrametric; \code{"sqrt.D"}
 #'        takes the element-wise square-root of the phylogenetic distances;
 #'        \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 #'        and Cailliez corrections, respectively.
 #'
 #' @param percentile Percentile to evaluate (\emph{p}). Default is
-#'        \code{0.99} (99%).
+#'        \code{0.99} (99\%).
 #'
 #' @param diff.fq Determines whether a correction to detect those associations
-#'        that present higher incongruence in the system.
+#'        that present a similar contribution to (in)congruence and occur with
+#'        some frequency at the 0.01 and 0.99 percentiles. These correction
+#'        avoid multiple associations being overrepresented.
 #'        If \code{TRUE} a corrected frequency value (observed in p -
 #'        observed in (p-1)) is computed for each host-symbiont association.
 #'
-#' @param strat Strategy you want to work with. Default is \code{"sequential"},
+#' @param strat Flag indicating whether execution is to be  \code{"sequential"}
+#'        or \code{"parallel"}. Default is \code{"sequential"},
 #'        resolves \R expressions sequentially in the current \R
 #'        process. If \code{"parallel"} resolves \R expressions in parallel in
 #'        separate \R sessions running in the background.
 #'
-#' @param cl Number of cluster the user wants to use. Check how many CPUs/cores
-#'        your computer has with
-#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}.
-#'        Default is \code{cl = 1} for \code{"sequential"} strategy.
+#' @param cl Number of cluster to be used for parallel computing.
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+#'        returns the number of clusters available.
+#'        Default is \code{cl = 1} resulting in \code{"sequential"} execution.y.
 #'
 #' @return A dataframe with host-symbiont associations in rows. The first and
 #'         second columns display the names of the host and symbiont terminals,
@@ -53,11 +63,11 @@
 #'         the corrected frequencies.
 #'
 #' @section NOTE:
-#'       If the \code{node.label} object in both trees contains NAs or neither
-#'       value, an error will appear. You should make sure that all nodes
-#'       have a value, or else remove it within the \code{"phylo"} class tree
+#'       The \code{node.label} object in both trees can not contain NAs or null
+#'       values (i.e. no numeric value). All nodes should have a value. Else
+#'       remove node labels within the \code{"phylo"} class tree
 #'       with \code{tree$node.label <- NULL}. For more details, see
-#'       \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
+#'       \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}.
 #'
 #'       \code{GD} method can not be used with the trimmed matrices produced
 #'       with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
@@ -92,7 +102,7 @@ max_incong <- function (HS, treeH, treeS, n, N, method = "paco",
       GD <- geo_D(THSi, treeH, treeS, strat = strat, cl = cl)
 
       LF <- link_freq(THSi, GD, HS, percentile = percentile, below.p = FALSE,
-                      res.fq = res.fq)
+                      res.fq = FALSE)
 
       if (diff.fq == TRUE) {
         LFi_b <- link_freq(THSi, GD, HS, percentile = 0.01,

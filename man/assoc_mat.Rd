@@ -7,15 +7,16 @@
 assoc_mat(hs)
 }
 \arguments{
-\item{hs}{A two-columns matrix representing associations between host
-(column 1) and symbiont (column 2) species.}
+\item{hs}{A two-columns matrix or data frame representing associations
+between hosts (column 1) and symbionts (column 2) species.}
 }
 \value{
-An association matrix, with hosts in rows and symbionts in columns,
-        sorted alphabetically.
+An association binary matrix, with hosts in rows and symbionts in
+        columns, sorted alphabetically.
 }
 \description{
-Create an host-symbiont association matrix
+Creates a binary host-symbiont association matrix from a two-columns matrix
+or data frame of host-symbiont associations.
 }
 \examples{
 data(nuc_cp)

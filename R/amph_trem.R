@@ -2,6 +2,7 @@
 #'
 #' @title amph_trem dataset
 #' @name amph_trem
+#' @aliases am_matrix amphipod trematode amphipod_1000tr trematode_1000tr
 #' @usage data(amph_trem)
 #'
 #' @description Data set of mitochondrial haplotypes of the trematode
@@ -13,7 +14,7 @@
 #' @format This data set compresses five objects:
 #'
 #' \describe{
-#'    \item{\code{bm_matrix}}{Associations between 17 haplotypes of
+#'    \item{\code{am_matrix}}{Associations between 17 haplotypes of
 #'    \emph{Coitocaecum parvum} and 59 haplotypes of
 #'    \emph{Paracalliope fluviatilis}.
 #'    A binary matrix with 59 rows (amphipod) and 17 variables (trematode).}
@@ -46,6 +47,7 @@
 #' and host–parasite co‐divergence: evidence for trait‐specific local adaptation.
 #' Biological Journal of the Linnean Society. 118:344–358.
 #' \doi{10.1111/bij.12722}
+#'
 #' Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
 #' (2022). User’s Guide Random Tanglegram Partitions V.1.0.0. Zenodo.
 #' \doi{10.5281/zenodo.6327235}
@@ -56,6 +58,7 @@
 #' \doi{10.5281/zenodo.6327235}
 #'
 #' @keywords datasets
+#'
 #'
 #'
 NULL
