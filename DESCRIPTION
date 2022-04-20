@@ -1,6 +1,6 @@
 Package: Rtapas
 Title: Random Tanglegram Partitions
-Version: 1.1
+Version: 1.2
 Date: 2021-09-23
 Authors@R: c(person("Mar", "Llaberia-Robledillo", role = c("aut", "cre", "cph"), email = "mar.llaberia@uv.es", comment = c(ORCID = "0000-0002-7989-796X")),
   person("Juan A.", "Balbuena", role = c("aut", "cph"), email = "j.a.balbuena@uv.es", comment = c(ORCID = "0000-0003-4006-1353"))
