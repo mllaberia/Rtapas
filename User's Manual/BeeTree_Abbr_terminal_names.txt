@@ -1,0 +1,35 @@
+The original terminal names of the euglossine bee pollinators tree of Ramírez et al. (2011 Science 333: 1742-1746)
+have been shortened to facilitate graphical visualization of results as follows:
+
+Name in Ramírez et al.		Shortened name
+===========================================
+Eufriesea_chrysopyga_EU24a      Euf_ch
+Eufriesea_mexicana_EU95         Euf_me
+Eufriesea_violascens_EU51a      Euf_vi
+Euglossa_amazonica_EU107        Eug_am
+Euglossa_asarophora_EU15        Eug_as
+Euglossa_chalybeata_EU30a       Eug_ch
+Euglossa_crassipunctata_EU144b  Eug_cr
+Euglossa_despecta_EU84          Eug_de
+Euglossa_dodsoni_EU13           Eug_do
+Euglossa_dressleri_EU63         Eug_dr
+Euglossa_flammea_EU139          Eug_fl
+Euglossa_fuscifrons_EU46        Eug_fu
+Euglossa_gorgonensis_EU67       Eug_go
+Euglossa_hansoni_EU17           Eug_ha
+Euglossa_heterosticta_EU19      Eug_he
+Euglossa_ignita_EU14            Eug_ig
+Euglossa_intersecta_EU21        Eug_in
+Euglossa_ioprosopa_EU39         Eug_io
+Euglossa_macrorhyncha_EU90a     Eug_ma
+Euglossa_mixta_EU8              Eug_mi
+Euglossa_prasina_EU79           Eug_pr
+Euglossa_retroviridis_EU87      Eug_re
+Euglossa_tridentata_EU42        Eug_tr
+Eulaema_bombiformis_EU4         Eul_bo
+Eulaema_cingulata_EU2           Eul_ci
+Eulaema_meriana_EU3             Eul_me
+Eulaema_mocsaryi_EU20           Eul_mo
+Eulaema_nigrita_EU7             Eul_ni
+Exaerete_smaragdina_EU1         Exa_sm
+==============================================
