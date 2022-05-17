@@ -87,7 +87,7 @@
 #' # Maximizing incongruence
 #' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 #'                   symmetric = FALSE, ei.correct = "sqrt.D",
-#'                   percentile = 0.99, correction = "diff.fq",
+#'                   percentile = 0.99, diff.fq = TRUE,
 #'                   strat = "parallel", cl = 8)
 #' THSi <- trimHS_maxI(N, np_matrix, n)
 #' pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:10],

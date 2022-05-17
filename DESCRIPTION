@@ -5,7 +5,7 @@ Date: 2021-09-23
 Authors@R: c(person("Mar", "Llaberia-Robledillo", role = c("aut", "cre", "cph"), email = "mar.llaberia@uv.es", comment = c(ORCID = "0000-0002-7989-796X")),
   person("Juan A.", "Balbuena", role = c("aut", "cph"), email = "j.a.balbuena@uv.es", comment = c(ORCID = "0000-0003-4006-1353"))
   )
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: Mar Llaberia-Robledillo <mar.llaberia@uv.es>
 Description: Applies a given global-fit method to random partial tanglegrams of a fixed size to 
              identify the associations, terminals, and nodes that maximize phylogenetic 
              (in)congruence. It also includes functions to compute more easily the confidence 

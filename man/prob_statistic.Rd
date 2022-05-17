@@ -13,7 +13,6 @@ prob_statistic(
   fx,
   percentile = 0.01,
   correction = "none",
-  below.p = TRUE,
   symmetric = FALSE,
   ei.correct = "none",
   proc.warns = FALSE,
@@ -53,11 +52,6 @@ association that maximizes phylogenetic congruence. If
 (observed in p - observed in (p-1)) is computed for each
 host-symbiont association.
 It should be the same correction used to obtain \code{"fx"}.}
-
-\item{below.p}{Determines whether frequencies are to be computed below or
-above the percentile set. Default is \code{TRUE} for
-\code{\link[=max_cong]{max_cong()}} analysis. Set it to
-\code{FALSE} for \code{\link[=max_incong]{max_incong()}} analysis.}
 
 \item{symmetric}{Specifies the type of Procrustes superimposition. Default
 is \code{FALSE}, indicates that the superposition is applied
@@ -103,14 +97,14 @@ n = 15
 # Maximizing congruence (not run)
 # NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 #                 symmetric = FALSE, ei.correct = "sqrt.D",
-#                 percentile = 0.01, res.fq = FALSE,
+#                 percentile = 0.01, correction = "none",
 #                 strat = "parallel", cl = 8)
 # THSc <- trimHS_maxC(N, np_matrix, n)
 # pp_treesPACOo_cong <- prob_statistic(THSc, np_matrix, NUC_500tr[1:10],
-#                         CP_500tr[1:10], freqfun = "paco", NPc,
-#                         symmetric = FALSE, ei.correct = "sqrt.D",
-#                         percentile = 0.01, correction = "none",
-#                         below.p = TRUE, strat = "parallel", cl = 8)
+#                          CP_500tr[1:10], freqfun = "paco", NPc,
+#                          percentile = 0.01, correction = "none",
+#                          symmetric = FALSE, ei.correct = "sqrt.D",
+#                          strat = "parallel", cl = 8)
 
 # Maximizing incongruence
 NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
@@ -120,9 +114,9 @@ NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 THSi <- trimHS_maxI(N, np_matrix, n)
 pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:10],
                         CP_500tr[1:10], freqfun = "paco", NPi,
-                        symmetric = FALSE, ei.correct = "sqrt.D",
                         percentile = 0.99, correction = "diff.fq",
-                        below.p = TRUE, strat = "parallel", cl = 8)
+                        symmetric = FALSE, ei.correct = "sqrt.D",
+                        strat = "parallel", cl = 8)
 
 
 }
