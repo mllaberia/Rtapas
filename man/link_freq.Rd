@@ -62,7 +62,7 @@ phylogenetic (in)congruence.
 
 \examples{
 data(amph_trem)
-N = 10
+N = 10 #for the example, we recommend 1e+4 value
 n = 8
 
 TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)

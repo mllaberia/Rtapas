@@ -1,16 +1,17 @@
 Package: Rtapas
 Title: Random Tanglegram Partitions
-Version: 1.2
-Date: 2021-09-23
+Version: 1.0
+Date: 2022-09-19
 Authors@R: c(person("Mar", "Llaberia-Robledillo", role = c("aut", "cre", "cph"), email = "mar.llaberia@uv.es", comment = c(ORCID = "0000-0002-7989-796X")),
-  person("Juan A.", "Balbuena", role = c("aut", "cph"), email = "j.a.balbuena@uv.es", comment = c(ORCID = "0000-0003-4006-1353"))
+  person("Juan A.", "Balbuena", role = c("aut", "cph"), email = "j.a.balbuena@uv.es", comment = c(ORCID = "0000-0003-4006-1353")), 
+  person("José Ignacio", "Lucas-Lledó", role = c("aut", "cph"), comment = c(ORCID = "0000-0001-6254-8942")),
+  person("Oscar Alejandro", "Pérez-Escobar", role = c("aut", "cph"), comment = c(ORCID = "0000-0001-9166-2410"))
   )
-Maintainer: Mar Llaberia-Robledillo <mar.llaberia@uv.es>
-Description: Applies a given global-fit method to random partial tanglegrams of a fixed size to 
-             identify the associations, terminals, and nodes that maximize phylogenetic 
-             (in)congruence. It also includes functions to compute more easily the confidence 
-             intervals of classification metrics and plot results, reducing computational time. 
-             See (..)
+Description: Applies a given global-fit method to random partial tanglegrams of a fixed size
+             to identify the associations, terminals, and nodes that maximize phylogenetic
+             (in)congruence. It also includes functions to compute more easily the confidence
+             intervals of classification metrics and plot results, reducing computational time.
+             See Llaberia-Robledillo et al. (2022, <doi:10.1101/2022.05.17.492291>).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -27,7 +28,7 @@ Imports:
     vegan,
     stringr,
     parallelly
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 NeedsCompilation: no
 Suggests: 
     testthat (>= 3.0.0)

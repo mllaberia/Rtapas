@@ -59,7 +59,6 @@ Data set of mitochondrial haplotypes of the trematode
 Lagrue C., Joannes A., Poulin R., Blasco-Costa I. (2016). Genetic structure
 and host–parasite co‐divergence: evidence for trait‐specific local adaptation.
 Biological Journal of the Linnean Society. 118:344–358.
-\doi{10.1111/bij.12722}
 
 Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
 (2022). User’s Guide Random Tanglegram Partitions V.1.0.0. Zenodo.

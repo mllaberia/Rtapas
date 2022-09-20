@@ -46,7 +46,7 @@ calculate the ParaFitGlobal Statistic.
 }
 \examples{
 data(amph_trem)
-N = 10
+N = 10 #for the example, we recommend 1e+4 value
 n = 8
 
 TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
@@ -57,10 +57,8 @@ PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
 \references{
 Legendre P., Desdevises Y., Bazin E. (2002). A Statistical Test for
 Host–Parasite Coevolution. Systematic Biology. 51:217–234.
-\doi{1080/10635150252899734}
 
 Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
 (2020). Random Tanglegram Partitions (Random TaPas): An Alexandrian Approach
 to the Cophylogenetic Gordian Knot. Systematic Biology. 69:1212–1230.
-\doi{10.1093/sysbio/syaa033}
 }

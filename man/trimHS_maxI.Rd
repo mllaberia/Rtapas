@@ -28,7 +28,7 @@ associations.
 }
 \examples{
 data(nuc_cp)
-N = 1e+2
+N = 10  #for the example, we recommend 1e+4 value
 n = 15
 TNC <- trimHS_maxI(N, np_matrix, n, check.unique = TRUE)
 

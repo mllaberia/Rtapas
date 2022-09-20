@@ -70,7 +70,7 @@
 #'
 #' @examples
 #' data(nuc_pc)
-#' N = 1e+2 #for the example, we recommend 1e+4 value
+#' N = 10 #for the example, we recommend 1e+4 value
 #' n = 15
 #' # Maximizing congruence (not run)
 #' # NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
@@ -90,8 +90,8 @@
 #'                   percentile = 0.99, diff.fq = TRUE,
 #'                   strat = "parallel", cl = 8)
 #' THSi <- trimHS_maxI(N, np_matrix, n)
-#' pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:10],
-#'                         CP_500tr[1:10], freqfun = "paco", NPi,
+#' pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:5],
+#'                         CP_500tr[1:5], freqfun = "paco", NPi,
 #'                         percentile = 0.99, correction = "diff.fq",
 #'                         symmetric = FALSE, ei.correct = "sqrt.D",
 #'                         strat = "parallel", cl = 8)

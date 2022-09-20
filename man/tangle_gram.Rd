@@ -89,16 +89,15 @@ of each node.
 }
 
 \examples{
-data(amph_trem)
-N = 1000
+data(nuc_cp)
+N = 10 #for the example, we recommend 1e+4 value
 n = 8
-ATc <- max_cong(am_matrix, amphipod, trematode, n, N, method = "paco",
+NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
                 symmetric = TRUE, ei.correct = "sqrt.D",
-                percentile = 0.01, res.fq = TRUE,
+                percentile = 0.01, res.fq = FALSE,
                 strat = "parallel", cl = 4)
-
-col = c("darkred","gray90", "darkblue")
-tangle_gram(amphipod, trematode, am_matrix, ATc, colscale = "diverging",
+col = c("darkorchid4", "gold")
+tangle_gram(NUCtr, CPtr, np_matrix, NPc, colscale = "sequential",
             colgrad = col, nbreaks = 50, node.tag = TRUE)
 
 

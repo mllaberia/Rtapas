@@ -57,7 +57,6 @@ Zuntini A., Arias T., Serna A., Gravendeel B., Torres M.F., Nargar K.,
 Chomicki G., Chase M.W., Leitch I.J., Forest F., Baker W.J. (2021).
 Hundreds of nuclear and plastid loci yield novel insights into orchid
 relationships. American Journal of Botany, 108(7), 1166-1180.
-\doi{10.1002/ajb2.1702}
 }
 \usage{
 data(nuc_cp)
@@ -75,6 +74,5 @@ Zuntini A., Arias T., Serna A., Gravendeel B., Torres M.F., Nargar K.,
 Chomicki G., Chase M.W., Leitch I.J., Forest F., Baker W.J. (2021).
 Hundreds of nuclear and plastid loci yield novel insights into orchid
 relationships. American Journal of Botany, 108(7), 1166-1180.
-\doi{10.1002/ajb2.1702}
 }
 \keyword{datasets}

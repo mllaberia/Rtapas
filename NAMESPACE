@@ -2,7 +2,7 @@
 
 export(assoc_mat)
 export(geo_D)
-export(gini_plot)
+export(gini_ci)
 export(link_freq)
 export(linkf_CI)
 export(max_cong)

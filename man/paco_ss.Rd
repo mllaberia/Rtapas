@@ -7,7 +7,6 @@ configurations}
 \source{
 Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.
 (2022). User’s Guide Random Tanglegram Partitions V.1.0.0. Zenodo.
-\doi{10.5281/zenodo.6327235}
 }
 \usage{
 paco_ss(
@@ -69,7 +68,7 @@ configurations in Euclidean space.
 }
 \examples{
 data(amph_trem)
-N = 10
+N = 10 #for the example, we recommend 1e+4 value
 n = 8
 
 TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
@@ -80,10 +79,8 @@ PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
 \references{
 Balbuena J.A., Miguez-Lozano R., Blasco-Costa I. (2013). PACo: A Novel
 Procrustes Application to Cophylogenetic Analysis. PLOS ONE. 8:e61048.
-\doi{10.1371/journal.pone.0061048}
 
 Balbuena J.A., Perez-Escobar Ó.A., Llopis-Belenguer C., Blasco-Costa I.
 (2020). Random Tanglegram Partitions (Random TaPas): An Alexandrian Approach
 to the Cophylogenetic Gordian Knot. Systematic Biology. 69:1212–1230.
-\doi{10.1093/sysbio/syaa033}
 }

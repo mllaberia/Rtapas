@@ -56,7 +56,6 @@
 #' Chomicki G., Chase M.W., Leitch I.J., Forest F., Baker W.J. (2021).
 #' Hundreds of nuclear and plastid loci yield novel insights into orchid
 #' relationships. American Journal of Botany, 108(7), 1166-1180.
-#' \doi{10.1002/ajb2.1702}
 #'
 #' @source
 #' Perez-Escobar O.A., Dodsworth S., Bogarin D., Bellot S., Balbuena J.A.,
@@ -65,7 +64,6 @@
 #' Chomicki G., Chase M.W., Leitch I.J., Forest F., Baker W.J. (2021).
 #' Hundreds of nuclear and plastid loci yield novel insights into orchid
 #' relationships. American Journal of Botany, 108(7), 1166-1180.
-#' \doi{10.1002/ajb2.1702}
 #'
 #' @keywords datasets
 #'

@@ -47,7 +47,7 @@
 #'
 #' @examples
 #' data(nuc_cp)
-#' N = 10
+#' N = 10 #for the example, we recommend 1e+4 value
 #' n = 8
 #' # Maximizing incongruence
 #' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",

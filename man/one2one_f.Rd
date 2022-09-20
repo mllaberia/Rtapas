@@ -54,7 +54,7 @@ associations can be chosen.
 }
 
 \examples{
-N = 1e+2
+N = 10  #for the example, we recommend 1e+4 value
 data(amph_trem)
 n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
 

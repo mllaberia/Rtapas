@@ -30,9 +30,9 @@ max_incong(
 
 \item{N}{Number of runs.}
 
-\item{method}{Specifies the desired global-fit method (GD, PACo or ParaFit).
-The default is \code{PACo}. Options are \code{"geoD"} (Geodesic
-Distances), \code{"paco"} (PACo) or \code{"paraF"} (ParaFit).}
+\item{method}{Specifies the desired global-fit method (PACo or ParaFit).
+The default is \code{PACo}. Options are \code{"paco"} (PACo) or
+\code{"paraF"} (ParaFit).}
 
 \item{symmetric}{Specifies the type of Procrustes superimposition. Default
 is \code{FALSE}, indicates that the superposition is applied
@@ -100,7 +100,7 @@ phylogenetic incongruence.
 
 \examples{
 data(nuc_pc)
-N = 1e+2
+N = 10 #for the example, we recommend 1e+4 value
 n = 15
 NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
                   symmetric = FALSE, ei.correct = "sqrt.D",

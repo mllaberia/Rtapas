@@ -2,8 +2,8 @@
 #'
 #' Computes and displays in a boxplot the Gini coefficient and their
 #' confidence intervals of the frequency (or residual/corrected frequencies)
-#' distributions of up to three estimated (in)congruence metrics of the
-#' individual host-symbiont associations.
+#' distributions of the estimated (in)congruence metric (with any of the three
+#' global-fit methods) of the individual host-symbiont associations.
 #'
 #' @param LF_1 Vector of statistics produced with
 #'        \code{\link[=max_cong]{max_cong()}} or
@@ -14,28 +14,13 @@
 #'        \code{\link[=prob_statistic]{prob_statistic()}} for \code{"geoD"},
 #'        \code{"paco"} or \code{"paraF"} using \code{LF_1}.
 #'
-#' @param LF_2 Vector of statistics produced with
-#'        \code{\link[=max_cong]{max_cong()}} or
-#'        \code{\link[=max_incong]{max_incong()}} for \code{"geoD"},
-#'        \code{"paco"} or \code{"paraF"}.
-#'
-#' @param M02 Matrix produced with
-#'        \code{\link[=prob_statistic]{prob_statistic()}} for \code{"geoD"},
-#'        \code{"paco"} or \code{"paraF"} using \code{LF_2}.
-#'
-#' @param LF_3 Vector of statistics produced with
-#'        \code{\link[=max_cong]{max_cong()}} or
-#'        \code{\link[=max_incong]{max_incong()}} for \code{"geoD"},
-#'        \code{"paco"} or \code{"paraF"}.
-#'
-#' @param M03 Matrix produced with
-#'        \code{\link[=prob_statistic]{prob_statistic()}} for \code{"geoD"},
-#'        \code{"paco"} or \code{"paraF"} using \code{LF_3}.
-#'
 #' @param ... Any optional argument admissible in
 #'        \code{\link[graphics:boxplot]{boxplot()}}
 #'
 #' @param ylab Title of the y label.
+#'
+#' @param plot Default is \code{"TRUE"}, plots the Gini coefficient and its
+#'        confidence intervals in a boxplot.
 #'
 #' @return The Gini values obtained and their representation in a boxplot, with
 #'         their confidence intervals.
@@ -67,7 +52,7 @@
 #'
 #' @examples
 #' data(nuc_cp)
-#' N = 10000
+#' N = 10 #for the example, we recommend 1e+4 value
 #' n = 15
 #' # Maximizing congruence
 #' NPc_PACo <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
@@ -78,51 +63,35 @@
 #' # Loaded directly from dataset
 #' # THSC <- trimHS_maxC(N, np_matrix, n)
 #' # pp_treesPACo_cong <- prob_statistic(ths = THSc, np_matrix, NUC_500tr[1:10],
-#' #                         CP_500tr[1:10], freqfun = "paco", NPc,
+#' #                         CP_500tr[1:10], freqfun = "paco", NPc_PACo,
 #' #                         symmetric = FALSE, ei.correct = "sqrt.D",
-#' #                         percentile = 0.01, res.fq = FALSE,  below.p = TRUE,
+#' #                         percentile = 0.01, correction = "none",
 #' #                         strat = "parallel", cl = 8)
 #'
-#' gini_plot(LF_1 = NPc_PACo, M01 = pp_treesPACo_cong,
-#'           ylab = "Gini Coefficient (G)",
-#'           names = c("PACo_MaxCongruence"))
+#' gini_ci(LF_1 = NPc_PACo, M01 = pp_treesPACo_cong,
+#'          ylab = "Gini Coefficient (G)",
+#'          plot = TRUE, ylim = c(0.3, 0.8))
+#' abline(h = 1/3) # because res.fq = TRUE
 #'
-gini_plot <- function (LF_1, M01, LF_2, M02, LF_3, M03,
-                       ylab = "Gini coefficient", ...)
-{
-  if (missing(M01) & missing(LF_1) == TRUE) {
-    Gini01 <- NULL
-    GiniM01 <- NULL
+gini_ci <- function (LF_1, M01,
+                     ylab = "Gini coefficient", plot = TRUE, ...){
+
+  Gini01 <- unlist(Gini_RSV( LF_1[, ncol(LF_1)]))
+  GiniM01 <- unlist(apply(M01, 1, Gini_RSV))
+
+  if(plot == TRUE){
+    box <- boxplot(GiniM01, show.names = TRUE, ylab = ylab, ...)
+    text(1, Gini01, "*", cex = 2, col = "red")
   }
-  else {
-    Gini01 <- unlist(Gini_RSV( LF_1[, ncol(LF_1)]))
-    GiniM01 <- unlist(apply(M01, 1, Gini_RSV))
-  }
-  if (missing(M02) & missing(LF_2) == TRUE) {
-    Gini02 <- NULL
-    GiniM02 <- NULL
-  }
-  else {
-    Gini02 <- unlist(Gini_RSV(LF_2[, ncol(LF_2)]))
-    GiniM02 <- unlist(apply(M02, 1, Gini_RSV))
-  }
-  if (missing(M03) & missing(LF_3) == TRUE) {
-    Gini03 <- NULL
-    GiniM03 <- NULL
-  }
-  else {
-    Gini03 <- unlist(Gini_RSV(LF_3[, ncol(LF_3)]))
-    GiniM03 <- unlist(apply(M03, 1, Gini_RSV))
-  }
-  ginis <- list(GiniM01, GiniM02, GiniM03)
-  ginis <- ginis[!sapply(ginis, is.null)]
-  rg <- list(Gini01 = Gini01, Gini02 = Gini02, Gini03 = Gini03)
-  rg <- rg[!sapply(rg, is.null)]
-  boxplot(ginis,
-          show.names = TRUE, ylab = ylab, ...)
-  for (i in 1:length(rg)) {
-    text(i, rg[[i]], "*", cex = 2, col = "red")
-  }
-  return(unlist(rg))
+
+  box <- boxplot(GiniM01, plot = FALSE)
+  lower_CI <- box$conf[1,]
+  upper_CI <- box$conf[2,]
+  Mean <- mean(GiniM01)
+  Observed <- Gini01
+
+  values <- data.frame(Observed, Mean, lower_CI, upper_CI)
+
+  return(values)
 }
 

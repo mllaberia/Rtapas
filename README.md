@@ -8,7 +8,7 @@ We introduce Rtapas (v1.2), an R package to perform Random Tanglegram Partitions
 Incorporates ParaFit (Legendre et al. 2002), geodesic distances (GD) (Schardl et al. 2008) and PACo (Balbuena et al. 2013) as global-fit methods to implement Random TaPas. Rtapas further enhances the usability and implementation of Random TaPas by including functions (i) to facilitate the prior processing of association data between taxa, (ii) to estimate, in a set of probability trees, the statistic of a given global-fit method, (iii) to estimate the (in)congruence metrics of the individual host-symbiont associations, and (iv) to compute either conventional (G) or normalized (G*) (Raffinetti et al. 2015) characterizing the distribution of such metrics.
 
 ## Installation
-
+ 
 You can install the development version of Rtapas from [GitHub](https://github.com/) with:
 
 ``` r

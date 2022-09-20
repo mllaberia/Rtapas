@@ -94,7 +94,7 @@ of cases that maximize phylogenetic congruence.
 
 \examples{
 data(nuc_pc)
-N = 1e+2
+N = 10 #for the example, we recommend 1e+4 value
 n = 15
 NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
                 symmetric = FALSE, ei.correct = "sqrt.D",

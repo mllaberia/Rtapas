@@ -1,11 +1,12 @@
 ---
 title: "User’s Manual - `Rtapas`"
-author: "Mar Llaberia-Robledillo, Juan Antonio Balbuena, ..."
+author: "Mar Llaberia-Robledillo, Juan Antonio Balbuena, J. Ignacio Lucas-Lledo, Oscar Perez-Escobar"
 date: "22/02/2022"
 output:
   html_document: default
   pdf_document: default
   word_document: default
+  toc: true
 editor_options:
   markdown:
     wrap: sentence
@@ -16,11 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 This manual illustrates the use of the R package `Rtapas`.
-We demonstrate in the manuscript the use of the package with two quite different datasets to be able to apply all the options that package presents. The first dataset consists of mitochondrial haplotypes of the cytochrome oxidase subunit 1 of the trematode, *Coitocaecum parvum* (Crowcroft, 1945), and those of its amphipod host, *Paracalliope fluviatilis* (Thomson, 1879), from seven locations in South Island, New Zealand (Lagrue et al. 2016).The second dataset consists of chloroplast and nuclear sequence data from 52 orchid genera (Pérez-Escobar et al. 2021).
+This imports `ape`(Paradis & Schliep 2019), `parallel`(R Core Team , 2021), and `phytools`(Revell 2012) packages by default, but also depends on `distory`(Chakerian & Holmes 2010), `GiniWegNeg`(Raffinetti & Aimar 2016), `vegan`(Oksanen et al. 2020), and `parallelly` (Bengtsson, 2021).
+The installation of the packages is necessary to run `Rtapas`.
 
-## WORKOUT EXAMPLE 
+## WORKOUT EXAMPLE
 
-In this manual we use a database external to the package so that the user can follow the entire process. We demonstrate in this example how to assess the influence of phylogenetic uncertainty in the analysis using association data of pollinated orchids and their corresponding bee pollinators (Ramíerz et al. 2011)
+In this manual we use a database external to the package so that the user can follow the entire process.
+We examined cophylogenetic patterns between hosts and symbionts and demonstrate how to assess the influence of phylogenetic uncertainty in the analysis.
+To this end, we used the association data of pollinated orchids and their corresponding bee pollinators (Ramíerz et al. 2011), and the posterior probability trees used to build th respective consensus trees.
 
 ### SESSION STARTS
 
@@ -32,15 +36,21 @@ library(Rtapas)
 
 Package `parallel` is convenient for multi‐core to reduce computational time.
 
-### DATA AND PARAMETERS INPUTS
+### DATA INPUTS
 
-The input consists of three files (*H*, *S*, **A**), where *H* and *S* represent the phylogenies of hosts and symbionts, and **A** informs of the associations between hosts and symbionts. 
-*H* and *S* can be Nexus or Newick files containing the phylogenetic relationships of hosts and symbionts, respectively. **A** is typically an ASCII file, although any file format admitted by `R` can be used.  Host-symbiont associations in **A** can be coded as either: (i) a two-column matrix of host-symbiont pairs in rows, in which hosts are in column 1 and symbionts in column 2. or (ii) a binary matrix with rows and columns corresponding to terminals in *H* and *S*, respectively, in which extant associations between each terminal are coded as 1, and no associations as 0. Should the user wish to incorporate phylogenetic uncertainty in the analysis, two additional Nexus or Newick files with equal number of trees used to infer *H* and *S* (*mH* and *mS*) are required. For instance, *mH* and *mS* can consist of a set of posterior‐probability trees produced by a Bayesian phylogenetic analyses. Typically, the number of trees in each set is 1,000.
+The input consists of three files (*H*, *S*, **A**), where *H* and *S* represent the phylogenies of hosts and symbionts, and **A** informs of the associations between hosts and symbionts.
+*H* and *S* can be Nexus or Newick files containing the phylogenetic relationships of hosts and symbionts, respectively.
+**A** is typically an ASCII file, although any file format admitted by `R` can be used.
+Host-symbiont associations in **A** can be coded as either: (i) a two-column matrix of host-symbiont pairs in rows, in which hosts are in column 1 and symbionts in column 2 or (ii) a binary matrix with rows and columns corresponding to terminals in *H* and *S*, respectively, in which extant associations between each terminal are coded as 1, and no associations as 0.
+Should the user wish to incorporate phylogenetic uncertainty in the analysis, two additional Nexus or Newick files with equal number of trees used to infer *H* and *S* (*mH* and *mS*) are required.
+For instance, *mH* and *mS* can consist of a set of posterior‐probability trees produced by a Bayesian phylogenetic analyses.
+Typically, the number of trees in each set is 1.000.
 
-The terminals of *H* and *S* should be the same as those displayed in **A** (but not necessarily with the same order). If there are any terminals in the trees that are not present in the interaction matrix, we recommend to remove them with the `phytools` function `drop.tip()`. Otherwise, displaying of the final tanglegram could not be optimal. 
+The terminals of *H* and *S* should be the same as those displayed in **A** (but not necessarily with the same order).
+If there are any terminals in the trees that are not present in the interaction matrix, we recommend to remove them with the `phytools` function `drop.tip()`.
+Otherwise, displaying the final tanglegram correctly may not be possible and will result in error.
 
-First, we show the process of loading and cleaning the data input.
-```{r}
+```{r collapse=TRUE}
 # Data inputs 
 A <- as.matrix(read.table("Orchids_x_Bees.txt", header = TRUE))
 treeH <- read.nexus("bees.tre")
@@ -51,143 +61,175 @@ mS <- read.nexus("mOrchids.tre")
 
 ```
 
-We recommend that all trees are binary and rooted to gain full functionally of the package. For instance, if the trees are not binary, the global-fit method of geodesic distances (GD) (Schardl et al. 2008) cannot be used. Likewise, the use of unrooted trees precludes representation of the ancestral states in the tanglegram.
+We recommend that all trees are binary and rooted to gain full functionally of the package.
+For instance, if the trees are not binary, the global-fit method of geodesic distances (GD) (Schardl et al. 2008) cannot be used.
+Likewise, the use of unrooted trees blocks the representation of ancestral states in the tanglegram.
 
-In addition, we determine the initial parameters necessary for the algorithm. 
-Rtapas applies `N` times a global-fit method to a subset of *H*, *S* and **A** defined by `n` randomly chosen host-symbiont associations and computes a global-fit statistic. Three global fit methods can be used in Rtapas: geodesic distances (GD) (Schardl et al. 2008), Procrustes Approach to Cophylogeny (PACo) (Balbuena et al. 2013) and ParaFit (Legendre et al. 2002). Then a percentile `p` of the distribution of the `N` statistics generated by any of these methods is scrutinized to determine the set of host-symbiont associations that maximize phylogenetic congruence (or incongruence) between *H* and *S*.  Thus, the user should specify `N`, `n` and `p`.
-We recommend setting `N` at maximum of 10,000 replicates, as higher values can be computationally prohibitive, and lower values may not yield sufficient resolution.
+### PARAMETERS INPUTS
+
+Next, we determine the initial parameters necessary for the algorithm.
+`Rtapas` applies `N` times a global-fit method to a subset of *H*, *S* and **A** defined by `n` randomly chosen host-symbiont associations and computes a global-fit statistic.
+Then, we set the number of replicates to be run (*N*) and the number of unique one-to-one associations (`n`) (i.e., each taxon of either phylogeny is associated with one, and only one, of the other phylogeny, and vice versa).
+Typically, *N* is set to 10.000 replicates, as higher values can be computationally prohibitive, and lower values may not yield sufficient resolution.
 
 ```{r}
 N = 1e+4
 ```
 
-The original Random TaPas algorithm selects for host-symbiont associations that maximize phylogentic congruence between *H* and *S*. In order to help set the optimal `n`, we need to determine the maximum `n` for which one-to-one associations can be chosen in all `N` runs, by following:
+Balbuena et al. (2020) recommend using an `n`between 10 and 20 % of the total number of associations in A, i.e., 129 in the present example.
+Based on this information, `n` must be higher than 12.9 (10%) and less than 25.8 (20%).
+Thus, we can set any integer value of `n` within this range.
 
-```{r, eval=FALSE}
+```{r }
+sum(A) # all associations
+sum(A) * 0.1  # 10% of the total associations 
+sum(A) * 0.2  # 20% of the total associations 
+n = 25
+```
+
+However, when one wants to apply the original algorithm (maximize congruence, Balbuena et al. 2020) in certain scenarios (see Supplementary Materials of Llaberia-Robledillo et al.), setting the number of `n` requires some work (NOT the case of this example, so we exemplify this with a random matrix simulated).
+The original Random TaPas algorithm selects for one-to-one host-symbiont associations that maximize phylogentic congruence between *H* and *S*.
+But, there is an upper limit to the number of unique one-to-one associations that can be chosen in any of the *N* runs for a given system.
+That is, in each run, the algorithm will select, randomly, a certain number of unique associations among all the possible ones.
+However, in a given run, the number of associations to be randomly selected may be higher than all possible associations.
+This is because, at each repetition, the algorithm selects a random association with the one-to-one characteristics and can eliminate the possibility of others being chosen.
+So, we use function `one2one_f` to determines the maximum `n` for which one-to-one associations can be chosen in all (or most) *N* runs.
+
+```{r eval = FALSE}
 one2one_f(A, reps = N, plot = TRUE)
 ```
 
-The maximum possible number of `n` is the sum of all associations in **A**, but since the aim is to find associations that maximize congruence, only those associations where each taxon of *H* is associated with one (only to one) taxon in *S*, and vice versa, are needed here.
-However, in certain configurations, setting the number of unique host‐associations (`n`) requires some work because there is an upper limit to the number of such associations that can be chosen in any of the `N` runs, or we do not need the unique one to one associations (i.e. incongruence algorithm).
 If `plot = TRUE` (the default) in the function above, a plot of `n` in the interval range against the number of runs that could be completed is produced.
 Based on this information, the chosen `n` has to offer a good compromise between the number of unique runs implemented (\> 9,500) and the fraction (\> 10%) of total number of host‐symbiont associations recommended for analysis.
 
-If trees of different molecular markers are compared, all the associations present in the system are one to one, so `n` would be equal to the sum of all the associations.
-On the contrary, if the dataset is significantly dominated by multiple associations (this case), the value of `n` compared to the total associations would be very low.
-In such cases, we recommend using an `n` close to 20%, or at least 10%, of the total number of associations (offering a good compromise between the number of matrices evaluated and the fraction (\>10%) of total number of host‐symbiont associations), by following:
+## Algorithm to maximize congruence
 
-```{r, eval=TRUE}
-n = round(sum(A)*0.2)
-```
-
-#### Algorithm to maximize congruence
-
-Function `max_cong()` is used to identify host-symbionts associations that maximize congruence between *H* and *S*. It determines the frequency of occurrence of each host-symbiont association in a `p` of the `N` statistics (global-fit values) distribution generated.
+Function `max_cong()` is used to identify host-symbionts associations that maximize congruence between *H* and *S*.
+It determines the frequency of occurrence of each host-symbiont association in a percentile (`p`) of the `N` statistics (global-fit values) distribution generated.
 
 For `N` runs, `max_cong()` randomly selects `n` unique associations in **A** where one terminal in *H* is associated with a single terminal in *S* (and vice versa).
-The output is a list of  `N` trimmed host-symbiont association matrices with `n` links.
-Next, a global-fit method is applied on each of the trimmed matrices, returning a list of `N` statistic values. In this example, we apply PACo, that return the sum of squared residuals. The other global-fit methods included are GD (returns a geodesic distance) and ParaFit (returns the global value statistic - ParaFit Global -).
+The output is a list of `N` trimmed host-symbiont association matrices with `n` links.
+Next, a global-fit method is applied on each of the trimmed matrices, returning a list of `N` statistic values.
+Three global fit methods can be used in `Rtapas`: Geodesic distances (GD) (Schardl et al. 2008), Procrustes Approach to Cophylogeny (PACo) (Balbuena et al. 2013) and ParaFit (Legendre et al. 2002).
+The user can choose which method use on his data, or use all of them and compare the results.
+It is all up to user.
+Here, we are going to use PACo.
 
-In the example we set the PACo’s argument `symmetric = TRUE` to perform a symmetric Procrustes superimposition between the host and symbiont dissimilarity matrices. Biologically this means that codivergence between orchids and bees lineages was assumed to be reciprocal. 
+PACo returns the sum of squared residuals, GD returns a geodesic distance and ParaFit returns the global value statistic (ParaFit Global).
+The three methods produce statistics inversely proportional to cophylogenetic congruence, the most congruent host-symbiont associations would correspond to the lowest statistics values.
+
+#### PACo as Global-Fit method
+
+In the example we set the PACo's argument `symmetric = TRUE` to perform a symmetric Procrustes superimposition between the host and symbiont dissimilarity matrices.
+Biologically, this means that codivergence between orchids and bees lineages was assumed to be reciprocal.
 The adoption of a symmetric mode (dependency between *S* and *H* is reciprocal) or asymmetric mode (the evolution of *S* depends on evolution of *H*) is important because it determines the type of Procrustes superimposition, and therefore affects the detection of congruence between the phylogenies.
 In host-parasite systems, where the phylogeny of the parasite is often dependent on that of the host, we recommend setting `symmetric = FALSE`.
 In other cases, such as the phylogenies of different molecular markers or in plant-pollinator systems, it is not clear which group may be driving the evolution of the other, so we recommend setting `symmetric = TRUE` (default).
 
 ```{r}
-LFc_PC <- max_cong(A, treeH, treeS, n, N, method = "paco", 
-                symmetric = TRUE, ei.correct = "sqrt.D", 
-                percentile = 0.01, res.fq = TRUE, 
-                strat = "parallel", cl = 10)
-head(LFc_PC)
+PACo_LFc <- max_cong(A, treeH, treeS, n, N, method = "paco", symmetric = TRUE, 
+                     ei.correct = "sqrt.D", percentile = 0.01, res.fq = TRUE, 
+                     strat = "parallel", cl = 10)
+head(PACo_LFc)
 ```
 
 We extract the residual frequencies (`res.fq = TRUE`) of host‐symbiont associations represented in the 1% percentile (`percentile = 0.01`).
 In databases where multiple associations predominate, the output value can give an overrepresentation of one-to-one associations in the overall frequency distribution.
 This is due to the algorithm's favoring the selection of unique one-to-one associations, leading an overestimation of their relative contribution to congruence.
-For this reason, `res.fq = TRUE`, which allows converting the frequency distribution of host-symbiont associations into distribution of residuals (*R~i~* = observed - expected frequencies), indicating whether link *i* is represented more often as expected by chance in `p` (*wFq* in the `LFc_PC` output).
+For this reason, `res.fq = TRUE`, which allows converting the frequency distribution of host-symbiont associations into distribution of residuals (*R~i~* = observed - expected frequencies), indicating whether link *i* is represented more often as expected by chance in `p` (*wFq* in the `PACo_LFc` output).
 
-Finally, we represent the initial triplet (*H*, *S* and **A**) with the `tangle_gram()` function. The contribution of each host-symbiont association to the global cophylogenetic signal is displayed as a heatmap on the tanglegram, where `colgrad` argument defines the color scale, and `nbreaks` specifies the number of breaks on the color scale. The user can also set the size of the color points at terminals and nodes (`cexpt`) and additional visualization options included in `phytools::plot.cophylo()` (see [https://www.rdocumentation.org/packages/phytools/versions/0.6‐60/topics/cophylo](https://www.rdocumentation.org/packages/phytools/versions/0.6‐60/topics/cophylo){.uri}).
-
-The contribution of each host-symbiont association to the global cophylogenetic signal can be estimated as its frequency of occurrence in the `p` percentile of the `N` global fit statistics or as its correct residual as pointed out above (`res.fq = TRUE` in the previous function). In the latter case, it is recommended to set `colscale = "diverging"`. So the color scale is centered at 0. Positive values would be associated to host-symbiont associations whose contribution to cophylogenetic congruence is large, whereas negative ones would identify associations that contribute to phylogenetic incongruence. For a diverging color scale, at least three colors are recommended, e.g.
+Finally, we represent the initial triplet (*H*, *S* and **A**) with the `tangle_gram()` function.
+The contribution of each host-symbiont association to the global cophylogenetic signal can be estimated as its frequency of occurrence in the `p` percentile of the `N` global fit statistics or as its correct residual as pointed out above (`res.fq = TRUE`).
+Positive values would be associated to host-symbiont associations whose contribution to cophylogenetic congruence is large, whereas negative ones would identify associations that contribute to phylogenetic incongruence.
+In case that `res.fq = TRUE` in the previous function, it is recommended to set `colscale = "diverging"`, so the color scale is centered at 0 (and at least three colors are needed).
 
 ```{r}
 colgrad <- c("darkred", "gray90", "darkblue")
-```
 
-where the red colors would represent those taxa with higher incongruence and the blue colors, those with higher congruence.
-
-If the frequencies are not corrected (`res.fq = FALSE`), it is convenient to set `colscale = "sequential"`. Then the scale spans from the minimum to the maximum values observed. In this case, a two-color range would suffice, e.g.
-
-```{r, eval=FALSE}
-colgrad <- c("darkred", "darkblue")
-```
-
-In addition, the average frequency or residual frequency of each terminal in `p` as a continuous trait, fast maximum likelihood estimators of ancestral states can be computed and their values displayed at the nodes of the phylogeny with `node.tag = TRUE`. Note that this will not work if (i) there are terminals that are not associated with terminals in the corresponding tree, (ii) the trees are not rooted, (iii) the trees present multichotomies, or/and (iv) there are `NA` or `NULL` values in trees or in `max_cong()` output. 
-
-```{r}
-tangle_gram(treeH, treeS, A, LFc_PC, colscale = "diverging", 
+tangle_gram(treeH, treeS, A, PACo_LFc, colscale = "diverging", 
             colgrad = c("darkred", "gray90", "darkblue"), nbreaks = 50, 
             node.tag = TRUE, cexpt = 1.2, link.lwd = 1, link.lty = 1, 
             fsize = 0.5, pts = FALSE, ftype ="i")
 
 ```
 
-#### Algortihm to maximize incongruence
+The contribution of each host-symbiont association to the global cophylogenetic signal is displayed as a heatmap on the tanglegram, where, red colors would represent those taxa with higher incongruence and the blue colors, those with higher congruence.
+The `colgrad` argument defines the color scale, and `nbreaks` specifies the number of breaks on the color scale.
+The user can also set the size of the color points at terminals and nodes (`cexpt`), remove tip names (`ftype = "off"`) and additional visualization options included in `phytools::plot.cophylo()` (see [https://www.rdocumentation.org/packages/phytools/versions/0.6‐60/topics/cophylo](https://www.rdocumentation.org/packages/phytools/versions/0.6‐60/topics/cophylo){.uri}).
 
-To identify host-symbiont associations that maximize incongruence between phylogenies, `max_incong()` is applied. The difference with the previous algorithm is the criteria for determining the trimmed matrices and the chosen percentile.
-In the previous case, only one-to-one associations were allowed, while in this test multiple and/or repeated associations are allowed, so the size of the matrices will be unequal.
+In addition, taking the average frequency of each terminal in `p` as a continuous trait, fast maximum likelihood estimators of ancestral states can be computed and their values displayed at the nodes of the phylogeny with `node.tag = TRUE`.
+Note that this will not work if (i) there are terminals in one tree that are not associated with terminals in the other tree, (ii) the trees are not rooted, (iii) the trees present multichotomies, or/and (iv) there are `NA` or `NULL` values in trees or in `max_cong()` output.
 
-To interpret this algorithm, we need to understand the statistics values (GD, PACo and ParaFit).
-Lowest statistic values indicate a higher congruence (or lower incongruence), meanwhile higher statistic values indicate lower congruence (or highest incongruence).
-Thus, the distribution frequency is determined within a percentile of 1% (low values of statistic) and 99% (high values of statistic).
-Then, `percentile = 0.99` in this algorithm.
+On the other hand, in case that the frequencies are not corrected (`res.fq = FALSE`), it is convenient to set `colscale = "sequential"`.
+Then the scale spans from the minimum to the maximum values observed, so a two-color range is defined.
 
-```{r}
-LFi_PC <- max_incong(A, treeH, treeS, n, N, method = "paco", 
-                     symmetric = TRUE, ei.correct = "sqrt.D", 
-                     percentile = 0.99, diff.fq = TRUE,
-                     strat = "parallel", cl = 10)
-head(LFi_PC)
+```{r, eval=FALSE}
+colgrad <- c("darkred", "darkblue")
 ```
 
-In the output `LFi_PC`, the incongruence of each association is measured as the frequency of occurrence of a given association in the `p` of the distribution (`Freq`).
-However, in systems in which a large number of host-parasite associations are similar in either their contribution to congruence or incongruence, a given association can occur with certain frequency at both the 0.01 and 0.99 percentiles.
-We recommend in these scenarios setting `diff.fq = TRUE`.
-So, the incongruence of the association (`LFr` above) is estimated as *f~1-p~ - f~p~*, where *f~p~* and *f~1-p~* are the frequency of occurrence of the association in the *p* and *1 - p* percentiles respectively (See ..).
-This adjustment makes comparison with residual frequencies produced by the previous algorithm (`wFq`) straightforward, as `wFq` and `Lfr` are expected to be directly proportional.
-Then, plot the tanglegram:
+## Algortihm to maximize incongruence
+
+To identify host-symbiont associations that maximize incongruence between phylogenies, `max_incong()` is applied.
+This algorithm is less restrictive in terms of the `n` chosen as it allows multiple associations, so the criteria for determining the trimmed matrices changes.
+In the previous case, only one-to-one associations were allowed, while in this test multiple and/or repeated associations are allowed, so the size of the matrices will be unequal.
+
+#### PACo as Global-Fit method
+
+The steps for its application are analogous to those in `max_cong`.
+However, since the global-fit methods contemplated, i.e., PACo, ParaFit and GD, produce statistics that are directly proportional to incongruence, the frequency of occurrence of each host-symbiont association are evaluated in a high `p` (`percentile = 0.99` is the default)
 
 ```{r}
-colgradI <- c("darkred", "gray90", "darkblue")
-tangle_gram(treeH, treeS, A, LFi_PC, colscale = "diverging", 
-            colgrad = colgradI, nbreaks = 50, node.tag = TRUE, 
+PACo_LFi <- max_incong(A, treeH, treeS, n, N, method = "paco", symmetric = TRUE,
+                       ei.correct = "sqrt.D", percentile = 0.99, diff.fq = TRUE, 
+                       strat = "parallel", cl = 10)
+head(PACo_LFi)
+```
+
+In the output `PACo_LFi`, the incongruence of each association is measured as the frequency of occurrence of a given association in the `p` of the distribution (`Freq`).
+However, in systems in which a large number of host-parasite associations are similar in either their contribution to congruence or incongruence, a given association can occur with certain frequency at both the `0.01` and `0.99` percentiles.
+We recommend in these scenarios setting `diff.fq = TRUE`.
+So the incongruence of the association (`LFr` above) is estimated as *f~1-p~ - f~p~*, where *f~p~* and *f~1-p~* are the frequency of occurrence of the association in the *p* and *1 - p* percentiles respectively (See Llaberia-Robledillo et al.).
+This adjustment makes comparison with residual frequencies produced by the previous algorithm (`wFq`) straightforward, as `wFq` and `Lfr` are expected to be directly proportional.
+Then, we plot the tanglegram:
+
+```{r}
+colgrad <- c("darkred", "gray90", "darkblue")
+tangle_gram(treeH, treeS, A, PACo_LFi, colscale = "diverging", 
+            colgrad = colgrad, nbreaks = 50, node.tag = TRUE, 
             cexpt = 1.2, link.lwd = 1, link.lty = 1, fsize = 0.5, 
             pts = FALSE, ftype ="i")
 
 ```
 
-#### Analysis with a set of posterior probability trees
+## Assessing Phylogenetic Uncertainty
 
-If the user has sets of trees used to build the consensus phylogeny of hosts and symbionts (e.g. posterior probability trees produced by Bayesian inference), the confidence intervals of the occurrence frequencies can be computed. Then, we first apply `trimHS_maxC()` or `trimHS_maxI()` (if we wish to select for links that maximize congruence or incongruence, respectively). These functions randomly select, `n` unique or multiple associations (respectively) for `N` runs that maximizes the (in)congruence, obtaining a list of the `N` trimmed matrices. Second, we estimate the desired statistical value (GD, PACo or/and ParaFit) for each of the pairs of trees.
+If the user has sets of trees used to build the consensus phylogeny of hosts and symbionts (i.e., posterior probability trees produced by Bayesian inference), the confidence intervals of the occurrence frequencies can be computed.
+Then, first `trimHS_maxC()` or `trimHS_maxI()` are applied (if we wish to select for links that maximize congruence or incongruence, respectively).
+These functions randomly select, `n` unique or multiple associations (respectively) for `N` runs that maximizes the (in)congruence, obtaining a list of the `N` trimmed matrices.
+Second, we estimate the desired statistical value (GD, PACo or/and ParaFit) for each of the pairs of trees.
 
-Note that the computational load is considerable as typically 1000 tree pairs need to be evaluated over `N` runs. So we recommend applying  parallelization (i.e., `strat = "parallel"`) depending on the processors available on your computer (in our case `cl = 16` mobilizes 16 threads).
-Then, a global-fit statistic is computed for a given set of pairs (*H* and *S*) of the posterior probability trees (`freqfun = "paco"` below indicates that we chose PACo's *m^2^*):
+Note that the computational load is considerable as typically 1000 tree pairs need to be evaluated over `N` runs.
+So we recommend applying parallelization (i.e., `strat = "parallel"`) depending on the processors available on your computer (in our case `cl = 16` mobilizes 16 threads).
+Then, the global-fit statistic is computed for a given set of pairs (*H* and *S*) of the posterior probability trees (`freqfun = "paco"` below indicates that we chose PACo's *m^2^*):
 
 ```{r}
 # Maximize Congruence
+t <- proc.time()
 THSc <- trimHS_maxC(N, A, n)
-PACOc <- prob_statistic(ths = THSc, A, mH[1:10], mS[1:10], 
-                        freqfun = "paco", LFc_PC, symmetric = TRUE, 
-                         ei.correct = "sqrt.D", percentile = 0.01, 
-                         correction = "res.fq",  below.p = TRUE,
-                         strat = "parallel", cl = 16)
+PACOc <- prob_statistic(THSc, A, mH, mS, 
+                        freqfun = "paco", PACo_LFc, symmetric = TRUE, 
+                        ei.correct = "sqrt.D", percentile = 0.01, 
+                        correction = "res.fq", strat = "parallel", cl = 16)
+proc.time() - t 
 
-# Maximize Incongruence 
+# Maximize Incongruence
+t <- proc.time()
 THSi <- trimHS_maxI(N, A, n)
-PACOi <- prob_statistic(ths = THSi, A, mH[1:10], mS[1:10], 
-                        freqfun = "paco", LFi_PC, symmetric = TRUE, 
+PACOi <- prob_statistic(THSi, A, mH, mS, 
+                        freqfun = "paco", PACo_LFi, symmetric = TRUE, 
                         ei.correct = "sqrt.D", percentile = 0.99, 
                         correction = "diff.fq", strat = "parallel", cl = 16)
+proc.time() - t
 
 ```
 
@@ -197,35 +239,122 @@ Next, the contribution of each host-symbiont association to (in)congruence are e
 The color of the bars and intervals can be changed using the `col.bar` and `col.ci` arguments, respectively.
 
 ```{r}
-LF01c <- linkf_CI(freqfun = "paco", x = PACOc, fx = LFc_PC, 
+# Maximize Congruence
+LF01c <- linkf_CI(freqfun = "paco", x = PACOc, fx = PACo_LFc, 
                     c.level = 95, barplot = TRUE, col.bar = "gray90",
                     col.ci = "darkred", ylab = "Frequency")
 
-LF01i <- linkf_CI(freqfun = "paco", x = PACOi, fx = LFi_PC, 
+# Maximize Incongruence
+LF01i <- linkf_CI(freqfun = "paco", x = PACOi, fx = PACo_LFi, 
                     c.level = 95, barplot = TRUE, col.bar = "gray90", 
                     col.ci = "darkred", ylab = "Frequency")
 
 ```
 
-The shape of the distribution of the contributions of the host-symbiont associations to (in)congruence can be characterized with a Gini coefficient (Ultsch and Lötsch 2017), either conventional (*G*) if all output values are positive, or normalized (*G*\*) (Raffinetti et al. 2015) if negative values are produced due to corrected frequencies (either if `res.fq = TRUE` or `diff.fq = TRUE`).
+The shape of the distribution of the contributions of the host-symbiont associations to (in)congruence can be characterized with a Gini coefficient (Ultsch & Lötsch 2017), either conventional (*G*) if all output values are positive (without any correction `res.fq/diff.fq = FALSE`), or normalized (*G*\*) (Raffinetti et al. 2015) if negative values are produced due to corrected frequencies (either if `res.fq/diff.fq = TRUE`).
 
 Since both residuals and corrected frequencies have been estimated here (applying PACo), the *G*\* values of the consensus trees, with its confidence intervals obtained with the set of pairs of posterior probability trees, are estimated:
 
-```{r, eval = FALSE, include = TRUE}
-#Congruence with ParaFit. 
-LFc_PF <- max_cong(A, treeH, treeS, n, N, method = "paraF", 
-                  ei.correct = "sqrt.D", percentile = 0.01, 
-                  res.fq = TRUE, strat = "parallel", cl = 10)
-#THSc <- trimHS_maxC(N, A, n) #-- el mateix que per PACo
-PFc <- prob_statistic(ths = THSc, A, mH, mS, freqfun = "paco", LFcb, 
-                      symmetric = TRUE, ei.correct = "sqrt.D", 
-                      percentile = 0.01, correction = "ref.fq",  
-                      below.p = TRUE, strat = "parallel", cl = 16)
+```{r}
+par(mfrow = c(1, 2)) # display the two graphical results together 
+
+# Maximize Congruence
+gini_ci(PACo_LFc, PACOc, ylab = c("Gini coefficient values (G*)"), 
+        xlab = "Max. Congruence (PACo)", plot = TRUE)
+abline(h = 2/3)
+
+# Maximize Incongruence
+gini_ci(PACo_LFi, PACOi, ylab = c("Gini coefficient values (G*)"), 
+        xlab = "Max. Incongruence (PACo)", plot = TRUE)
+abline(h = 2/3)
+
+#dev.off()
 ```
 
-```{r, eval=FALSE}
-gini_plot(LFc_PC, PACOc, LFc_PF, PFc,  
-          names = c("PACo", "ParaFit")) 
+In this example, as both algorithms are executed, we compute the *G\** for both sets of corrected frequencies (`res.fq = TRUE` in `max_cong`or `diff.fq = TRUE` in `max_incong`).
+Therefore, we can compare the mean *G\** value with the values of the set of pairs of posterior probability trees.
+If the plot argument is set to `TRUE` (the default), a boxplot is displayed with the value of the consensus tree (asterisk) and the *G\** of the set of pairs of posterior probability trees.
+In case the user would like to compute the coefficient for only one algorithm, it would not be necessary to display the boxplot (`plot = FALSE`).
 
-```
+The Gini value is inversely proportional to cophylogenetic signal.
+If the distribution of congruence (or incongruence) across the host-symbiont associations were random, the expected value of *G\** would be 2/3 (set with `abline` funtion).
+Values lower than these thresholds would indicate higher cophylogenetic signal than expected by chance (Balbuena et al. 2020).
 
+## REFERENCES
+
+Balbuena, J. A., Míguez-Lozano, R., & Blasco-Costa, I.
+(2013).
+PACo: A Novel Procrustes Application to Cophylogenetic Analysis.
+*PLOS ONE*, *8*(4), e61048.
+<https://doi.org/10.1371/journal.pone.0061048>
+
+Balbuena, J. A., Pérez-Escobar, Ó.
+A., Llopis-Belenguer, C., & Blasco-Costa, I.
+(2020).
+Random Tanglegram Partitions (Random TaPas): An Alexandrian Approach to the Cophylogenetic Gordian Knot.
+*Systematic Biology*, *69*(6), 1212-1230.
+<https://doi.org/10.1093/sysbio/syaa033>
+
+Chakerian J.
+& Holmes S.
+(2020).
+distory: Distance Between Phylogenetic Histories.
+R package version 1.4.4.
+<https://CRAN.R-project.org/package=distory>
+
+Henrik Bengtsson (2021).
+parallelly: Enhancing the 'parallel' Package.
+R package version 1.29.0.
+<https://CRAN.R-project.org/package=parallelly>
+
+Jari Oksanen, F. Guillaume Blanchet, Michael Friendly, Roeland Kindt, Pierre Legendre, Dan McGlinn, Peter R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Eduard Szoecs and Helene Wagner (2020).
+vegan: Community Ecology Package.
+R package version 2.5-7.
+<https://CRAN.R-project.org/package=vegan>
+
+Legendre, P., Desdevises, Y., & Bazin, E.
+(2002).
+A Statistical Test for Host--Parasite Coevolution.
+*Systematic Biology*, *51*(2), 217-234.
+<https://doi.org/10.1080/10635150252899734>
+
+Paradis E.
+& Schliep K.
+2019.
+ape 5.0: an environment for modern phylogenetics and evolutionary analyses in R.
+Bioinformatics 35: 526-528.
+<https://doi.org/10.1093/bioinformatics/bty633>
+
+R Core Team (2021).
+R: A language and environment for statistical computing.
+R Foundation for Statistical Computing, Vienna, Austria.
+<https://www.R-project.org/>.
+
+Raffinetti, E., & Aimar, F.
+(2016).
+*GiniWegNeg: Computing the Gini-Based Coefficients for Weighted and Negative Attributes* (1.0.1).
+<https://CRAN.R-project.org/package=GiniWegNeg>
+
+Raffinetti, E., Siletti, E., & Vernizzi, A.
+(2015).
+On the Gini coefficient normalization when attributes with negative values are considered.
+*Statistical Methods & Applications*, *24*(3), 507-521.
+<https://doi.org/10.1007/s10260-014-0293-4>
+
+Revell, L. J.
+(2012).
+phytools: An R package for phylogenetic comparative biology (and other things).
+*Methods in Ecology and Evolution*, *3*(2), 217-223.
+<https://doi.org/10.1111/j.2041-210X.2011.00169.x>
+
+Schardl, C. L., Craven, K. D., Speakman, S., Stromberg, A., Lindstrom, A., & Yoshida, R.
+(2008).
+A Novel Test for Host-Symbiont Codivergence Indicates Ancient Origin of Fungal Endophytes in Grasses.
+*Systematic Biology*, *57*(3), 483-498.
+<https://doi.org/10.1080/10635150802172184>
+
+Ultsch, A., & Lötsch, J.
+(2017).
+A data science based standardized Gini index as a Lorenz dominance preserving measure of the inequality of distributions.
+*PLOS ONE*, *12*(8), e0181572.
+<https://doi.org/10.1371/journal.pone.0181572>

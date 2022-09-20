@@ -39,7 +39,7 @@
 #' @import stringr
 #'
 #' @examples
-#' N = 1e+2
+#' N = 10  #for the example, we recommend 1e+4 value
 #' data(amph_trem)
 #' n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
 #'
@@ -67,8 +67,10 @@ one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",
   }
 
   if (sum(HS) == ncol(HS))
-  stop("If all associations are one-to-one associations, n would be the sum of
-       all associations in HS")
+  stop("If all associations are one-to-one associations, n max would be the
+       sum of all associations in HS, not not suitable for running the
+       algorithms. You can choose between 10 and 20 % of the total number
+       of associations")
 
   if (is.null(interval) == TRUE) {
     N <- sum(HS)
