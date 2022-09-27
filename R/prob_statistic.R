@@ -37,6 +37,12 @@
 #'        host-symbiont association.
 #'        It should be the same correction used to obtain \code{"fx"}.
 #'
+#' @param algm Only required if \code{correction = "none"}. Specifies the
+#'        algorithm that has been used to obtain
+#'        \code{"fx"} without correction. Use \code{= "maxcong"} for
+#'        \code{\link[=max_cong]{max_cong()}}, and \code{= "maxincong"} for
+#'        \code{\link[=max_incong]{max_incong()}}.
+#'
 #' @param symmetric Specifies the type of Procrustes superimposition. Default
 #'        is \code{FALSE}, indicates that the superposition is applied
 #'        asymmetrically (S depends on H). If \code{TRUE}, PACo is applied
@@ -81,7 +87,8 @@
 #' # pp_treesPACOo_cong <- prob_statistic(THSc, np_matrix, NUC_500tr[1:10],
 #' #                          CP_500tr[1:10], freqfun = "paco", NPc,
 #' #                          percentile = 0.01, correction = "none",
-#' #                          symmetric = FALSE, ei.correct = "sqrt.D",
+#' #                          algm = "maxcong", symmetric = FALSE,
+#' #                          ei.correct = "sqrt.D",
 #' #                          strat = "parallel", cl = 8)
 #'
 #' # Maximizing incongruence
@@ -100,7 +107,8 @@
 prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
                        percentile = 0.01, correction = "none",
                        symmetric = FALSE, ei.correct="none",
-                       proc.warns = FALSE, strat = "sequential", cl = 1) {
+                       algm = "maxcong", proc.warns = FALSE,
+                       strat = "sequential", cl = 1) {
 
   strat.choice <- c("sequential", "parallel")
   if (strat %in% strat.choice == FALSE)
@@ -108,16 +116,26 @@ prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,
 
   freqfun.choice <- c("geoD", "paco", "paraF")
   if(freqfun %in% freqfun.choice == FALSE)
-    stop(writeLines("Invalid freqfun parameter.\r Correct choices are 'geoD',
-                    'paco' or 'paraF'"))
+    stop(writeLines("Invalid freqfun parameter.
+    Correct choices are 'geoD','paco' or 'paraF'"))
 
   corr.choice <- c("none", "res.fq", "diff.fq")
   if(correction %in% corr.choice == FALSE)
-    stop(writeLines("Invalid correction parameter.\r Correct choices are 'none',
-                    'res.fq' or 'diff.fq'"))
+    stop(writeLines("Invalid correction parameter.
+    Correct choices are 'none', 'res.fq' or 'diff.fq'"))
+
   if(correction == "none"){
     res.fq = FALSE
     diff.fq = FALSE
+
+    algm.choice <- c("maxcong", "maxincong")
+    if(algm %in% algm.choice == FALSE)
+      stop(writeLines("Invalid algorithm parameter.
+      Correct choices are 'maxcong' or 'maxincong'"))
+
+    if (algm == "maxcong"){
+      below.p = TRUE
+    } else {below.p = FALSE}
   } else {
     if(correction == "res.fq"){
       res.fq = TRUE

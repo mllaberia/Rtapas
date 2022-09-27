@@ -15,6 +15,7 @@ prob_statistic(
   correction = "none",
   symmetric = FALSE,
   ei.correct = "none",
+  algm = "maxcong",
   proc.warns = FALSE,
   strat = "sequential",
   cl = 1
@@ -66,6 +67,12 @@ takes the element-wise square-root of the phylogenetic distances;
 \code{"lingoes"} and \code{"cailliez"} apply the classical Lingoes
 and Cailliez corrections, respectively.}
 
+\item{algm}{Only required if \code{correction = "none"}. Specifies the
+algorithm that has been used to obtain
+\code{"fx"} without correction. Use \code{= "maxcong"} for
+\code{\link[=max_cong]{max_cong()}}, and \code{= "maxincong"} for
+\code{\link[=max_incong]{max_incong()}}.}
+
 \item{proc.warns}{Switches on/off trivial warnings returned when treeH and
 treeS differ in size (number of tips). Default is \code{FALSE}.}
 
@@ -103,7 +110,8 @@ n = 15
 # pp_treesPACOo_cong <- prob_statistic(THSc, np_matrix, NUC_500tr[1:10],
 #                          CP_500tr[1:10], freqfun = "paco", NPc,
 #                          percentile = 0.01, correction = "none",
-#                          symmetric = FALSE, ei.correct = "sqrt.D",
+#                          algm = "maxcong", symmetric = FALSE,
+#                          ei.correct = "sqrt.D",
 #                          strat = "parallel", cl = 8)
 
 # Maximizing incongruence
