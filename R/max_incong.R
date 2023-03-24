@@ -91,7 +91,8 @@ max_incong <- function (HS, treeH, treeS, n, N, method = "paco",
                         percentile = 0.99, diff.fq = FALSE,
                         strat = "sequential", cl = 1) {
 
-  THSi <- trimHS_maxI(N = N, n = n, HS = HS, check.unique = TRUE)
+  THSi <- trimHS_maxI(N = N, n = n, HS = HS, check.unique = TRUE,
+                      strat = strat, cl = cl)
   method.choice <- c("geoD", "paco", "paraF")
   if (method %in% method.choice == FALSE)
     stop(writeLines("Invalid global-fit method.

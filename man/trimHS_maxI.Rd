@@ -4,7 +4,7 @@
 \alias{trimHS_maxI}
 \title{Trims the H-S association matrix maximizing the incongruence}
 \usage{
-trimHS_maxI(N, HS, n, check.unique = TRUE)
+trimHS_maxI(N, HS, n, check.unique = TRUE, strat = "sequential", cl = 1)
 }
 \arguments{
 \item{N}{Number of runs.}

@@ -25,9 +25,10 @@
 #' n = 15
 #' TNC <- trimHS_maxI(N, np_matrix, n, check.unique = TRUE)
 #'
-trimHS_maxI <- function (N, HS, n, check.unique = TRUE) {
+trimHS_maxI <- function (N, HS, n, check.unique = TRUE,
+                         strat = "sequential", cl = 1) {
 
-  trim.intI <- function (HS, n) {
+  trim.intI <- function (x, HS, n) {
     HS.LUT <- which(HS == 1, arr.ind = TRUE)
     HS.LUT <- cbind(HS.LUT, 1:nrow(HS.LUT))
     LH <- LS <- 2
@@ -45,8 +46,28 @@ trimHS_maxI <- function (N, HS, n, check.unique = TRUE) {
     return(hs)
   }
 
-  trimI.HS <- replicate(N, trim.intI(HS = HS, n = n), simplify = FALSE)
-  if (check.unique == TRUE) trimI.HS <- unique(trimI.HS)
-  trimI.HS[sapply(trimI.HS, is.null)] <- NULL
+  strat.choice <- c("sequential", "parallel")
+  if (strat %in% strat.choice == FALSE)
+    stop(writeLines("Invalid strategy parameter"))
+
+  if (strat == "sequential") {
+    trimI.HS <- lapply(1:20, trim.intI, HS = HS, n = 22)
+    if (check.unique == TRUE) trimI.HS <- unique(trimI.HS)
+    if (length(trimI.HS) < N)
+      warning("No. of trimmed H-S assoc. matrices < No. of runs")
+    trimI.HS[lapply(trimI.HS, is.null)] <- NULL
+
+  } else {
+    cores <- parallelly::makeClusterPSOCK(workers = cl)
+    trimI.HS <- parallel::parLapply(cores, 1:N, trim.intI, HS = HS, n = n)
+    parallel::stopCluster(cores)
+    if (check.unique == TRUE) trimI.HS <- unique(trimI.HS)
+    if (length(trimI.HS) < N)
+      warning("No. of trimmed H-S assoc. matrices < No. of runs")
+    trimI.HS[sapply(trimI.HS, is.null)] <- NULL
+  }
+  dims <- function(x){all(dim(x)) == 0}
+  which_null <- sapply(trimI.HS, dims)
+  trimI.HS <- trimI.HS[-which(which_null == TRUE)]
   return(trimI.HS)
-}
+  }
