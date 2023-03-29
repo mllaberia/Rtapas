@@ -15,6 +15,17 @@
 #'        probability of obtaining the same trimmed matrix in different runs
 #'        increases as \code{n} decreases.
 #'
+#' @param strat Flag indicating whether execution is to be  \code{"sequential"}
+#'        or \code{"parallel"}. Default is \code{"sequential"},
+#'        resolves \R expressions sequentially in the current \R
+#'        process. If \code{"parallel"} resolves \R expressions in parallel in
+#'        separate \R sessions running in the background.
+#'
+#' @param cl Number of cluster to be used for parallel computing.
+#'        \code{\link[parallelly:availableCores]{parallelly::availableCores()}}
+#'        returns the number of clusters available.
+#'        Default is \code{cl = 1} resulting in \code{"sequential"} execution.
+#'
 #' @return A list of the N trimmed matrices.
 #'
 #' @export
@@ -51,11 +62,11 @@ trimHS_maxI <- function (N, HS, n, check.unique = TRUE,
     stop(writeLines("Invalid strategy parameter"))
 
   if (strat == "sequential") {
-    trimI.HS <- lapply(1:20, trim.intI, HS = HS, n = 22)
+    trimI.HS <- lapply(1:N, trim.intI, HS = HS, n = n)
     if (check.unique == TRUE) trimI.HS <- unique(trimI.HS)
     if (length(trimI.HS) < N)
       warning("No. of trimmed H-S assoc. matrices < No. of runs")
-    trimI.HS[lapply(trimI.HS, is.null)] <- NULL
+    trimI.HS[sapply(trimI.HS, is.null)] <- NULL
 
   } else {
     cores <- parallelly::makeClusterPSOCK(workers = cl)
@@ -68,6 +79,9 @@ trimHS_maxI <- function (N, HS, n, check.unique = TRUE,
   }
   dims <- function(x){all(dim(x)) == 0}
   which_null <- sapply(trimI.HS, dims)
-  trimI.HS <- trimI.HS[-which(which_null == TRUE)]
+  if (length(which(which_null == TRUE)) > 1) {
+    trimI.HS <- trimI.HS[-which(which_null == TRUE)]
+    }
   return(trimI.HS)
-  }
+}
+
