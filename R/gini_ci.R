@@ -32,7 +32,7 @@
 #'          negative values are produced due to corrected frequencies
 #'          (if \code{res.fq = TRUE} or
 #'          \code{diff.fq = TRUE}). For more details see
-#'          \code{\link[GiniWegNeg:Gini_RSV]{Gini_RSV()}}.
+#'          Raffinetti et al. (2015).
 #'
 #' @references
 #' Ultsch A., Lötsch J. (2017). A data science based standardized Gini index
@@ -43,10 +43,6 @@
 #' normalization when attributes with negative values are considered.
 #' Stat Methods Appl. 24:507–521. \doi{10.1007/s10260-014-0293-4}
 #'
-#'
-#'
-#'
-#' @importFrom GiniWegNeg Gini_RSV
 #' @importFrom graphics boxplot text
 #' @export
 #'
@@ -76,8 +72,8 @@
 gini_ci <- function (LF_1, M01,
                      ylab = "Gini coefficient", plot = TRUE, ...){
 
-  Gini01 <- unlist(Gini_RSV( LF_1[, ncol(LF_1)]))
-  GiniM01 <- unlist(apply(M01, 1, Gini_RSV))
+  Gini01 <- unlist(gini_RSV( LF_1[, ncol(LF_1)]))
+  GiniM01 <- unlist(apply(M01, 1, gini_RSV))
 
   if(plot == TRUE){
     box <- boxplot(GiniM01, show.names = TRUE, ylab = ylab, ...)

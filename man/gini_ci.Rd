@@ -42,7 +42,7 @@ global-fit methods) of the individual host-symbiont associations.
          negative values are produced due to corrected frequencies
          (if \code{res.fq = TRUE} or
          \code{diff.fq = TRUE}). For more details see
-         \code{\link[GiniWegNeg:Gini_RSV]{Gini_RSV()}}.
+         Raffinetti et al. (2015).
 }
 
 \examples{

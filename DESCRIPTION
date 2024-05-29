@@ -1,7 +1,7 @@
 Package: Rtapas
 Title: Random Tanglegram Partitions
-Version: 1.1.1
-Date: 2023-03-24
+Version: 1.2
+Date: 2024-05-29
 Authors@R: c(person("Mar", "Llaberia-Robledillo", role = c("aut", "cre", "cph"), email = "mar.llaberia@uv.es", comment = c(ORCID = "0000-0002-7989-796X")),
   person("Juan A.", "Balbuena", role = c("aut", "cph"), email = "j.a.balbuena@uv.es", comment = c(ORCID = "0000-0003-4006-1353")), 
   person("José Ignacio", "Lucas-Lledó", role = c("aut", "cph"), comment = c(ORCID = "0000-0001-6254-8942")),
@@ -11,7 +11,7 @@ Description: Applies a given global-fit method to random partial tanglegrams of 
              to identify the associations, terminals, and nodes that maximize phylogenetic
              (in)congruence. It also includes functions to compute more easily the confidence
              intervals of classification metrics and plot results, reducing computational time.
-             See Llaberia-Robledillo et al. (2022, <doi:10.1101/2022.05.17.492291>).
+             See Llaberia-Robledillo et al. (2023, <doi:10.1093/sysbio/syad016>).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -22,13 +22,12 @@ Depends:
 Imports:
     ape,
     distory,
-    GiniWegNeg,
     paco,
     stats,
     vegan,
     stringr,
     parallelly
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.1
 NeedsCompilation: no
 Suggests: 
     testthat (>= 3.0.0)
