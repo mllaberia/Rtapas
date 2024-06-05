@@ -34,7 +34,7 @@
 #'        and Cailliez corrections, respectively.
 #'
 #' @param percentile Percentile to evaluate (\emph{p}). Default is
-#'        \code{0.99} (99\%).
+#'        \code{0.99} (99\\%).
 #'
 #' @param diff.fq Determines whether a correction to detect those associations
 #'        that present a similar contribution to (in)congruence and occur with
@@ -78,12 +78,11 @@
 #'
 #' @examples
 #' data(nuc_pc)
-#' N = 10 #for the example, we recommend 1e+4 value
+#' N = 1 #for the example, we recommend 1e+4 value
 #' n = 15
 #' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 #'                   symmetric = FALSE, ei.correct = "sqrt.D",
-#'                   percentile = 0.99, diff.fq = TRUE,
-#'                   strat = "parallel", cl = 10)
+#'                   percentile = 0.99, diff.fq = TRUE)
 #'
 #'
 max_incong <- function (HS, treeH, treeS, n, N, method = "paco",

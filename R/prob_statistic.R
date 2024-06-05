@@ -26,7 +26,7 @@
 #'         ParaFit.
 #'
 #' @param percentile Percentile to evaluate (\emph{p}). Default is
-#'        \code{0.01} (1\%).
+#'        \code{0.01} (1\\%).
 #'
 #' @param correction Correction to be assumed. The default value is
 #'        \code{"none"}. If \code{= "res.fq"}, a residual frequency value
@@ -75,9 +75,9 @@
 #' @export
 #'
 #' @examples
-#' data(nuc_pc)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 15
+#' # data(nuc_pc)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 15
 #' # Maximizing congruence (not run)
 #' # NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 #' #                 symmetric = FALSE, ei.correct = "sqrt.D",
@@ -92,16 +92,15 @@
 #' #                          strat = "parallel", cl = 8)
 #'
 #' # Maximizing incongruence
-#' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
-#'                   symmetric = FALSE, ei.correct = "sqrt.D",
-#'                   percentile = 0.99, diff.fq = TRUE,
-#'                   strat = "parallel", cl = 8)
-#' THSi <- trimHS_maxI(N, np_matrix, n)
-#' pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:5],
-#'                         CP_500tr[1:5], freqfun = "paco", NPi,
-#'                         percentile = 0.99, correction = "diff.fq",
-#'                         symmetric = FALSE, ei.correct = "sqrt.D",
-#'                         strat = "parallel", cl = 8)
+#' # NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#' #                   symmetric = FALSE, ei.correct = "sqrt.D",
+#' #                   percentile = 0.99, diff.fq = TRUE)
+#' # THSi <- trimHS_maxI(N, np_matrix, n)
+#' # pp_treesPACOo_incong <- prob_statistic(THSi, np_matrix, NUC_500tr[1:5],
+#' #                                  CP_500tr[1:5], freqfun = "paco", NPi,
+#' #                                  percentile = 0.99, correction = "diff.fq",
+#' #                                  symmetric = FALSE, ei.correct = "sqrt.D",
+#' #                                  strat = "parallel", cl = 8)
 #'
 #'
 prob_statistic <- function (ths, HS, mTreeH, mTreeS, freqfun = "paco", fx,

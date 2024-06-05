@@ -48,7 +48,7 @@ takes the element-wise square-root of the phylogenetic distances;
 and Cailliez corrections, respectively.}
 
 \item{percentile}{Percentile to evaluate (\emph{p}). Default is
-\code{0.01} (1\%).}
+\code{0.01} (1\\\%).}
 
 \item{res.fq}{Determines whether a correction to avoid one-to-one
 associations being overrepresented in the percentile evaluated.
@@ -68,12 +68,12 @@ Default is \code{cl = 1} resulting in \code{"sequential"} execution.}
 }
 \value{
 A dataframe with host-symbiont associations in rows. The first and
-        second columns display the names of the host and symbiont terminals,
-        respectively. The third column designates the host-symbiont
-        association by pasting the names of the terminals, and the fourth
-        column displays the frequency of occurrence of each host-symbiont
-        association in \emph{p}. If \code{res.fq = TRUE}, column 5 displays
-        the corrected frequencies as a residual.
+second columns display the names of the host and symbiont terminals,
+respectively. The third column designates the host-symbiont
+association by pasting the names of the terminals, and the fourth
+column displays the frequency of occurrence of each host-symbiont
+association in \emph{p}. If \code{res.fq = TRUE}, column 5 displays
+the corrected frequencies as a residual.
 }
 \description{
 Prunes the host (H) and symbiont (S) phylogenies to conform with trimmed
@@ -85,21 +85,19 @@ of cases that maximize phylogenetic congruence.
 }
 \section{NOTE}{
 
-      If the \code{node.label} object in both trees contains NAs or empty
-      values (i.e. no numeric value). All nodes should have a value. Else
-      remove node labels within the \code{"phylo"} class tree
-      with \code{tree$node.label <- NULL}. For more details, see
-      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
+If the \code{node.label} object in both trees contains NAs or empty
+values (i.e. no numeric value). All nodes should have a value. Else
+remove node labels within the \code{"phylo"} class tree
+with \code{tree$node.label <- NULL}. For more details, see
+\code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}
 }
 
 \examples{
 data(nuc_pc)
-N = 10 #for the example, we recommend 1e+4 value
+N = 1 #for the example, we recommend 1e+4 value
 n = 15
 NPc <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
                 symmetric = FALSE, ei.correct = "sqrt.D",
-                percentile = 0.01, res.fq = FALSE,
-                strat = "parallel", cl = 10)
-
+                percentile = 0.01, res.fq = FALSE)
 
 }

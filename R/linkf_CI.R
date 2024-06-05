@@ -19,7 +19,7 @@
 #'        (Geodesic Distances), \code{"paco"} (PACo) or \code{"paraF"}
 #'        (ParaFit).
 #'
-#' @param c.level Confidence interval level. Default is \code{95} (95\%).
+#' @param c.level Confidence interval level. Default is \code{95} (95\\%).
 #'
 #' @param barplot Default is \code{"TRUE"}, plots the distribution and
 #'        confidence intervals of the frequencies.
@@ -46,14 +46,14 @@
 #' @export
 #'
 #' @examples
-#' data(nuc_cp)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 8
+#' # data(nuc_cp)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 8
 #' # Maximizing incongruence
-#' NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
-#'                   symmetric = FALSE, ei.correct = "sqrt.D",
-#'                   percentile = 0.99, diff.fq = TRUE,
-#'                   strat = "parallel", cl = 8)
+#' # NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#' #                  symmetric = FALSE, ei.correct = "sqrt.D",
+#' #                  percentile = 0.99, diff.fq = TRUE,
+#' #                  strat = "parallel", cl = 8)
 #' # Loaded directly from dataset
 #' # THSi <- trimHS_maxI(N, np_matrix, n)
 #' # pp_treesPACo_incong <- prob_statistic(ths = THSi, np_matrix,
@@ -61,9 +61,8 @@
 #' #                        NPi, symmetric = FALSE, ei.correct = "sqrt.D",
 #' #                        percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
 #' #                        below.p = FALSE, strat = "parallel", cl = 8)
-#'
-#' LFci <- linkf_CI (freqfun = "paco", x = pp_treesPACo_incong, fx = NPi,
-#'                   c.level = 95, ylab = "Observed - Expected frequency")
+#' # LFci <- linkf_CI (freqfun = "paco", x = pp_treesPACo_incong, fx = NPi,
+#' #                   c.level = 95, ylab = "Observed - Expected frequency")
 #'
 #'
 linkf_CI <- function (freqfun = "paco", x, fx, c.level = 95, barplot = TRUE,

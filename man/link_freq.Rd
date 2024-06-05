@@ -25,7 +25,7 @@ link_freq(
 \item{HS}{Host-symbiont association matrix.}
 
 \item{percentile}{Percentile to evaluate (\emph{p}). Default is
-\code{0.01} (1\%).}
+\code{0.01} (1\\\%).}
 
 \item{sep}{Character that separates host and symbiont labels.}
 
@@ -39,12 +39,12 @@ expected frequency) is computed for each host-symbiont association.}
 }
 \value{
 A dataframe with host-symbiont associations in rows. The first and
-        second columns display the names of the host and symbiont terminals,
-        respectively. The third column designates the host-symbiont
-        association by pasting the names of the terminals, and the fourth
-        column displays the frequency of occurrence of each host-symbiont
-        association. If \code{res.fq = TRUE}, column 5 displays the
-        corrected frequencies as a residual.
+second columns display the names of the host and symbiont terminals,
+respectively. The third column designates the host-symbiont
+association by pasting the names of the terminals, and the fourth
+column displays the frequency of occurrence of each host-symbiont
+association. If \code{res.fq = TRUE}, column 5 displays the
+corrected frequencies as a residual.
 }
 \description{
 Determines the frequency (or residual/corrected frequency) of each
@@ -53,22 +53,22 @@ phylogenetic (in)congruence.
 }
 \section{NOTE}{
 
-       The \code{res.fq = TRUE} correction is recommended in tanglegrams with
-       large portion of multiple (as opposed to one-to-one) host-symbiont
-       associations. For future usage, frequencies of host-symbiont
-       associations above a given percentile values can also be computed
-       setting \code{below.p = FALSE}.
+The \code{res.fq = TRUE} correction is recommended in tanglegrams with
+large portion of multiple (as opposed to one-to-one) host-symbiont
+associations. For future usage, frequencies of host-symbiont
+associations above a given percentile values can also be computed
+setting \code{below.p = FALSE}.
 }
 
 \examples{
-data(amph_trem)
-N = 10 #for the example, we recommend 1e+4 value
-n = 8
+# data(amph_trem)
+# N = 10 #for the example, we recommend 1e+4 value
+# n = 8
 
-TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
-                ei.correct = "sqrt.D", strat = "parallel", cl = 8)
-LFPACO <- link_freq(TAM, PACO, am_matrix, percentile = 0.01,
-                  below.p = TRUE, res.fq = TRUE)
+# TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+# PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
+#                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
+# LFPACO <- link_freq(TAM, PACO, am_matrix, percentile = 0.01,
+#                     below.p = TRUE, res.fq = TRUE)
 
 }

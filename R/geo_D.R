@@ -38,12 +38,12 @@
 #' @return Geodesic distance
 #'
 #' @examples
-#' data(amph_trem)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 8
+#' # data(amph_trem)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 8
 #'
-#' TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-#' GD <- geo_D(TAM, amphipod, trematode, strat = "sequential", cl = 1)
+#' # TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+#' # GD <- geo_D(TAM, amphipod, trematode, strat = "sequential", cl = 1)
 #'
 #' @source
 #' Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.

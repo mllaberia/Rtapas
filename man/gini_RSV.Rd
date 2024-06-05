@@ -15,26 +15,24 @@ Computes the Gini coefficient adjusted for negative (even weighted) data.
 }
 \section{NOTE}{
 
-         It produces a conventional Gini coefficient (G)
-         (Ultsch and Lötsch 2017) if all output values are positive, or
-         a normalized Gini coefficient (G*) (Raffinetti et al. 2015) if
-         negative values are produced due to corrected frequencies
-         (if \code{res.fq = TRUE} or
-         \code{diff.fq = TRUE}). For more details see
-         Raffinetti et al. (2015).
+It produces a conventional Gini coefficient (G)
+(Ultsch and Lötsch 2017) if all output values are positive, or
+a normalized Gini coefficient (G*) (Raffinetti et al. 2015) if
+negative values are produced due to corrected frequencies
+(if \code{res.fq = TRUE} or
+\code{diff.fq = TRUE}). For more details see
+Raffinetti et al. (2015).
 }
 
 \examples{
-data(nuc_cp)
-N = 10 #for the example, we recommend 1e+4 value
-n = 15
+# data(nuc_cp)
+# N = 10 #for the example, we recommend 1e+4 value
+# n = 15
 # Maximizing congruence
-NPc_PACo <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
-                symmetric = FALSE, ei.correct = "sqrt.D",
-                percentile = 0.01, res.fq = FALSE,
-                strat = "parallel", cl = 8)
-
-gini_RSV(y = NPc_PACo)
+# NPc_PACo <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#                symmetric = FALSE, ei.correct = "sqrt.D",
+#                percentile = 0.01, res.fq = FALSE)
+# gini_RSV(y = NPc_PACo)
 
 }
 \references{

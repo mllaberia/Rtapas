@@ -39,9 +39,9 @@
 #' @import stringr
 #'
 #' @examples
-#' N = 10  #for the example, we recommend 1e+4 value
-#' data(amph_trem)
-#' n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
+#' # N = 10  #for the example, we recommend 1e+4 value
+#' # data(amph_trem)
+#' # n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
 #'
 #' @export
 one2one_f <- function(HS, reps = 1e+4, interval = NULL, strat = "sequential",

@@ -45,13 +45,13 @@
 #' @return A sum of squared residuals.
 #'
 #' @examples
-#' data(amph_trem)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 8
+#' # data(amph_trem)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 8
 #'
-#' TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-#' PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
-#'                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
+#' # TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+#' # PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
+#' #                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
 #'
 #' @source
 #' Balbuena J.A., Perez-Escobar O.A., Llopis-Belenguer C., Blasco-Costa I.

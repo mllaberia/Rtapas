@@ -26,16 +26,14 @@
 #' @export
 #'
 #' @examples
-#' data(nuc_cp)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 15
+#' # data(nuc_cp)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 15
 #' # Maximizing congruence
-#' NPc_PACo <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
-#'                 symmetric = FALSE, ei.correct = "sqrt.D",
-#'                 percentile = 0.01, res.fq = FALSE,
-#'                 strat = "parallel", cl = 8)
-#'
-#' gini_RSV(y = NPc_PACo)
+#' # NPc_PACo <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#' #                symmetric = FALSE, ei.correct = "sqrt.D",
+#' #                percentile = 0.01, res.fq = FALSE)
+#' # gini_RSV(y = NPc_PACo)
 #'
 gini_RSV <- function(y){
   w <- rep(1, length(y))

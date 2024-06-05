@@ -15,40 +15,40 @@
 This data set consists of seven objects:
 
 \describe{
-   \item{\code{np_matrix}}{Associations one-to-one between the 52 orchid
-   taxa.
-   A binary matrix with 52 rows (nuclear) and 52 columns (chloroplast).}
+\item{\code{np_matrix}}{Associations one-to-one between the 52 orchid
+taxa.
+A binary matrix with 52 rows (nuclear) and 52 columns (chloroplast).}
 
-   \item{\code{NUCtr}}{Phylogeny constructed by sequence data of nuclear
-   loci of orchids (Perez-Escobar et al. 2021).
-   An object of class \code{"phylo"} containing the details of
-   the phylogenetic tree (i.e. edge, edge length, nodes and tips names).}
+\item{\code{NUCtr}}{Phylogeny constructed by sequence data of nuclear
+loci of orchids (Perez-Escobar et al. 2021).
+An object of class \code{"phylo"} containing the details of
+the phylogenetic tree (i.e. edge, edge length, nodes and tips names).}
 
-   \item{\code{CPtr}}{Phylogeny constructed by sequence data of chloroplast
-   loci of orchids (Perez-Escobar et al. 2021).
-   An object of class \code{"phylo"} containing the details of
-   the phylogenetic tree (i.e. edge, edge length, nodes and tips names).}
+\item{\code{CPtr}}{Phylogeny constructed by sequence data of chloroplast
+loci of orchids (Perez-Escobar et al. 2021).
+An object of class \code{"phylo"} containing the details of
+the phylogenetic tree (i.e. edge, edge length, nodes and tips names).}
 
-   \item{\code{NUC_500tr}}{500 bootstrap replicates trees from
-   Perez-Escobar et al. (2021).
-   Object of class \code{"multiphylo"} containing a 500 phylogenetic trees
-   with their respective details (i.e. edges, edges length, nodes, and
-   tips names).}
+\item{\code{NUC_500tr}}{500 bootstrap replicates trees from
+Perez-Escobar et al. (2021).
+Object of class \code{"multiphylo"} containing a 500 phylogenetic trees
+with their respective details (i.e. edges, edges length, nodes, and
+tips names).}
 
-   \item{\code{CP_500tr}}{500 bootstrap replicates trees from
-   Perez-Escobar et al. (2021).
-   Object of class \code{"multiphylo"} containing a 500 phylogenetic trees
-   with their respective details (i.e. edges, edges length, nodes, and
-   tips names).}
+\item{\code{CP_500tr}}{500 bootstrap replicates trees from
+Perez-Escobar et al. (2021).
+Object of class \code{"multiphylo"} containing a 500 phylogenetic trees
+with their respective details (i.e. edges, edges length, nodes, and
+tips names).}
 
-   \item{\code{pp_treesPACo_cong}}{Matrix with the value of the PACo
-   statistics generated for each pair (H and S) of posterior probability
-   trees maximizing congruence between them.}
+\item{\code{pp_treesPACo_cong}}{Matrix with the value of the PACo
+statistics generated for each pair (H and S) of posterior probability
+trees maximizing congruence between them.}
 
-   \item{\code{pp_treesPACo_incong}}{Matrix with the value of the PACo
-   statistics generated for each pair (H and S) of posterior probability
-   trees maximizing incongruence between them.}
- }
+\item{\code{pp_treesPACo_incong}}{Matrix with the value of the PACo
+statistics generated for each pair (H and S) of posterior probability
+trees maximizing incongruence between them.}
+}
 }
 \source{
 Perez-Escobar O.A., Dodsworth S., Bogarin D., Bellot S., Balbuena J.A.,
@@ -63,9 +63,9 @@ data(nuc_cp)
 }
 \description{
 Data set of nuclear and chloroplast loci of 52 orchid taxa
-             from Kew DNA and Tissue Collection,
-             https://dnabank.science.kew.org/homepage.html
-             (Perez-Escobar et al. 2021).
+from Kew DNA and Tissue Collection,
+https://dnabank.science.kew.org/homepage.html
+(Perez-Escobar et al. 2021).
 }
 \references{
 Perez-Escobar O.A., Dodsworth S., Bogarin D., Bellot S., Balbuena J.A.,

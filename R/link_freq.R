@@ -14,7 +14,7 @@
 #' @param HS Host-symbiont association matrix.
 #'
 #' @param percentile Percentile to evaluate (\emph{p}). Default is
-#'        \code{0.01} (1\%).
+#'        \code{0.01} (1\\%).
 #'
 #' @param sep Character that separates host and symbiont labels.
 #'
@@ -43,15 +43,15 @@
 #'         corrected frequencies as a residual.
 #'
 #' @examples
-#' data(amph_trem)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 8
+#' # data(amph_trem)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 8
 #'
-#' TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-#' PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
-#'                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
-#' LFPACO <- link_freq(TAM, PACO, am_matrix, percentile = 0.01,
-#'                   below.p = TRUE, res.fq = TRUE)
+#' # TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+#' # PACO <- paco_ss(TAM, amphipod, trematode, symmetric = TRUE,
+#' #                 ei.correct = "sqrt.D", strat = "parallel", cl = 8)
+#' # LFPACO <- link_freq(TAM, PACO, am_matrix, percentile = 0.01,
+#' #                     below.p = TRUE, res.fq = TRUE)
 #'
 #' @export
 link_freq <- function (x, fx, HS, percentile = 0.01,

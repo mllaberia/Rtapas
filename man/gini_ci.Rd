@@ -26,7 +26,7 @@ confidence intervals in a boxplot.}
 }
 \value{
 The Gini values obtained and their representation in a boxplot, with
-        their confidence intervals.
+their confidence intervals.
 }
 \description{
 Computes and displays in a boxplot the Gini coefficient and their
@@ -36,32 +36,30 @@ global-fit methods) of the individual host-symbiont associations.
 }
 \section{NOTE}{
 
-         It produces a conventional Gini coefficient (G)
-         (Ultsch and Lötsch 2017) if all output values are positive, or
-         a normalized Gini coefficient (G*) (Raffinetti et al. 2015) if
-         negative values are produced due to corrected frequencies
-         (if \code{res.fq = TRUE} or
-         \code{diff.fq = TRUE}). For more details see
-         Raffinetti et al. (2015).
+It produces a conventional Gini coefficient (G)
+(Ultsch and Lötsch 2017) if all output values are positive, or
+a normalized Gini coefficient (G*) (Raffinetti et al. 2015) if
+negative values are produced due to corrected frequencies
+(if \code{res.fq = TRUE} or
+\code{diff.fq = TRUE}). For more details see
+Raffinetti et al. (2015).
 }
 
 \examples{
 data(nuc_cp)
-N = 10 #for the example, we recommend 1e+4 value
+N = 1 #for the example, we recommend 1e+4 value
 n = 15
 # Maximizing congruence
 NPc_PACo <- max_cong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
                 symmetric = FALSE, ei.correct = "sqrt.D",
-                percentile = 0.01, res.fq = FALSE,
-                strat = "parallel", cl = 8)
+                percentile = 0.01, res.fq = FALSE)
 
 # Loaded directly from dataset
 # THSC <- trimHS_maxC(N, np_matrix, n)
 # pp_treesPACo_cong <- prob_statistic(ths = THSc, np_matrix, NUC_500tr[1:10],
 #                         CP_500tr[1:10], freqfun = "paco", NPc_PACo,
 #                         symmetric = FALSE, ei.correct = "sqrt.D",
-#                         percentile = 0.01, correction = "none",
-#                         strat = "parallel", cl = 8)
+#                         percentile = 0.01, correction = "none")
 
 gini_ci(LF_1 = NPc_PACo, M01 = pp_treesPACo_cong,
          ylab = "Gini Coefficient (G)",

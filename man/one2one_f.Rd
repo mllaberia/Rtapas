@@ -20,7 +20,7 @@ one2one_f(
 
 \item{interval}{Vector with the minimum and maximum \code{n} that the user
 wants to test. Default is \code{"NULL"}, where a minimum \code{n}
-(10% of the total associations) and a maximum \code{n} (20% of the
+(10\% of the total associations) and a maximum \code{n} (20\% of the
 total associations) are automatically assigned.}
 
 \item{strat}{Flag indicating whether execution is to be  \code{"sequential"}
@@ -40,7 +40,7 @@ number of runs that could be completed.}
 }
 \value{
 The maximum number of unique one-to-one associations
-        (\code{n}).
+(\code{n}).
 }
 \description{
 For a binary matrix of host-symbiont associations, it finds the maximum
@@ -49,13 +49,13 @@ associations can be chosen.
 }
 \section{NOTE}{
 
-         It can be used to decide the best \code{n} prior to application of
-         \code{\link[=max_cong]{max_cong()}}.
+It can be used to decide the best \code{n} prior to application of
+\code{\link[=max_cong]{max_cong()}}.
 }
 
 \examples{
-N = 10  #for the example, we recommend 1e+4 value
-data(amph_trem)
-n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
+# N = 10  #for the example, we recommend 1e+4 value
+# data(amph_trem)
+# n <- one2one_f(am_matrix, reps = N, interval = c(2, 10), plot = TRUE)
 
 }

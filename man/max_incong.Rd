@@ -48,7 +48,7 @@ takes the element-wise square-root of the phylogenetic distances;
 and Cailliez corrections, respectively.}
 
 \item{percentile}{Percentile to evaluate (\emph{p}). Default is
-\code{0.99} (99\%).}
+\code{0.99} (99\\\%).}
 
 \item{diff.fq}{Determines whether a correction to detect those associations
 that present a similar contribution to (in)congruence and occur with
@@ -70,12 +70,12 @@ Default is \code{cl = 1} resulting in \code{"sequential"} execution.y.}
 }
 \value{
 A dataframe with host-symbiont associations in rows. The first and
-        second columns display the names of the host and symbiont terminals,
-        respectively. The third column designates the host-symbiont
-        association by pasting the names of the terminals, and the fourth
-        column displays the frequency of occurrence of each host-symbiont
-        association in \emph{p}. If \code{diff.fq = TRUE}, column 5 displays
-        the corrected frequencies.
+second columns display the names of the host and symbiont terminals,
+respectively. The third column designates the host-symbiont
+association by pasting the names of the terminals, and the fourth
+column displays the frequency of occurrence of each host-symbiont
+association in \emph{p}. If \code{diff.fq = TRUE}, column 5 displays
+the corrected frequencies.
 }
 \description{
 Prunes the host (H) and symbiont (S) phylogenies to conform with the trimmed
@@ -86,26 +86,26 @@ phylogenetic incongruence.
 }
 \section{NOTE}{
 
-      The \code{node.label} object in both trees can not contain NAs or null
-      values (i.e. no numeric value). All nodes should have a value. Else
-      remove node labels within the \code{"phylo"} class tree
-      with \code{tree$node.label <- NULL}. For more details, see
-      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}.
+The \code{node.label} object in both trees can not contain NAs or null
+values (i.e. no numeric value). All nodes should have a value. Else
+remove node labels within the \code{"phylo"} class tree
+with \code{tree$node.label <- NULL}. For more details, see
+\code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}.
 
-      \code{GD} method can not be used with the trimmed matrices produced
-      with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
-      \code{\link[=max_incong]{max_incong()}} for those datasets with
-      multiple associations.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  \code{GD} method can not be used with the trimmed matrices produced
+  with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
+  \code{\link[=max_incong]{max_incong()}} for those datasets with
+  multiple associations.
+}\if{html}{\out{</div>}}
 }
 
 \examples{
 data(nuc_pc)
-N = 10 #for the example, we recommend 1e+4 value
+N = 1 #for the example, we recommend 1e+4 value
 n = 15
 NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
                   symmetric = FALSE, ei.correct = "sqrt.D",
-                  percentile = 0.99, diff.fq = TRUE,
-                  strat = "parallel", cl = 10)
+                  percentile = 0.99, diff.fq = TRUE)
 
 
 }

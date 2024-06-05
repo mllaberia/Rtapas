@@ -80,12 +80,12 @@ of each node.
 }
 \section{NOTE}{
 
-         In order to calculate the ancestral states in the phylogenies, all
-         nodes of the trees (node.label) must have a value (NA or
-         empty values are not allowed). In addition, the trees must be
-         time-calibrated and preferably rooted. If one of these elements
-         is missing, an error will be generated and nodes and points of
-         terminals will be displayed as black.
+In order to calculate the ancestral states in the phylogenies, all
+nodes of the trees (node.label) must have a value (NA or
+empty values are not allowed). In addition, the trees must be
+time-calibrated and preferably rooted. If one of these elements
+is missing, an error will be generated and nodes and points of
+terminals will be displayed as black.
 }
 
 \examples{

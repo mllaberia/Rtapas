@@ -12,17 +12,17 @@ between hosts (column 1) and symbionts (column 2) species.}
 }
 \value{
 An association binary matrix, with hosts in rows and symbionts in
-        columns, sorted alphabetically.
+columns, sorted alphabetically.
 }
 \description{
 Creates a binary host-symbiont association matrix from a two-columns matrix
 or data frame of host-symbiont associations.
 }
 \examples{
-data(nuc_cp)
-NTaxa <- sort(NUCtr$tip.label)
-CPTaxa <- sort(CPtr$tip.label)
+# data(nuc_cp)
+# NTaxa <- sort(NUCtr$tip.label)
+# CPTaxa <- sort(CPtr$tip.label)
 
-NC <- assoc_mat(data.frame(NTaxa, CPTaxa))
+# NC <- assoc_mat(data.frame(NTaxa, CPTaxa))
 
 }

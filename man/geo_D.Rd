@@ -40,25 +40,26 @@ distance between the pruned trees.
 }
 \section{NOTE}{
 
-      The \code{node.label} object in both trees can not contain NAs or null
-      values (i.e. no numeric value). All nodes should have a value. Else
-      remove node labels within the \code{"phylo"} class tree
-      with \code{tree$node.label <- NULL}. For more details, see
-      \code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}.
+The \code{node.label} object in both trees can not contain NAs or null
+values (i.e. no numeric value). All nodes should have a value. Else
+remove node labels within the \code{"phylo"} class tree
+with \code{tree$node.label <- NULL}. For more details, see
+\code{\link[distory:dist.multiPhylo]{distory::dist.multiPhylo()}}.
 
-      This function can not be used with the trimmed matrices produced
-      with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
-      \code{\link[=max_incong]{max_incong()}} in datasets with
-      multiple host-symbiont associations.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  This function can not be used with the trimmed matrices produced
+  with \code{\link[=trimHS_maxI]{trimHS_maxI()}} or with the algorithm
+  \code{\link[=max_incong]{max_incong()}} in datasets with
+  multiple host-symbiont associations.
+}\if{html}{\out{</div>}}
 }
 
 \examples{
-data(amph_trem)
-N = 10 #for the example, we recommend 1e+4 value
-n = 8
+# data(amph_trem)
+# N = 10 #for the example, we recommend 1e+4 value
+# n = 8
 
-TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-GD <- geo_D(TAM, amphipod, trematode, strat = "sequential", cl = 1)
+# TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+# GD <- geo_D(TAM, amphipod, trematode, strat = "sequential", cl = 1)
 
 }
 \references{

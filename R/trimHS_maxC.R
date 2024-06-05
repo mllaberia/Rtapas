@@ -29,10 +29,10 @@
 #' @return A list of the N trimmed matrices.
 #'
 #' @examples
-#' data(nuc_cp)
-#' N = 10  #for the example, we recommend 1e+4 value
-#' n = 15
-#' TNC <- trimHS_maxC(N, np_matrix, n, check.unique = TRUE)
+#' # data(nuc_cp)
+#' # N = 10  #for the example, we recommend 1e+4 value
+#' # n = 15
+#' # TNC <- trimHS_maxC(N, np_matrix, n, check.unique = TRUE)
 #'
 #'
 #' @import parallel

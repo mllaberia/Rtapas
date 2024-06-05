@@ -31,7 +31,7 @@ for\code{"geoD"} (Geodesic Distances),
 (Geodesic Distances), \code{"paco"} (PACo) or \code{"paraF"}
 (ParaFit).}
 
-\item{c.level}{Confidence interval level. Default is \code{95} (95\%).}
+\item{c.level}{Confidence interval level. Default is \code{95} (95\\\%).}
 
 \item{barplot}{Default is \code{"TRUE"}, plots the distribution and
 confidence intervals of the frequencies.}
@@ -49,10 +49,10 @@ By default, \code{"darkblue"} is used.}
 }
 \value{
 A dataframe with associations information (columns 1 and 2), the
-        observed value of the frequencies for these associations (column 3),
-        the mean, the minimum and the maximum value of the frequencies
-        (columns 4, 5 and 6) obtained with the sets of posterior
-        probability trees.
+observed value of the frequencies for these associations (column 3),
+the mean, the minimum and the maximum value of the frequencies
+(columns 4, 5 and 6) obtained with the sets of posterior
+probability trees.
 }
 \description{
 From the matrix obtained in \code{\link[=prob_statistic]{prob_statistic()}},
@@ -61,14 +61,14 @@ frequencies) of the host-symbiont associations using a set of pairs of
 posterior probability trees of host and symbiont.
 }
 \examples{
-data(nuc_cp)
-N = 10 #for the example, we recommend 1e+4 value
-n = 8
+# data(nuc_cp)
+# N = 10 #for the example, we recommend 1e+4 value
+# n = 8
 # Maximizing incongruence
-NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
-                  symmetric = FALSE, ei.correct = "sqrt.D",
-                  percentile = 0.99, diff.fq = TRUE,
-                  strat = "parallel", cl = 8)
+# NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
+#                  symmetric = FALSE, ei.correct = "sqrt.D",
+#                  percentile = 0.99, diff.fq = TRUE,
+#                  strat = "parallel", cl = 8)
 # Loaded directly from dataset
 # THSi <- trimHS_maxI(N, np_matrix, n)
 # pp_treesPACo_incong <- prob_statistic(ths = THSi, np_matrix,
@@ -76,9 +76,8 @@ NPi <- max_incong(np_matrix, NUCtr, CPtr, n, N, method = "paco",
 #                        NPi, symmetric = FALSE, ei.correct = "sqrt.D",
 #                        percentile = 0.99, diff.fq = TRUE, res.fq = FALSE,
 #                        below.p = FALSE, strat = "parallel", cl = 8)
-
-LFci <- linkf_CI (freqfun = "paco", x = pp_treesPACo_incong, fx = NPi,
-                  c.level = 95, ylab = "Observed - Expected frequency")
+# LFci <- linkf_CI (freqfun = "paco", x = pp_treesPACo_incong, fx = NPi,
+#                   c.level = 95, ylab = "Observed - Expected frequency")
 
 
 }

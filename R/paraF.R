@@ -53,13 +53,13 @@
 #' @export
 #'
 #' @examples
-#' data(amph_trem)
-#' N = 10 #for the example, we recommend 1e+4 value
-#' n = 8
+#' # data(amph_trem)
+#' # N = 10 #for the example, we recommend 1e+4 value
+#' # n = 8
 #'
-#' TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-#' PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
-#'             strat = "parallel", cl = 8)
+#' # TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+#' # PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
+#' #            strat = "parallel", cl = 8)
 #'
 paraF <- function (ths, treeH, treeS, ei.correct = "none",
                      strat = "sequential", cl = 1) {

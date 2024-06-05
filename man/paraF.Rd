@@ -34,7 +34,7 @@ Default is \code{cl = 1} resulting in \code{"sequential"} execution.}
 }
 \value{
 A number object with the ParaFitGlobal Statistic of host-symbiont
-        test for the N trimmed matrix.
+test for the N trimmed matrix.
 }
 \description{
 For any trimmed matrix produced with
@@ -45,13 +45,13 @@ symbiont (S) phylogenies to conform with the trimmed matrix and runs
 calculate the ParaFitGlobal Statistic.
 }
 \examples{
-data(amph_trem)
-N = 10 #for the example, we recommend 1e+4 value
-n = 8
+# data(amph_trem)
+# N = 10 #for the example, we recommend 1e+4 value
+# n = 8
 
-TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
-PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
-            strat = "parallel", cl = 8)
+# TAM <- trimHS_maxC(N, am_matrix, n, check.unique = TRUE)
+# PF <- paraF(TAM, amphipod, trematode, ei.correct = "sqrt.D",
+#            strat = "parallel", cl = 8)
 
 }
 \references{
